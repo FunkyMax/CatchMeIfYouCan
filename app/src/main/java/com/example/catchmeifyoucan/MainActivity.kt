@@ -28,9 +28,10 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         val joystick = findViewById<JoystickView>(R.id.joystickView)
         joystick.setOnMoveListener { angle, strength ->
-            println(angle)
-            println(strength)
+            angleID.text = "angle: " + angle
+            strengthID.text = "strength: " + strength
         }
+        //joystick.alpha = 0f
         runnable.run()
     }
 }
