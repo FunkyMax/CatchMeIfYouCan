@@ -1,13 +1,22 @@
 package com.example.catchmeifyoucan
 
-import android.app.Activity
-import kotlinx.android.synthetic.main.activity_main.*
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.widget.ImageView
+import kotlin.random.Random
 
-class GameController : Activity() {
+class GameController{
+    var duration : Long = 700
+    var randomX : Random = Random
+    var randomY : Random = Random
 
-    var speed : Float = 1f
+    fun moveBlackBallRandomly(image: ImageView){
+        val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(image, "x", randomX.nextFloat()*1000)
+        val animationY : ObjectAnimator  = ObjectAnimator.ofFloat(image, "y", randomY.nextFloat()*2700)
 
-    fun moveBlackBallRandomly(){
-        blackBall
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(animationX,animationY)
+        animatorSet.duration = duration
+        animatorSet.start()
     }
     }

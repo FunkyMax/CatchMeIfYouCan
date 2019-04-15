@@ -1,12 +1,25 @@
 package com.example.catchmeifyoucan
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.Window
 import android.view.WindowManager
 import io.github.controlwear.virtual.joystick.android.JoystickView
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(){
+    val handler = Handler()
+    val gameController = GameController()
+
+
+    private val runnable = object : Runnable {
+        override fun run() {
+            gameController.moveBlackBallRandomly(blackBall)
+            handler.postDelayed(this, 700)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,5 +31,6 @@ class MainActivity : AppCompatActivity() {
             println(angle)
             println(strength)
         }
+        runnable.run()
     }
 }
