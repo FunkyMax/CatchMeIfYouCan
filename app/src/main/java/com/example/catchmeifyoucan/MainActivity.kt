@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity(){
 
     private val greenBallRunnable = object : Runnable {
         override fun run() {
-            gameController.moveGreenBallWithJoystick(joystickView, greenCircle, angleID,strengthID)
-            greenBallHandler.postDelayed(this, 17)
+            gameController.moveGreenBallWithJoystick(joystickView, greenBall, angleID,strengthID)
+            greenBallHandler.postDelayed(this, 30)
         }
     }
 

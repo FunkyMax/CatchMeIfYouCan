@@ -2,19 +2,19 @@ package com.example.catchmeifyoucan
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.graphics.Path
 import android.widget.ImageView
 import android.widget.TextView
 import io.github.controlwear.virtual.joystick.android.JoystickView
-import kotlin.math.cos
 import kotlin.random.Random
 
 class GameController{
-    private val duration : Long = 700
+    private val blackBallAnimationDuration = 700L
+    private val greenBallAnimationDuration = 30L
+    private var angleFromJoystick = 0.0
+    private var strengthFromJoystick = 0.0f
+    private var newXVector2 = 0.0f
+    private var newYVector2 = 0.0f
     private var random = Random
-    var angleFromJoystick = 0.0
-    var aTeil : Double = 0.0
-    var bTeil : Double = 0.0
 
     fun moveBlackBallRandomly(blackBall: ImageView){
         val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(blackBall, "x", random.nextFloat()*1000)
@@ -22,34 +22,35 @@ class GameController{
 
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(animationX,animationY)
-        animatorSet.duration = duration
+        animatorSet.duration = blackBallAnimationDuration
         animatorSet.start()
     }
 
     fun moveGreenBallWithJoystick(joystick: JoystickView, greenBall : ImageView, angleID: TextView, strengthID: TextView) {
-        var strengthFromJoystick = 0
         joystick.setOnMoveListener { angle, strength ->
-            angleID.text = "angle: " + angle.toString()
+            angleID.text = "angle: " + angle
             angleFromJoystick = angle.toDouble()
-            strengthID.text = "strength: " + strength.toString()
-            strengthFromJoystick = strength
+            strengthID.text = "strength: " + strength
+            strengthFromJoystick = strength*0.6f
+
+            newXVector2 = Math.cos(Math.toRadians(angleFromJoystick)).toFloat()
+            newYVector2 = Math.sin(Math.toRadians(angleFromJoystick)).toFloat()
         }
 
-        var currentXPosition = greenBall.x
-        var currentYPosition = greenBall.y
-        aTeil = Math.cos(angleFromJoystick/360*2*Math.PI)
-        bTeil = Math.sin(angleFromJoystick/360*2*Math.PI)
-        //println("a: " + aTeil + ", b: " + bTeil)
-
-        //val path = Path()
-
-        //path.lineTo(currentXPosition + distance,currentYPosition + distance)
-        val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "x", currentXPosition+aTeil.toFloat()*10)
-        val animationY : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "y", currentYPosition+bTeil.toFloat()*10)
+        val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "x", getXCoordinate(greenBall)+newXVector2*strengthFromJoystick)
+        val animationY : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "y", getYCoordinate(greenBall)-newYVector2*strengthFromJoystick)
 
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(animationX,animationY)
-        animatorSet.duration = 17
+        animatorSet.duration = greenBallAnimationDuration
         animatorSet.start()
+    }
+
+    fun getXCoordinate(greenBall: ImageView):Float{
+        return greenBall.x
+    }
+
+    fun getYCoordinate(greenBall: ImageView):Float{
+        return greenBall.y
     }
 }
