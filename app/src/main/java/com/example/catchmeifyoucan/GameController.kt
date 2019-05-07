@@ -12,7 +12,9 @@ import kotlin.random.Random
 class GameController{
     private val duration : Long = 700
     private var random = Random
-    private val distance = 100
+    var angleFromJoystick = 0.0
+    var aTeil : Double = 0.0
+    var bTeil : Double = 0.0
 
     fun moveBlackBallRandomly(blackBall: ImageView){
         val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(blackBall, "x", random.nextFloat()*1000)
@@ -26,17 +28,28 @@ class GameController{
 
     fun moveGreenBallWithJoystick(joystick: JoystickView, greenBall : ImageView, angleID: TextView, strengthID: TextView) {
         var strengthFromJoystick = 0
-        var angleFromJoystick = 0.0
         joystick.setOnMoveListener { angle, strength ->
             angleID.text = "angle: " + angle.toString()
             angleFromJoystick = angle.toDouble()
             strengthID.text = "strength: " + strength.toString()
             strengthFromJoystick = strength
         }
+
         var currentXPosition = greenBall.x
         var currentYPosition = greenBall.y
-        val path = Path()
-        path.lineTo(currentXPosition + distance,currentYPosition + distance)
-        cos(angleFromJoystick)
+        aTeil = Math.cos(angleFromJoystick/360*2*Math.PI)
+        bTeil = Math.sin(angleFromJoystick/360*2*Math.PI)
+        //println("a: " + aTeil + ", b: " + bTeil)
+
+        //val path = Path()
+
+        //path.lineTo(currentXPosition + distance,currentYPosition + distance)
+        val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "x", currentXPosition+aTeil.toFloat()*10)
+        val animationY : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "y", currentYPosition+bTeil.toFloat()*10)
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(animationX,animationY)
+        animatorSet.duration = 17
+        animatorSet.start()
     }
 }
