@@ -12,9 +12,11 @@ class GameController{
     private val greenBallAnimationDuration = 30L
     private var angleFromJoystick = 0.0
     private var strengthFromJoystick = 0.0f
-    private var newXVector2 = 0.0f
-    private var newYVector2 = 0.0f
+    private var newXVector = 0.0f
+    private var newYVector = 0.0f
     private var random = Random
+    val displayMetricsX = 1200
+    val displayMetricsY = 2720
 
     fun moveBlackBallRandomly(blackBall: ImageView){
         val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(blackBall, "x", random.nextFloat()*1000)
@@ -27,23 +29,30 @@ class GameController{
     }
 
     fun moveGreenBallWithJoystick(joystick: JoystickView, greenBall : ImageView, angleID: TextView, strengthID: TextView) {
+        //println("x: " + greenBall.x + ", y: " + greenBall.y)
         joystick.setOnMoveListener { angle, strength ->
             angleID.text = "angle: " + angle
             angleFromJoystick = angle.toDouble()
             strengthID.text = "strength: " + strength
-            strengthFromJoystick = strength*0.6f
+            strengthFromJoystick = strength * 0.6f
 
-            newXVector2 = Math.cos(Math.toRadians(angleFromJoystick)).toFloat()
-            newYVector2 = Math.sin(Math.toRadians(angleFromJoystick)).toFloat()
+            newXVector = Math.cos(Math.toRadians(angleFromJoystick)).toFloat()
+            newYVector = Math.sin(Math.toRadians(angleFromJoystick)).toFloat()
         }
 
-        val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "x", getXCoordinate(greenBall)+newXVector2*strengthFromJoystick)
-        val animationY : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "y", getYCoordinate(greenBall)-newYVector2*strengthFromJoystick)
+            if (!((newXVector * strengthFromJoystick + greenBall.x) >= displayMetricsX || newXVector * strengthFromJoystick + greenBall.x <= -50 || newYVector * strengthFromJoystick + greenBall.y >= displayMetricsY || newYVector * strengthFromJoystick + greenBall.y <= 0)){
 
-        val animatorSet = AnimatorSet()
-        animatorSet.playTogether(animationX,animationY)
-        animatorSet.duration = greenBallAnimationDuration
-        animatorSet.start()
+                val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "x", getXCoordinate(greenBall)+newXVector*strengthFromJoystick)
+                val animationY : ObjectAnimator  = ObjectAnimator.ofFloat(greenBall, "y", getYCoordinate(greenBall)-newYVector*strengthFromJoystick)
+
+                val animatorSet = AnimatorSet()
+                animatorSet.playTogether(animationX,animationY)
+                animatorSet.duration = greenBallAnimationDuration
+                animatorSet.start()
+            }
+            else{
+                println("uhsiduhsiusd")
+            }
     }
 
     fun getXCoordinate(greenBall: ImageView):Float{
