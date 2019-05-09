@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(){
         val joystick = findViewById<JoystickView>(R.id.joystickView)
         joystick.alpha = .35f
         blackBallRunnable.run()
-        //greenBallRunnable.run()
+        greenBallRunnable.run()
     }
 
     private val blackBallRunnable = object : Runnable {
@@ -34,12 +34,8 @@ class MainActivity : AppCompatActivity(){
 
     private val greenBallRunnable = object : Runnable {
         override fun run() {
-            gameController.moveGreenBallWithJoystick(joystickView, circleView, angleID,strengthID)
-            greenBallHandler.postDelayed(this, 30)
+            gameController.moveGreenBallWithJoystick(joystickView, circleView)
+            greenBallHandler.postDelayed(this, 17)
         }
     }
-
-
-
-
 }
