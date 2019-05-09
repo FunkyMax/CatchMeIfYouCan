@@ -7,14 +7,13 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-class CircleView : View {
+class GreenCircleView : View {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
     override fun onDraw(canvas: Canvas?) {
-        var paint = Paint()
+        val paint = Paint()
         paint.isAntiAlias = true
         paint.color = Color.GREEN
-        canvas?.drawCircle(30f,30f,30f, paint)
+        canvas?.drawCircle(50f,50f,50f, paint)
     }
-
 }
