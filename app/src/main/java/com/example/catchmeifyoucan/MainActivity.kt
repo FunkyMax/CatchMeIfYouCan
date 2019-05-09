@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         val joystick = findViewById<JoystickView>(R.id.joystickView)
         joystick.alpha = .35f
-        windowManager.defaultDisplay.width
         blackBallRunnable.run()
         greenBallRunnable.run()
     }
@@ -29,14 +28,16 @@ class MainActivity : AppCompatActivity(){
     private val blackBallRunnable = object : Runnable {
         override fun run() {
             gameController.moveBlackBallRandomly(blackBallView)
-            blackBallHandler.postDelayed(this, 700)
+            blackBallHandler.postDelayed(this, 800)
         }
     }
 
     private val greenBallRunnable = object : Runnable {
         override fun run() {
             gameController.moveGreenBallWithJoystick(joystickView, greenCircleView)
+            gameController.busted(greenCircleView, blackBallView)
             greenBallHandler.postDelayed(this, 17)
+
         }
     }
 }
