@@ -1,4 +1,4 @@
-package com.example.catchmeifyoucan
+package com.example.catchmeifyoucan.Activities
 
 import android.Manifest
 import android.os.Bundle
@@ -7,25 +7,27 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Window
 import android.view.WindowManager
-import io.github.controlwear.virtual.joystick.android.JoystickView
+import com.example.catchmeifyoucan.Bluetooth.BluetoothService
+import com.example.catchmeifyoucan.Game.GameController
+import com.example.catchmeifyoucan.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(){
-    val gameController = GameController()
-    val bluetoothService = BluetoothService()
-    val blackBallHandler = Handler()
-    val greenBallHandler = Handler()
+    private val gameController = GameController()
+    private val bluetoothService = BluetoothService()
+    private val blackBallHandler = Handler()
+    private val greenBallHandler = Handler()
+    private val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_main)
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
+        joystickView.alpha = .35f
 
-        val joystick = findViewById<JoystickView>(R.id.joystickView)
-        joystick.alpha = .35f
         blackBallRunnable.run()
         greenBallRunnable.run()
     }

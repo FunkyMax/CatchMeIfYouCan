@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".Activities.MainActivity">
     <io.github.controlwear.virtual.joystick.android.JoystickView
             android:id="@+id/joystickView"
             android:layout_height="281dp"
@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
-    <com.example.catchmeifyoucan.views.GreenCircleView
+    <com.example.catchmeifyoucan.Views.GreenCircleView
             android:layout_width="100px"
             android:layout_height="100px"
             android:id="@+id/greenCircleView"
@@ -34,7 +34,7 @@
             android:layout_marginBottom="48dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="156dp" app:layout_constraintHorizontal_bias="0.189"
             app:layout_constraintVertical_bias="0.0"/>
-    <com.example.catchmeifyoucan.views.BlackBallView
+    <com.example.catchmeifyoucan.Views.BlackBallView
             android:layout_width="60px"
             android:layout_height="60px"
             android:id="@+id/blackBallView"

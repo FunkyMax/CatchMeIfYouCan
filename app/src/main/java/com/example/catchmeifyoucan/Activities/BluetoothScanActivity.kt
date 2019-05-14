@@ -1,0 +1,3 @@
+package com.example.catchmeifyoucan.Activities
+
+class BluetoothScanActivity

@@ -1,9 +1,9 @@
-package com.example.catchmeifyoucan
+package com.example.catchmeifyoucan.Game
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import com.example.catchmeifyoucan.views.BlackBallView
-import com.example.catchmeifyoucan.views.GreenCircleView
+import com.example.catchmeifyoucan.Views.BlackBallView
+import com.example.catchmeifyoucan.Views.GreenCircleView
 import io.github.controlwear.virtual.joystick.android.JoystickView
 import kotlin.random.Random
 

@@ -1,4 +1,4 @@
-package com.example.catchmeifyoucan
+package com.example.catchmeifyoucan.Bluetooth
 
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
@@ -6,9 +6,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import android.support.v4.app.ActivityCompat.startActivityForResult
-import android.support.v4.content.ContextCompat.getSystemService
-import android.support.v4.content.ContextCompat.getSystemServiceName
 
 class BluetoothService : Service(){
 
