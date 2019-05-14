@@ -1,7 +1,9 @@
 package com.example.catchmeifyoucan
 
+import android.Manifest
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Window
 import android.view.WindowManager
@@ -11,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(){
     val gameController = GameController()
+    val bluetoothService = BluetoothService()
     val blackBallHandler = Handler()
     val greenBallHandler = Handler()
 
@@ -19,6 +22,8 @@ class MainActivity : AppCompatActivity(){
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_main)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+
         val joystick = findViewById<JoystickView>(R.id.joystickView)
         joystick.alpha = .35f
         blackBallRunnable.run()
