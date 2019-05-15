@@ -29,25 +29,20 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
 import com.example.catchmeifyoucan.R
-
-import java.util.ArrayList
-
-import java.sql.DriverManager.println
+import java.util.*
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
 class BluetoothScanActivity : ListActivity() {
+    private lateinit var bluetoothLeService : BluetoothLeService
     private var mLeDeviceListAdapter: LeDeviceListAdapter? = null
     private var mBluetoothAdapter: BluetoothAdapter? = null
     private var mScanning: Boolean = false
@@ -61,9 +56,9 @@ class BluetoothScanActivity : ListActivity() {
         }
     }
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        actionBar!!.setTitle("Scan for Bluetooth LE Devices")
+        //actionBar!!.setTitle("Scan for Bluetooth LE Devices")
         mHandler = Handler()
 
         val permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -72,18 +67,11 @@ class BluetoothScanActivity : ListActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
 
-
-        // Use this check to determine whether BLE is supported on the device.  Then you can
-        // selectively disable BLE-related features.
-        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "Bluetooth LE not supported by your device", Toast.LENGTH_SHORT).show()
-            finish()
-        }
-
         // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
         // BluetoothAdapter through BluetoothManager.
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         mBluetoothAdapter = bluetoothManager.adapter
+        bluetoothLeService = BluetoothLeService(bluetoothManager)
 
         // Checks if Bluetooth is supported on the device.
         if (mBluetoothAdapter == null) {
@@ -93,8 +81,8 @@ class BluetoothScanActivity : ListActivity() {
         }
     }
 
-    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
         if (!mScanning) {
             menu.findItem(R.id.menu_stop).isVisible = false
             menu.findItem(R.id.menu_scan).isVisible = true
@@ -107,7 +95,7 @@ class BluetoothScanActivity : ListActivity() {
             )
         }
         return true
-    }*/
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -156,8 +144,12 @@ class BluetoothScanActivity : ListActivity() {
 
     // Eventuell unnötige Informationen; das BT soll ja nur gekoppelt werden. Die Existenz der DeviceControlKlasse erübrigt sich damit auch.
 
-    /*override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
+    override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
         val device = mLeDeviceListAdapter!!.getDevice(position) ?: return
+        bluetoothLeService.initialize()
+        bluetoothLeService.connect(device.address)
+
+        /*
         val intent = Intent(this, DeviceControlActivity::class.java)
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.name)
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.address)
@@ -165,8 +157,8 @@ class BluetoothScanActivity : ListActivity() {
             mBluetoothAdapter!!.stopLeScan(mLeScanCallback)
             mScanning = false
         }
-        startActivity(intent)
-    }*/
+        startActivity(intent)*/
+    }
 
     private fun scanLeDevice(enable: Boolean) {
         if (enable) {
@@ -241,7 +233,7 @@ class BluetoothScanActivity : ListActivity() {
             if (deviceName != null && deviceName.length > 0)
                 viewHolder.deviceName!!.text = deviceName
             else
-                viewHolder.deviceName!!.setText(R.string.unknown_device)
+                viewHolder.deviceName!!.text = "Unknown device"
             viewHolder.deviceAddress!!.text = device.address
 
             return view

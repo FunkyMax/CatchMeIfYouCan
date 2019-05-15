@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
-    <com.example.catchmeifyoucan.Views.GreenCircleView
+    <com.example.catchmeifyoucan.views.GreenCircleView
             android:layout_width="100px"
             android:layout_height="100px"
             android:id="@+id/greenCircleView"
@@ -34,7 +34,7 @@
             android:layout_marginBottom="48dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="156dp" app:layout_constraintHorizontal_bias="0.189"
             app:layout_constraintVertical_bias="0.0"/>
-    <com.example.catchmeifyoucan.Views.BlackBallView
+    <com.example.catchmeifyoucan.views.BlackBallView
             android:layout_width="60px"
             android:layout_height="60px"
             android:id="@+id/blackBallView"
