@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.CheckBox
 import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
 import com.example.catchmeifyoucan.Game.GameController
 import com.example.catchmeifyoucan.R
@@ -59,5 +61,16 @@ class MainActivity : AppCompatActivity(){
         bluetoothLeService = BluetoothLeService(bluetoothManager)
         bluetoothLeService.initialize()
         bluetoothLeService.connect(HM10_ADDRESS)
+    }
+
+    fun onLedClicked(view: View){
+        if (view is CheckBox){
+            if (view.isChecked){
+                //bluetoothLeService?.write("on")
+            }
+            else {
+                //bluetoothLeService?.write("off")
+            }
+        }
     }
 }
