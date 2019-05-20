@@ -22,6 +22,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import java.util.*
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -34,6 +35,8 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
     private var mBluetoothDeviceAddress: String? = null
     private var mBluetoothGatt: BluetoothGatt? = null
     private var mConnectionState = STATE_DISCONNECTED
+    private val serviceUUID: UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
+    private val characteristicUUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -43,6 +46,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED
                 mConnectionState = STATE_CONNECTED
+                mBluetoothGatt!!.discoverServices()
                 broadcastUpdate(intentAction)
                 Log.i(TAG, "Connected to GATT server.")
                 // Attempts to discover services after successful connection.
@@ -58,7 +62,12 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
+                val characteristic : BluetoothGattCharacteristic = mBluetoothGatt!!.getService(serviceUUID).getCharacteristic(characteristicUUID)
+                gatt.setCharacteristicNotification(characteristic, true)
+                val descriptor : BluetoothGattDescriptor = characteristic.getDescriptor(convertFromInteger(0x2902))
+                descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                gatt.writeDescriptor(descriptor)
+                //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
             } else {
                 Log.w(TAG, "onServicesDiscovered received: $status")
             }
@@ -79,6 +88,12 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
             characteristic: BluetoothGattCharacteristic
         ) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic)
+        }
+
+        override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
+            val characteristic : BluetoothGattCharacteristic = mBluetoothGatt!!.getService(serviceUUID).getCharacteristic(characteristicUUID)
+            characteristic.value = byteArrayOf(1, 1)
+            gatt?.writeCharacteristic(characteristic)
         }
     }
 
@@ -211,6 +226,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         Log.d(TAG, "Trying to create a new connection.")
         mBluetoothDeviceAddress = address
         mConnectionState = STATE_CONNECTING
+        mBluetoothGatt?.discoverServices()
         return true
     }
 
@@ -281,6 +297,15 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         }*/
     }
 
+    fun convertFromInteger(i: Int): UUID {
+
+        val MSB = 0x0000000000001000L
+        val LSB = -0x7fffff7fa064cb05L
+        val value = (i and -0x1).toLong()
+        return UUID(MSB or (value shl 32), LSB)
+
+    }
+
     companion object {
         private val TAG = BluetoothLeService::class.java.simpleName
 
@@ -288,7 +313,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         private val STATE_CONNECTING = 1
         private val STATE_CONNECTED = 2
 
-        val ACTION_GATT_CONNECTED = "com.example.bluetooth.le.ACTION_GATT_CONNECTED"
+        val ACTION_GATT_CONNECTED = "1"
         val ACTION_GATT_DISCONNECTED = "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED"
         val ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED"
         val ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE"
