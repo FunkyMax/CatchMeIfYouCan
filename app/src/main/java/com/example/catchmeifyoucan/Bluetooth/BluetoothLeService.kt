@@ -37,6 +37,8 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
     private var mConnectionState = STATE_DISCONNECTED
     private val serviceUUID: UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
     private val characteristicUUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
+    private val on = "on"
+    private val off = "off"
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -67,6 +69,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
                 val descriptor : BluetoothGattDescriptor = characteristic.getDescriptor(convertFromInteger(0x2902))
                 descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
                 gatt.writeDescriptor(descriptor)
+                mBluetoothGatt!!.getService(serviceUUID)
                 //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
             } else {
                 Log.w(TAG, "onServicesDiscovered received: $status")
@@ -92,7 +95,6 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
 
         override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
             val characteristic : BluetoothGattCharacteristic = mBluetoothGatt!!.getService(serviceUUID).getCharacteristic(characteristicUUID)
-            characteristic.value = byteArrayOf(1, 1)
             gatt?.writeCharacteristic(characteristic)
         }
     }
@@ -306,6 +308,18 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
 
     }
 
+    fun write(){
+        if (mBluetoothGatt == null) {
+            return
+        }
+
+        val service = mBluetoothGatt!!.getService(serviceUUID)
+        val characteristic = service.getCharacteristic(characteristicUUID)
+        on.toByteArray(Charsets.UTF_8)
+        characteristic.value = (on.toByteArray(Charsets.UTF_8))
+        mBluetoothGatt!!.writeCharacteristic(characteristic)
+    }
+
     companion object {
         private val TAG = BluetoothLeService::class.java.simpleName
 
@@ -313,7 +327,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         private val STATE_CONNECTING = 1
         private val STATE_CONNECTED = 2
 
-        val ACTION_GATT_CONNECTED = "1"
+        val ACTION_GATT_CONNECTED = "com.example.bluetooth.le.ACTION_GATT_CONNECTED"
         val ACTION_GATT_DISCONNECTED = "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED"
         val ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED"
         val ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE"

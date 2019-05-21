@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(){
     fun onLedClicked(view: View){
         if (view is CheckBox){
             if (view.isChecked){
-               // bluetoothLeService?.write("on")
+               bluetoothLeService?.write()
             }
             else {
                 //bluetoothLeService?.write("off")
