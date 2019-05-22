@@ -4,12 +4,20 @@ import com.example.catchmeifyoucan.Activities.MainActivity
 
 class DataController {
 
-    val gameController = GameController()
-    val bluetoothLeService = MainActivity.getBluetoothService()
-    var playerHeadlightBeamViewCurrentX : Float = 0f
-    var playerHeadlightBeamViewCurrentY : Float = 0f
-    var randomHeadlightBeamViewCurrentX : Float = 0f
-    var randomHeadlightBeamViewCurrentY : Float = 0f
+    private val gameController = GameController()
+    private val bluetoothLeService = MainActivity.getBluetoothService()
+    private var playerHeadlightBeamViewCurrentX : Float = 0f
+    private var playerHeadlightBeamViewCurrentY : Float = 0f
+    private var randomHeadlightBeamViewCurrentX : Float = 0f
+    private var randomHeadlightBeamViewCurrentY : Float = 0f
+
+    fun sendDataToBluetoothModule(){
+        getViewsCoordinates()
+        bluetoothLeService.write(playerHeadlightBeamViewCurrentX.toString())
+        bluetoothLeService.write(playerHeadlightBeamViewCurrentY.toString())
+        bluetoothLeService.write(randomHeadlightBeamViewCurrentX.toString())
+        bluetoothLeService.write(randomHeadlightBeamViewCurrentY.toString())
+    }
 
     private fun getViewsCoordinates(){
         playerHeadlightBeamViewCurrentX = gameController.getPlayerHeadlightBeamViewCurrentX()
@@ -19,11 +27,4 @@ class DataController {
         sendDataToBluetoothModule()
     }
 
-    fun sendDataToBluetoothModule(){
-        getViewsCoordinates()
-        bluetoothLeService.write(playerHeadlightBeamViewCurrentX.toString())
-        bluetoothLeService.write(playerHeadlightBeamViewCurrentY.toString())
-        bluetoothLeService.write(randomHeadlightBeamViewCurrentX.toString())
-        bluetoothLeService.write(randomHeadlightBeamViewCurrentY.toString())
-    }
 }
