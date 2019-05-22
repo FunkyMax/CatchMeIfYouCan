@@ -21,6 +21,7 @@ const val ACTION_GATT_DISCONNECTED = "com.example.bluetooth.le.ACTION_GATT_DISCO
 const val ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED"
 const val ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE"
 const val EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA"
+const val HM10_ADDRESS = "34:03:DE:37:AC:D1"
 
 class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
 
@@ -78,6 +79,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         if (mBluetoothAdapter == null) {
             return false
         }
+        connect(HM10_ADDRESS)
         return true
     }
 

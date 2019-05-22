@@ -7,13 +7,13 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-class BlackBallView : View {
+class PlayerHeadlightBeamView : View {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     private val paint = Paint()
 
     override fun onDraw(canvas: Canvas?) {
         paint.isAntiAlias = true
-        paint.color = Color.BLACK
-        canvas?.drawCircle(30f,30f,30f, paint)
+        paint.color = Color.GREEN
+        canvas?.drawCircle(50f,50f,50f, paint)
     }
 }

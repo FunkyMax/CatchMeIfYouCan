@@ -19,13 +19,21 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(){
-    private lateinit var bluetoothLeService : BluetoothLeService
+
+    companion object{
+        lateinit var bluetoothLeService: BluetoothLeService
+
+        fun getBluetoothService(): BluetoothLeService{
+            return bluetoothLeService
+        }
+    }
+
     private lateinit var bluetoothAdapter : BluetoothAdapter
     private val gameController = GameController()
     private val blackBallHandler = Handler()
     private val greenBallHandler = Handler()
     private val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 1
-    private val HM10_ADDRESS = "34:03:DE:37:AC:D1"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,15 +50,15 @@ class MainActivity : AppCompatActivity(){
 
     private val blackBallRunnable = object : Runnable {
         override fun run() {
-            gameController.moveBlackBallRandomly(blackBallView)
+            gameController.moveRandomHeadlightBeamView(randomHeadlightBeamView)
             blackBallHandler.postDelayed(this, 800)
         }
     }
 
     private val greenBallRunnable = object : Runnable {
         override fun run() {
-            gameController.moveGreenBallWithJoystick(joystickView, greenCircleView)
-            gameController.busted(greenCircleView, blackBallView)
+            gameController.movePlayerHeadlightBeamViewWithJoystick(joystickView, playerHeadlightBeamView)
+            gameController.collisionDetection(playerHeadlightBeamView, randomHeadlightBeamView)
             greenBallHandler.postDelayed(this, 17)
         }
     }
@@ -60,7 +68,6 @@ class MainActivity : AppCompatActivity(){
         bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeService = BluetoothLeService(bluetoothManager)
         bluetoothLeService.initialize()
-        bluetoothLeService.connect(HM10_ADDRESS)
     }
 
     fun onLedClicked(view: View){
