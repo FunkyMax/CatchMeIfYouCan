@@ -15,56 +15,28 @@ import java.util.*
 const val STATE_DISCONNECTED = 0
 const val STATE_CONNECTING = 1
 const val STATE_CONNECTED = 2
-
-const val ACTION_GATT_CONNECTED = "com.example.bluetooth.le.ACTION_GATT_CONNECTED"
-const val ACTION_GATT_DISCONNECTED = "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED"
-const val ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED"
-const val ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE"
-const val EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA"
 const val HM10_ADDRESS = "34:03:DE:37:AC:D1"
 
 class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
 
+    private val serviceUUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
+    private val characteristicUUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
     private var mBluetoothManager = bluetoothManager
     private var mBluetoothAdapter: BluetoothAdapter? = null
     private var mBluetoothDeviceAddress: String? = null
     private var mBluetoothGatt: BluetoothGatt? = null
     private var mConnectionState = STATE_DISCONNECTED
-    private val serviceUUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
-    private val characteristicUUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
+    private val mBinder = LocalBinder()
 
-    // Implements callback methods for GATT events that the app cares about.  For example,
-    // connection change and services discovered.
+    // Implements callback methods for GATT events that the app cares about.
     private val mGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-            val intentAction: String
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                intentAction = ACTION_GATT_CONNECTED
                 mConnectionState = STATE_CONNECTED
-                // Attempts to discover services after successful connection.
                 mBluetoothGatt!!.discoverServices()
-                broadcastUpdate(intentAction)
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                intentAction = ACTION_GATT_DISCONNECTED
                 mConnectionState = STATE_DISCONNECTED
-                broadcastUpdate(intentAction)
-            }
-        }
-
-        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-               broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
-            }
-        }
-
-        override fun onCharacteristicRead(
-            gatt: BluetoothGatt,
-            characteristic: BluetoothGattCharacteristic,
-            status: Int
-        ) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic)
             }
         }
     }
@@ -84,6 +56,19 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
     }
 
     /**
+     * Method for transmitting data to the HM10 Soft Bluetooth module.
+     */
+    fun write(data: String){
+        if (mBluetoothGatt == null) {
+            return
+        }
+        val characteristic = mBluetoothGatt!!.getService(serviceUUID).getCharacteristic(characteristicUUID)
+        characteristic.value = data.toByteArray(Charsets.UTF_8)
+        //mBluetoothGatt!!.setCharacteristicNotification(characteristic, true)
+        mBluetoothGatt!!.writeCharacteristic(characteristic)
+    }
+
+    /**
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
      * @param address The device address of the destination device.
@@ -93,7 +78,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
      * `BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)`
      * callback.
      */
-    fun connect(address: String?): Boolean? {
+    private fun connect(address: String?): Boolean? {
         if (mBluetoothAdapter == null || address == null) {
             return false
         }
@@ -124,19 +109,6 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
     }
 
     /**
-     * Method for transmitting data to the HM10 Soft Bluetooth module.
-     */
-    fun write(data: String){
-        if (mBluetoothGatt == null) {
-            return
-        }
-        val characteristic = mBluetoothGatt!!.getService(serviceUUID).getCharacteristic(characteristicUUID)
-        characteristic.value = data.toByteArray(Charsets.UTF_8)
-        //mBluetoothGatt!!.setCharacteristicNotification(characteristic, true)
-        mBluetoothGatt!!.writeCharacteristic(characteristic)
-    }
-
-    /**
      * After using a given BLE device, the app must call this method to ensure resources are
      * released properly.
      */
@@ -162,7 +134,6 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         mBluetoothGatt!!.disconnect()
     }
 
-    private val mBinder = LocalBinder()
     inner class LocalBinder : Binder() {
         internal val service: BluetoothLeService
             get() = this@BluetoothLeService
@@ -179,77 +150,4 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         close()
         return super.onUnbind(intent)
     }
-
-    private fun broadcastUpdate(action: String) {
-        val intent = Intent(action)
-        sendBroadcast(intent)
-    }
-
-    private fun broadcastUpdate(action: String, characteristic: BluetoothGattCharacteristic) {
-        val intent = Intent(action)
-
-        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
-        // carried out as per profile specifications:
-        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        /*if (UUID_HEART_RATE_MEASUREMENT == characteristic.uuid) {
-            val flag = characteristic.properties
-            var format = -1
-            if (flag and 0x01 != 0) {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16
-                Log.d(TAG, "Heart rate format UINT16.")
-            } else {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8
-                Log.d(TAG, "Heart rate format UINT8.")
-            }
-            val heartRate = characteristic.getIntValue(format, 1)!!
-            Log.d(TAG, String.format("Received heart rate: %d", heartRate))
-            intent.putExtra(EXTRA_DATA, heartRate.toString())
-        } */
-            // For all other profiles, writes the data formatted in HEX.
-           /* val data = characteristic.value
-            if (data != null && data.size > 0) {
-                val stringBuilder = StringBuilder(data.size)
-                for (byteChar in data)
-                    stringBuilder.append(String.format("%02X ", byteChar))
-                intent.putExtra(EXTRA_DATA, String(data) + "\n" + stringBuilder.toString())
-        }
-        sendBroadcast(intent)
-    */}
-
-
-
-
-
-
-
-    /**
-     * Request a read on a given `BluetoothGattCharacteristic`. The read result is reported
-     * asynchronously through the `BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)`
-     * callback.
-     *
-     * @param characteristic The characteristic to read from.
-     */
-    fun readCharacteristic(characteristic: BluetoothGattCharacteristic) {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            return
-        }
-        mBluetoothGatt!!.readCharacteristic(characteristic)
-    }
-
-    /**
-     * Enables or disables notification on a give characteristic.
-     *
-     * @param characteristic Characteristic to act on.
-     * @param enabled If true, enable notification.  False otherwise.
-     */
-    fun setCharacteristicNotification(
-        characteristic: BluetoothGattCharacteristic,
-        enabled: Boolean
-    ) {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            return
-        }
-        mBluetoothGatt!!.setCharacteristicNotification(characteristic, enabled)
-    }
-
 }

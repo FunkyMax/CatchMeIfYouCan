@@ -6,23 +6,24 @@ class DataController {
 
     val gameController = GameController()
     val bluetoothLeService = MainActivity.getBluetoothService()
-    var playerHeadlightBeamCurrentX : Float = 0f
-    var playerHeadlightBeamCurrentY : Float = 0f
-    var randomHeadlightBeamCurrentX : Float = 0f
-    var randomHeadlightBeamCurrentY : Float = 0f
+    var playerHeadlightBeamViewCurrentX : Float = 0f
+    var playerHeadlightBeamViewCurrentY : Float = 0f
+    var randomHeadlightBeamViewCurrentX : Float = 0f
+    var randomHeadlightBeamViewCurrentY : Float = 0f
 
-    fun getViewCoordinates(){
-        playerHeadlightBeamCurrentX = gameController.getPlayerHeadlightBeamViewCurrentX()
-        playerHeadlightBeamCurrentY = gameController.getPlayerHeadlightBeamViewCurrentY()
-        randomHeadlightBeamCurrentX = gameController.getRandomHeadlightBeamViewCurrentX()
-        randomHeadlightBeamCurrentY = gameController.getRandomHeadlightBeamViewCurrentY()
-        sendDataToHM10()
+    private fun getViewsCoordinates(){
+        playerHeadlightBeamViewCurrentX = gameController.getPlayerHeadlightBeamViewCurrentX()
+        playerHeadlightBeamViewCurrentY = gameController.getPlayerHeadlightBeamViewCurrentY()
+        randomHeadlightBeamViewCurrentX = gameController.getRandomHeadlightBeamViewCurrentX()
+        randomHeadlightBeamViewCurrentY = gameController.getRandomHeadlightBeamViewCurrentY()
+        sendDataToBluetoothModule()
     }
 
-    private fun sendDataToHM10(){
-        bluetoothLeService.write(playerHeadlightBeamCurrentX.toString())
-        bluetoothLeService.write(playerHeadlightBeamCurrentY.toString())
-        bluetoothLeService.write(randomHeadlightBeamCurrentX.toString())
-        bluetoothLeService.write(randomHeadlightBeamCurrentY.toString())
+    fun sendDataToBluetoothModule(){
+        getViewsCoordinates()
+        bluetoothLeService.write(playerHeadlightBeamViewCurrentX.toString())
+        bluetoothLeService.write(playerHeadlightBeamViewCurrentY.toString())
+        bluetoothLeService.write(randomHeadlightBeamViewCurrentX.toString())
+        bluetoothLeService.write(randomHeadlightBeamViewCurrentY.toString())
     }
 }
