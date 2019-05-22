@@ -24,7 +24,6 @@ class DataController {
         playerHeadlightBeamViewCurrentY = gameController.getPlayerHeadlightBeamViewCurrentY()
         randomHeadlightBeamViewCurrentX = gameController.getRandomHeadlightBeamViewCurrentX()
         randomHeadlightBeamViewCurrentY = gameController.getRandomHeadlightBeamViewCurrentY()
-        sendDataToBluetoothModule()
     }
 
 }
