@@ -5,7 +5,6 @@ import android.bluetooth.*
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.util.Log
 import java.util.*
 
 /**
@@ -55,7 +54,6 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
-            } else {
             }
         }
 
@@ -68,68 +66,6 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic)
             }
         }
-    }
-
-    private val mBinder = LocalBinder()
-
-    /**
-     * Retrieves a list of supported GATT services on the connected device. This should be
-     * invoked only after `BluetoothGatt#discoverServices()` completes successfully.
-     *
-     * @return A `List` of supported services.
-     */
-
-    private fun broadcastUpdate(action: String) {
-        val intent = Intent(action)
-        sendBroadcast(intent)
-    }
-
-    private fun broadcastUpdate(action: String, characteristic: BluetoothGattCharacteristic) {
-        val intent = Intent(action)
-
-        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
-        // carried out as per profile specifications:
-        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        /*if (UUID_HEART_RATE_MEASUREMENT == characteristic.uuid) {
-            val flag = characteristic.properties
-            var format = -1
-            if (flag and 0x01 != 0) {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16
-                Log.d(TAG, "Heart rate format UINT16.")
-            } else {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8
-                Log.d(TAG, "Heart rate format UINT8.")
-            }
-            val heartRate = characteristic.getIntValue(format, 1)!!
-            Log.d(TAG, String.format("Received heart rate: %d", heartRate))
-            intent.putExtra(EXTRA_DATA, heartRate.toString())
-        } */
-            // For all other profiles, writes the data formatted in HEX.
-           /* val data = characteristic.value
-            if (data != null && data.size > 0) {
-                val stringBuilder = StringBuilder(data.size)
-                for (byteChar in data)
-                    stringBuilder.append(String.format("%02X ", byteChar))
-                intent.putExtra(EXTRA_DATA, String(data) + "\n" + stringBuilder.toString())
-        }
-        sendBroadcast(intent)
-    */}
-
-    inner class LocalBinder : Binder() {
-        internal val service: BluetoothLeService
-            get() = this@BluetoothLeService
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        return mBinder
-    }
-
-    override fun onUnbind(intent: Intent): Boolean {
-        // After using a given device, you should make sure that BluetoothGatt.close() is called
-        // such that resources are cleaned up properly.  In this particular example, close() is
-        // invoked when the UI is disconnected from the Service.
-        close()
-        return super.onUnbind(intent)
     }
 
     /**
@@ -186,16 +122,16 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
     }
 
     /**
-     * Disconnects an existing connection or cancel a pending connection. The disconnection result
-     * is reported asynchronously through the
-     * `BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)`
-     * callback.
+     * Method for transmitting data to the HM10 Soft Bluetooth module.
      */
-    private fun disconnect() {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+    fun write(data: String){
+        if (mBluetoothGatt == null) {
             return
         }
-        mBluetoothGatt!!.disconnect()
+        val characteristic = mBluetoothGatt!!.getService(serviceUUID).getCharacteristic(characteristicUUID)
+        characteristic.value = data.toByteArray(Charsets.UTF_8)
+        //mBluetoothGatt!!.setCharacteristicNotification(characteristic, true)
+        mBluetoothGatt!!.writeCharacteristic(characteristic)
     }
 
     /**
@@ -210,6 +146,79 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         mBluetoothGatt!!.close()
         mBluetoothGatt = null
     }
+
+    /**
+     * Disconnects an existing connection or cancel a pending connection. The disconnection result
+     * is reported asynchronously through the
+     * `BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)`
+     * callback.
+     */
+    private fun disconnect() {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            return
+        }
+        mBluetoothGatt!!.disconnect()
+    }
+
+    private val mBinder = LocalBinder()
+    inner class LocalBinder : Binder() {
+        internal val service: BluetoothLeService
+            get() = this@BluetoothLeService
+    }
+
+    override fun onBind(intent: Intent): IBinder? {
+        return mBinder
+    }
+
+    override fun onUnbind(intent: Intent): Boolean {
+        // After using a given device, you should make sure that BluetoothGatt.close() is called
+        // such that resources are cleaned up properly.  In this particular example, close() is
+        // invoked when the UI is disconnected from the Service.
+        close()
+        return super.onUnbind(intent)
+    }
+
+    private fun broadcastUpdate(action: String) {
+        val intent = Intent(action)
+        sendBroadcast(intent)
+    }
+
+    private fun broadcastUpdate(action: String, characteristic: BluetoothGattCharacteristic) {
+        val intent = Intent(action)
+
+        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
+        // carried out as per profile specifications:
+        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
+        /*if (UUID_HEART_RATE_MEASUREMENT == characteristic.uuid) {
+            val flag = characteristic.properties
+            var format = -1
+            if (flag and 0x01 != 0) {
+                format = BluetoothGattCharacteristic.FORMAT_UINT16
+                Log.d(TAG, "Heart rate format UINT16.")
+            } else {
+                format = BluetoothGattCharacteristic.FORMAT_UINT8
+                Log.d(TAG, "Heart rate format UINT8.")
+            }
+            val heartRate = characteristic.getIntValue(format, 1)!!
+            Log.d(TAG, String.format("Received heart rate: %d", heartRate))
+            intent.putExtra(EXTRA_DATA, heartRate.toString())
+        } */
+            // For all other profiles, writes the data formatted in HEX.
+           /* val data = characteristic.value
+            if (data != null && data.size > 0) {
+                val stringBuilder = StringBuilder(data.size)
+                for (byteChar in data)
+                    stringBuilder.append(String.format("%02X ", byteChar))
+                intent.putExtra(EXTRA_DATA, String(data) + "\n" + stringBuilder.toString())
+        }
+        sendBroadcast(intent)
+    */}
+
+
+
+
+
+
 
     /**
      * Request a read on a given `BluetoothGattCharacteristic`. The read result is reported
@@ -241,13 +250,4 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         mBluetoothGatt!!.setCharacteristicNotification(characteristic, enabled)
     }
 
-    fun write(input: String){
-        if (mBluetoothGatt == null) {
-            return
-        }
-        val characteristic = mBluetoothGatt!!.getService(serviceUUID).getCharacteristic(characteristicUUID)
-        characteristic.value = input.toByteArray(Charsets.UTF_8)
-        //mBluetoothGatt!!.setCharacteristicNotification(characteristic, true)
-        mBluetoothGatt!!.writeCharacteristic(characteristic)
-    }
 }
