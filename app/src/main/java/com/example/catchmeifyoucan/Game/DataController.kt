@@ -4,12 +4,12 @@ import com.example.catchmeifyoucan.Activities.MainActivity
 
 class DataController {
 
-    private val gameController = GameController()
-    private val bluetoothLeService = MainActivity.getBluetoothService()
-    private var playerHeadlightBeamViewCurrentX : Float = 0f
-    private var playerHeadlightBeamViewCurrentY : Float = 0f
-    private var randomHeadlightBeamViewCurrentX : Float = 0f
-    private var randomHeadlightBeamViewCurrentY : Float = 0f
+    private val gameController = MainActivity.gameController
+    private val bluetoothLeService = MainActivity.bluetoothLeService
+    private var playerHeadlightBeamViewCurrentX = 0
+    private var playerHeadlightBeamViewCurrentY = 0
+    private var randomHeadlightBeamViewCurrentX = 0
+    private var randomHeadlightBeamViewCurrentY = 0
 
     fun sendDataToBluetoothModule(){
         getViewsCoordinates()

@@ -13,27 +13,35 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.CheckBox
 import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
+import com.example.catchmeifyoucan.Game.DataController
 import com.example.catchmeifyoucan.Game.GameController
 import com.example.catchmeifyoucan.R
 import kotlinx.android.synthetic.main.activity_main.*
 
+const val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 1
 
 class MainActivity : AppCompatActivity(){
 
+    // Making the BluetoothLeService a "static" field because the same instance is gonna be needed in a few classes. Further the BluetoothLeService can only be initialized in MainActivity because getSystemService() can only be called in here.
     companion object{
         lateinit var bluetoothLeService: BluetoothLeService
+        val gameController = GameController()
 
         fun getBluetoothService(): BluetoothLeService{
             return bluetoothLeService
         }
     }
 
+    // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in MainActivity. See above for more info.
     private lateinit var bluetoothAdapter : BluetoothAdapter
-    private val gameController = GameController()
-    private val blackBallHandler = Handler()
-    private val greenBallHandler = Handler()
-    private val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 1
 
+    //private val gameController = GameController()
+    private lateinit var dataController: DataController    // lateinit var because it cannot be initialized here because bluetoothLeService hasn't been initialized so far and the DataController needs the bluetoothLeService
+
+    // Initializing the necessary Handlers
+    private val playerHeadlightBeamViewHandler = Handler()
+    private val randomHeadlightBeamViewHandler = Handler()
+    private val dataControllerHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,22 +52,29 @@ class MainActivity : AppCompatActivity(){
         joystickView.alpha = .35f
 
         setupBluetoothConnection()
-        blackBallRunnable.run()
-        greenBallRunnable.run()
+        randomHeadlightBeamViewRunnable.run()
+        playerHeadlightBeamViewRunnable.run()
     }
 
-    private val blackBallRunnable = object : Runnable {
-        override fun run() {
-            gameController.moveRandomHeadlightBeamView(randomHeadlightBeamView)
-            blackBallHandler.postDelayed(this, 800)
-        }
-    }
-
-    private val greenBallRunnable = object : Runnable {
+    private val playerHeadlightBeamViewRunnable = object : Runnable {
         override fun run() {
             gameController.movePlayerHeadlightBeamViewWithJoystick(joystickView, playerHeadlightBeamView)
             gameController.collisionDetection(playerHeadlightBeamView, randomHeadlightBeamView)
-            greenBallHandler.postDelayed(this, 17)
+            playerHeadlightBeamViewHandler.postDelayed(this, 17)
+        }
+    }
+
+    private val randomHeadlightBeamViewRunnable = object : Runnable {
+        override fun run() {
+            gameController.moveRandomHeadlightBeamView(randomHeadlightBeamView)
+            randomHeadlightBeamViewHandler.postDelayed(this, 800)
+        }
+    }
+
+    private val dataControllerRunnable = object : Runnable {
+        override fun run() {
+            //dataController.sendDataToBluetoothModule()
+            dataControllerHandler.postDelayed(this, 500)
         }
     }
 
@@ -67,16 +82,22 @@ class MainActivity : AppCompatActivity(){
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeService = BluetoothLeService(bluetoothManager)
-        bluetoothLeService.initialize()
+        if (bluetoothLeService.initialize()) {
+            println("WORKING?")
+            dataController = DataController()
+            dataControllerRunnable.run()
+        }
     }
 
     fun onLedClicked(view: View){
         if (view is CheckBox){
             if (view.isChecked){
-               bluetoothLeService.write("1")
+                bluetoothLeService.write("on")
+                //dataController.sendDataToBluetoothModule()
             }
             else {
-                bluetoothLeService.write("0")
+                bluetoothLeService.write("off")
+                //dataController.sendDataToBluetoothModule()
             }
         }
     }
