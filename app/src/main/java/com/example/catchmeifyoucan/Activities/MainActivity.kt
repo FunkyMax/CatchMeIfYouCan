@@ -92,13 +92,17 @@ class MainActivity : AppCompatActivity(){
     fun onLedClicked(view: View){
         if (view is CheckBox){
             if (view.isChecked){
-                bluetoothLeService.write("on")
-                //dataController.sendDataToBluetoothModule()
+                //bluetoothLeService.write("on")
+                dataController.sendDataToBluetoothModule()
             }
             else {
-                bluetoothLeService.write("off")
-                //dataController.sendDataToBluetoothModule()
+                //bluetoothLeService.write("off")
+                dataController.sendDataToBluetoothModule()
             }
         }
+    }
+
+    override fun toString(): String {
+        return super.toString()+"ßß"
     }
 }

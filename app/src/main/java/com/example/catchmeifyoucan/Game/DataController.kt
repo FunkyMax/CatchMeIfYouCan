@@ -1,6 +1,11 @@
 package com.example.catchmeifyoucan.Game
 
 import com.example.catchmeifyoucan.Activities.MainActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+const val ESCAPE_CHARACTER = "ßß"
 
 class DataController {
 
@@ -12,11 +17,18 @@ class DataController {
     private var randomHeadlightBeamViewCurrentY = 0
 
     fun sendDataToBluetoothModule(){
-        getViewsCoordinates()
-        bluetoothLeService.write(playerHeadlightBeamViewCurrentX.toString())
-        bluetoothLeService.write(playerHeadlightBeamViewCurrentY.toString())
-        bluetoothLeService.write(randomHeadlightBeamViewCurrentX.toString())
-        bluetoothLeService.write(randomHeadlightBeamViewCurrentY.toString())
+        GlobalScope.launch{
+            getViewsCoordinates()
+            super.toString()
+            bluetoothLeService.write(makeString(playerHeadlightBeamViewCurrentX))
+            delay(20)
+            bluetoothLeService.write(makeString(playerHeadlightBeamViewCurrentY))
+            delay(20)
+            bluetoothLeService.write(makeString(randomHeadlightBeamViewCurrentX))
+            delay(20)
+            bluetoothLeService.write(makeString(randomHeadlightBeamViewCurrentY))
+            delay(20)
+        }
     }
 
     private fun getViewsCoordinates(){
@@ -26,4 +38,7 @@ class DataController {
         randomHeadlightBeamViewCurrentY = gameController.getRandomHeadlightBeamViewCurrentY()
     }
 
+    private fun makeString(int: Int) : String{
+        return int.toString() + ESCAPE_CHARACTER
+    }
 }

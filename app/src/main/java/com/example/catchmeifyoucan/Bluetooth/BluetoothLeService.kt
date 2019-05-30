@@ -77,6 +77,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         val service = mBluetoothGatt!!.getService(serviceUUID)
         val characteristic = service.getCharacteristic(characteristicUUID)
         characteristic.value = data.toByteArray(Charsets.UTF_8)
+        println(data)
         //mBluetoothGatt!!.setCharacteristicNotification(characteristic, true)
         mBluetoothGatt!!.writeCharacteristic(characteristic)
     }
