@@ -5,7 +5,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-const val ESCAPE_CHARACTER = "ßß"
+const val ESCAPE_CHARACTER = "~"
+const val DELAY = 25L;
 
 class DataController {
 
@@ -19,15 +20,14 @@ class DataController {
     fun sendDataToBluetoothModule(){
         GlobalScope.launch{
             getViewsCoordinates()
-            super.toString()
             bluetoothLeService.write(makeString(playerHeadlightBeamViewCurrentX))
-            delay(20)
+            delay(DELAY)
             bluetoothLeService.write(makeString(playerHeadlightBeamViewCurrentY))
-            delay(20)
+            delay(DELAY)
             bluetoothLeService.write(makeString(randomHeadlightBeamViewCurrentX))
-            delay(20)
+            delay(DELAY)
             bluetoothLeService.write(makeString(randomHeadlightBeamViewCurrentY))
-            delay(20)
+            delay(DELAY)
         }
     }
 

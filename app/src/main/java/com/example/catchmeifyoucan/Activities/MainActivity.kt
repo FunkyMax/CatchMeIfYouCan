@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity(){
         bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeService = BluetoothLeService(bluetoothManager)
         if (bluetoothLeService.initialize()) {
-            println("WORKING?")
             dataController = DataController()
             dataControllerRunnable.run()
         }
@@ -92,17 +91,13 @@ class MainActivity : AppCompatActivity(){
     fun onLedClicked(view: View){
         if (view is CheckBox){
             if (view.isChecked){
-                //bluetoothLeService.write("on")
+                //bluetoothLeService.write("1")
                 dataController.sendDataToBluetoothModule()
             }
             else {
-                //bluetoothLeService.write("off")
+                //bluetoothLeService.write("0")
                 dataController.sendDataToBluetoothModule()
             }
         }
-    }
-
-    override fun toString(): String {
-        return super.toString()+"ßß"
     }
 }
