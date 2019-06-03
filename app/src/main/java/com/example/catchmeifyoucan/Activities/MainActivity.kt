@@ -10,7 +10,6 @@ import android.view.View
 import android.view.Window
 import android.widget.CheckBox
 import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
-import com.example.catchmeifyoucan.Game.DataController
 import com.example.catchmeifyoucan.Game.GameController
 import com.example.catchmeifyoucan.Game.ViewsCoordinatesTranslator
 import com.example.catchmeifyoucan.R
@@ -24,21 +23,16 @@ class MainActivity : AppCompatActivity(){
     companion object{
         lateinit var bluetoothLeService: BluetoothLeService
         val gameController = GameController()
-
-        fun getBluetoothService(): BluetoothLeService{
-            return bluetoothLeService
-        }
     }
 
     // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in MainActivity. See above for more info.
     private lateinit var bluetoothAdapter : BluetoothAdapter
-
-    private lateinit var dataController: DataController // lateinit var because it cannot be initialized here because bluetoothLeService hasn't been initialized so far and the DataController needs the bluetoothLeService
     private lateinit var viewsCoordinatesTranslator: ViewsCoordinatesTranslator
+
     // Initializing the necessary Handlers
     private val playerHeadlightBeamViewHandler = Handler()
     private val randomHeadlightBeamViewHandler = Handler()
-    private val dataControllerHandler = Handler()
+    private val viewsCoordinatesTranslatorHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,12 +45,11 @@ class MainActivity : AppCompatActivity(){
         //window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         //ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
-        joystickView.alpha = .75f
 
         setupBluetoothConnection()
         randomHeadlightBeamViewRunnable.run()
         playerHeadlightBeamViewRunnable.run()
-        println("x: " + playerHeadlightBeamView.x + ", y: " + playerHeadlightBeamView.y)
+        viewsCoordinatesTranslatorRunnable.run();
     }
 
     private val playerHeadlightBeamViewRunnable = object : Runnable {
@@ -74,10 +67,10 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    private val dataControllerRunnable = object : Runnable {
+    private val viewsCoordinatesTranslatorRunnable = object : Runnable {
         override fun run() {
-            //dataController.sendDataToBluetoothModule()
-            dataControllerHandler.postDelayed(this, 500)
+            viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
+            viewsCoordinatesTranslatorHandler.postDelayed(this, 50)
         }
     }
 
@@ -86,9 +79,7 @@ class MainActivity : AppCompatActivity(){
         bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeService = BluetoothLeService(bluetoothManager)
         if (bluetoothLeService.initialize()) {
-            dataController = DataController()
             viewsCoordinatesTranslator = ViewsCoordinatesTranslator()
-            //dataControllerRunnable.run()
         }
     }
 
@@ -97,12 +88,10 @@ class MainActivity : AppCompatActivity(){
             if (view.isChecked){
                 viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
                 //bluetoothLeService.write("1")
-                //dataController.sendDataToBluetoothModule()
             }
             else {
                 viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
                 //bluetoothLeService.write("0")
-                //dataController.sendDataToBluetoothModule()
             }
         }
     }

@@ -15,8 +15,8 @@ class GameController{
     private val playerHeadlightBeamViewResetY = 2300f
     private val playerHeadlightBeamAnimationDuration= 34L
     private val randomHeadlightBeamAnimationDuration = 1100L
-    private val minDistance = 750
-    private val maxDistance = 1500
+    private val randomHeadlightMinDistanceToNextPosition = 750
+    private val randomHeadlightMaxDistanceToNextPosition = 1500
     private val random = Random
 
     private var catchCounter = 0
@@ -44,7 +44,7 @@ class GameController{
             randomHeadlightBeamViewNextY = random.nextFloat() * displayHeightBorder
 
             val distance = (Math.sqrt(Math.pow(randomHeadlightBeamViewNextX.toDouble() - randomHeadlightBeamView.x, 2.0) + Math.pow(randomHeadlightBeamViewNextY - randomHeadlightBeamView.y.toDouble(), 2.0)))
-            if (distance > minDistance && distance < maxDistance){
+            if (distance > randomHeadlightMinDistanceToNextPosition && distance < randomHeadlightMaxDistanceToNextPosition) {
                 break
             }
         }
@@ -107,7 +107,7 @@ class GameController{
         playerHeadlightBeamView.getLocationOnScreen(playerHeadlightBeamViewCurrentCoordinates)
         randomHeadlightBeamView.getLocationOnScreen(randomHeadlightBeamViewCurrentCoordinates)
 
-        //Getting the current Coordinates of the 2 views.
+        //Getting the current coordinates of the 2 views.
         playerHeadlightBeamViewCurrentX = playerHeadlightBeamViewCurrentCoordinates[0].toFloat()
         playerHeadlightBeamViewCurrentY = playerHeadlightBeamViewCurrentCoordinates[1].toFloat()
         randomHeadlightBeamViewCurrentX = randomHeadlightBeamViewCurrentCoordinates[0].toFloat()

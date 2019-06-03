@@ -5,16 +5,11 @@
 #define BAUD 115200
 // Arduino Variablen
 int counter;
-String data;
+int data;
 
 // Android Variablen
 String ON;
 String OFF;
-String ESCAPE_CHARACTER;
-String playerHeadlightBeamViewCurrentX;
-String playerHeadlightBeamViewCurrentY;
-String randomHeadlightBeamViewCurrentX;
-String randomHeadlightBeamViewCurrentY;
 
 // Player - MH DMX Variablen
 String kPan1 = "43";
@@ -77,7 +72,7 @@ void setup() {
   ON = "111110";  // Ursprünglicher Wert in Android Studio zum Einschalten der LED war "on", dessen Wert in der UTF8 Tabelle 49 ist.
   OFF = "111102102"; // Ursprünglicher Wert in Android Studio zum Ausschalten der LED war "off", dessen Wert in der UTF8 Tabelle 48 ist.
   ESCAPE_CHARACTER = "126"; // Escape Character, der als Tilde "~" zum Bluetooth Modul geschickt wird. Dessen Wert in der UTF8 Tabelle ist 126.
-  counter = 0;
+  counter = -1;
 }
 
 void loop() {
@@ -90,9 +85,13 @@ void loop() {
   // Wenn alle 4 Variablen (playerHeadlightBeamViewCurrentX, playerHeadlightBeamViewCurrentY, randomHeadlightBeamViewCurrentX, randomHeadlightBeamViewCurrentY) mit ihrem Wert belegt sind,
   // werden die Werte an das DMX Endgerät weitergeleitet und die Variablen wieder resettet.
   
-  if (BTSerial.available()) {
+  if (BTSerial.available()) { 
     data = BTSerial.read();
-    //Serial.println("data: " + data);
+    
+    if (counter<0){
+      counter += 1;
+    }
+    
     if (counter == 0){
       kPan1 = data;
       counter +=1;
@@ -124,47 +123,16 @@ void loop() {
     else if (counter == 7){
       mTilt2 = data;
       counter = 0;
+      Serial.println("kPan1: " + kPan1);
+      Serial.println("kPan2: " + kPan2);
+      Serial.println("kTilt1: " + kTilt1);
+      Serial.println("kTilt2: " + kTilt2);
+
+      Serial.println("mPan1: " + mPan1);
+      Serial.println("mPan2: " + mPan2);
+      Serial.println("mTilt1: " + mTilt1);
+      Serial.println("mTilt2: " + mTilt2);
     }
-    
-    /*if (data.toInt() <=57 && data.toInt() >= 48){
-      if (counter == 0){
-        playerHeadlightBeamViewCurrentX += map(data.toInt(), 48,57,0,9);
-        data = "";
-      }
-      else if (counter == 1){
-        playerHeadlightBeamViewCurrentY += map(data.toInt(), 48,57,0,9);
-        data = "";
-      }
-      else if (counter == 2){
-        randomHeadlightBeamViewCurrentX += map(data.toInt(), 48,57,0,9);
-        data = "";
-      }
-      else if (counter == 3){
-        randomHeadlightBeamViewCurrentY += map(data.toInt(), 48,57,0,9);
-        data = "";
-      }
-    }*/
-
-    Serial.println("kPan1: " + kPan1);
-    Serial.println("kPan2: " + kPan2);
-    Serial.println("kTilt1: " + kTilt1);
-    Serial.println("kTilt2: " + kTilt2);
-
-    Serial.println("mPan1: " + mPan1);
-    Serial.println("mPan2: " + mPan2);
-    Serial.println("mTilt1: " + mTilt1);
-    Serial.println("mTilt2: " + mTilt2);
-    
-   /*if (data.equals(ESCAPE_CHARACTER)){
-      Serial.println("ESCAPED");
-      data = "";
-      counter +=1;
-      if (counter > 3){ 
-        sendDataToDMX();
-        resetCoordinates();
-        counter = 0;
-      }
-    }*/
 
    // Code um die BluetoothLED ein und auszuschalten
     /*if (data.equals(ON)){
@@ -177,13 +145,6 @@ void loop() {
       data = "";
     }*/
   }
-}
-
-void resetCoordinates(){
-  playerHeadlightBeamViewCurrentX = "";
-  playerHeadlightBeamViewCurrentY = "";
-  randomHeadlightBeamViewCurrentX = "";
-  randomHeadlightBeamViewCurrentY = "";
 }
 
 void sendDataToDMX(){

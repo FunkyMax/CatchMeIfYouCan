@@ -53,13 +53,13 @@ class ViewsCoordinatesTranslator() {
 
     private fun transformPixelCoordinatesIntoWallCoordinates() {
         playerHeadlightBeamViewCurrentWallX =
-            -(((playerHeadlightBeamViewCurrentPixelX / displayWidth) * wallWidth) - playerMHOffsetX).toDouble()
+            (((playerHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - playerMHOffsetX)
         playerHeadlightBeamViewCurrentWallY =
-            -(((playerHeadlightBeamViewCurrentPixelY / displayHeight) * wallHeight) - displayHeight).toDouble()
+            (((-playerHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
         randomHeadlightBeamViewCurrentWallX =
-            -(((randomHeadlightBeamViewCurrentPixelX / displayWidth) * wallWidth) - randomMHOffsetX).toDouble()
+            (((randomHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomMHOffsetX)
         randomHeadlightBeamViewCurrentWallY =
-            -(((randomHeadlightBeamViewCurrentPixelY / displayWidth) * wallHeight) - displayHeight).toDouble()
+            (((-randomHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
     }
 
     private fun calculateDMXValuesFromPanAndTiltValues() {
@@ -109,18 +109,33 @@ class ViewsCoordinatesTranslator() {
 
         val playerDMXPanForChannel1 = (Math.floor(playerDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
         val playerDMXPanForChannel2 = playerDMXPan.rem(sixteenToEightBitConverter)
-        val playerDMXPanForChannel3 = (Math.floor(playerDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
-        val playerDMXPanForChannel4 = playerDMXTilt.rem(sixteenToEightBitConverter)
+        val playerDMXTiltForChannel3 = (Math.floor(playerDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
+        val playerDMXTiltForChannel4 = playerDMXTilt.rem(sixteenToEightBitConverter)
 
         val randomDMXPanForChannel33 = (Math.floor(randomDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
         val randomDMXPanForChannel34 = randomDMXPan.rem(sixteenToEightBitConverter)
-        val randomDMXPanForChannel35 = (Math.floor(randomDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomDMXPanForChannel36 = randomDMXTilt.rem(sixteenToEightBitConverter)
+        val randomDMXTiltForChannel35 = (Math.floor(randomDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
+        val randomDMXTiltForChannel36 = randomDMXTilt.rem(sixteenToEightBitConverter)
+
+        println("playerDMXPanForChannel1: " + playerDMXPanForChannel1)
+        println("playerDMXPanForChannel2: " + playerDMXPanForChannel2)
+        println("playerDMXTiltForChannel3: " + playerDMXTiltForChannel3)
+        println("playerDMXTiltForChannel4: " + playerDMXTiltForChannel4)
+        println("\n")
+        println("randomDMXPanForChannel33: " + randomDMXPanForChannel33)
+        println("randomDMXPanForChannel34: " + randomDMXPanForChannel34)
+        println("randomDMXTiltForChannel35: " + randomDMXTiltForChannel35)
+        println("randomDMXTiltForChannel36: " + randomDMXTiltForChannel36)
 
 
         // put values into corresponding arrays
-        val playerDMXValuesIntegerArray =
-            arrayOf(playerDMXPanForChannel1, playerDMXPanForChannel2, playerDMXPanForChannel3, playerDMXPanForChannel4)
+        val playerDMXValuesIntegerArray = arrayOf(
+            playerDMXPanForChannel1,
+            playerDMXPanForChannel2,
+            playerDMXTiltForChannel3,
+            playerDMXTiltForChannel4
+        )
+
         playerDMXValuesArray =
             playerDMXValuesIntegerArray.foldIndexed(ByteArray(playerDMXValuesIntegerArray.size)) { i, a, v ->
                 a.apply {
@@ -130,12 +145,14 @@ class ViewsCoordinatesTranslator() {
                     )
                 }
             }
+
         val randomDMXValuesIntegerArray = arrayOf(
             randomDMXPanForChannel33,
             randomDMXPanForChannel34,
-            randomDMXPanForChannel35,
-            randomDMXPanForChannel36
+            randomDMXTiltForChannel35,
+            randomDMXTiltForChannel36
         )
+
         randomDMXValuesArray =
             randomDMXValuesIntegerArray.foldIndexed(ByteArray(randomDMXValuesIntegerArray.size)) { i, a, v ->
                 a.apply {
