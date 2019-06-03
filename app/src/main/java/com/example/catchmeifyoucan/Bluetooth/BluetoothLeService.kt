@@ -42,7 +42,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-            println("INITIALIZED")
+            println("CONNECTED AND INITIALIZED")
             initialized = true
         }
     }
@@ -59,7 +59,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         }
         connect(HM10_ADDRESS)
         while (!initialized) {
-            println("testestest")
+            println("CONNECTING TO BLUETOOTH MODULE...")
             if (initialized) {
                 return initialized
             }

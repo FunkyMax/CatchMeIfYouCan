@@ -15,8 +15,8 @@ const val sixteenToEightBitConverter = 256
 const val distanceToWall = 300.0
 const val wallWidth = 400
 const val wallHeight = 300
-const val displayWidth = 1600
-const val displayHeight = 1200
+const val displayWidth = 2860
+const val displayHeight = 1340
 
 const val playerMHOffsetX = 169
 const val randomMHOffsetX = 231

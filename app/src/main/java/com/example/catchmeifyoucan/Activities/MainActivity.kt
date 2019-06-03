@@ -1,16 +1,13 @@
 package com.example.catchmeifyoucan.Activities
 
-import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.Window
-import android.view.WindowManager
 import android.widget.CheckBox
 import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
 import com.example.catchmeifyoucan.Game.DataController
@@ -46,14 +43,20 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_main)
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
-        joystickView.alpha = .35f
+        window.decorView.apply {
+            systemUiVisibility =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        }
+        //window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        //ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
+        joystickView.alpha = .75f
 
         setupBluetoothConnection()
         randomHeadlightBeamViewRunnable.run()
         playerHeadlightBeamViewRunnable.run()
+        println("x: " + playerHeadlightBeamView.x + ", y: " + playerHeadlightBeamView.y)
     }
 
     private val playerHeadlightBeamViewRunnable = object : Runnable {

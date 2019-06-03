@@ -9,8 +9,8 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 
 class GameController{
-    private val displayWidthBorder = 1340
-    private val displayHeightBorder = 2860
+    private val displayWidthBorder = 2860
+    private val displayHeightBorder = 1340
     private val playerHeadlightBeamViewResetX = 700f
     private val playerHeadlightBeamViewResetY = 2300f
     private val playerHeadlightBeamAnimationDuration= 34L
