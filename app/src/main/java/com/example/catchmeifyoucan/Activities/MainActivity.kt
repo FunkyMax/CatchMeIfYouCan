@@ -15,6 +15,7 @@ import android.widget.CheckBox
 import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
 import com.example.catchmeifyoucan.Game.DataController
 import com.example.catchmeifyoucan.Game.GameController
+import com.example.catchmeifyoucan.Game.ViewsCoordinatesTranslator
 import com.example.catchmeifyoucan.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -35,9 +36,8 @@ class MainActivity : AppCompatActivity(){
     // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in MainActivity. See above for more info.
     private lateinit var bluetoothAdapter : BluetoothAdapter
 
-    //private val gameController = GameController()
-    private lateinit var dataController: DataController    // lateinit var because it cannot be initialized here because bluetoothLeService hasn't been initialized so far and the DataController needs the bluetoothLeService
-
+    private lateinit var dataController: DataController // lateinit var because it cannot be initialized here because bluetoothLeService hasn't been initialized so far and the DataController needs the bluetoothLeService
+    private lateinit var viewsCoordinatesTranslator: ViewsCoordinatesTranslator
     // Initializing the necessary Handlers
     private val playerHeadlightBeamViewHandler = Handler()
     private val randomHeadlightBeamViewHandler = Handler()
@@ -84,19 +84,22 @@ class MainActivity : AppCompatActivity(){
         bluetoothLeService = BluetoothLeService(bluetoothManager)
         if (bluetoothLeService.initialize()) {
             dataController = DataController()
-            dataControllerRunnable.run()
+            viewsCoordinatesTranslator = ViewsCoordinatesTranslator()
+            //dataControllerRunnable.run()
         }
     }
 
     fun onLedClicked(view: View){
         if (view is CheckBox){
             if (view.isChecked){
+                viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
                 //bluetoothLeService.write("1")
-                dataController.sendDataToBluetoothModule()
+                //dataController.sendDataToBluetoothModule()
             }
             else {
+                viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
                 //bluetoothLeService.write("0")
-                dataController.sendDataToBluetoothModule()
+                //dataController.sendDataToBluetoothModule()
             }
         }
     }

@@ -70,13 +70,13 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
     /**
      * Method for transmitting data to the HM10 Soft Bluetooth module.
      */
-    fun write(data: String){
+    fun write(data: ByteArray) {
         if (mBluetoothGatt == null) {
             return
         }
         val service = mBluetoothGatt!!.getService(serviceUUID)
         val characteristic = service.getCharacteristic(characteristicUUID)
-        characteristic.value = data.toByteArray(Charsets.UTF_8)
+        characteristic.value = data
         println(data)
         //mBluetoothGatt!!.setCharacteristicNotification(characteristic, true)
         mBluetoothGatt!!.writeCharacteristic(characteristic)

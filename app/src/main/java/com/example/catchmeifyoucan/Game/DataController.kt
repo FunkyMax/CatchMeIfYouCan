@@ -6,7 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 const val ESCAPE_CHARACTER = "~"
-const val DELAY = 25L;
+const val DELAY = 50L;
 
 class DataController {
 
@@ -17,25 +17,21 @@ class DataController {
     private var randomHeadlightBeamViewCurrentX = 0
     private var randomHeadlightBeamViewCurrentY = 0
 
-    fun sendDataToBluetoothModule(){
+    fun sendDataToBluetoothModule(playerDMXValuesArray: ByteArray, randomDMXValuesArray: ByteArray) {
         GlobalScope.launch{
-            getViewsCoordinates()
-            bluetoothLeService.write(makeString(playerHeadlightBeamViewCurrentX))
+
+            bluetoothLeService.write(playerDMXValuesArray)
+            delay(DELAY)
+            bluetoothLeService.write(randomDMXValuesArray)
+            /*bluetoothLeService.write(makeString(playerHeadlightBeamViewCurrentX))
             delay(DELAY)
             bluetoothLeService.write(makeString(playerHeadlightBeamViewCurrentY))
             delay(DELAY)
             bluetoothLeService.write(makeString(randomHeadlightBeamViewCurrentX))
             delay(DELAY)
             bluetoothLeService.write(makeString(randomHeadlightBeamViewCurrentY))
-            delay(DELAY)
+            delay(DELAY)*/
         }
-    }
-
-    private fun getViewsCoordinates(){
-        playerHeadlightBeamViewCurrentX = gameController.getPlayerHeadlightBeamViewCurrentX()
-        playerHeadlightBeamViewCurrentY = gameController.getPlayerHeadlightBeamViewCurrentY()
-        randomHeadlightBeamViewCurrentX = gameController.getRandomHeadlightBeamViewCurrentX()
-        randomHeadlightBeamViewCurrentY = gameController.getRandomHeadlightBeamViewCurrentY()
     }
 
     private fun makeString(int: Int) : String{

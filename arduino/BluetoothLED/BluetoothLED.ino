@@ -17,10 +17,10 @@ String randomHeadlightBeamViewCurrentX;
 String randomHeadlightBeamViewCurrentY;
 
 // Player - MH DMX Variablen
-int kPan1 = 43;
-int kPan2 = 0;
-int kTilt1 = 45;
-int kTilt2 = 0;
+String kPan1 = "43";
+String kPan2 = "0";
+String kTilt1 = "45";
+String kTilt2 = "0";
 int kDimmer = 100;
 int kShutter = 30;
 int kFarbe = 160;
@@ -28,10 +28,10 @@ int kIris = 4;
 int kFokus = 0;
 
 // Computer - MH DMX Variablen
-int mPan1 = 42;
-int mPan2 = 0;
-int mTilt1 = 45;
-int mTilt2 = 0;
+String mPan1 = "42";
+String mPan2 = "0";
+String mTilt1 = "45";
+String mTilt2 = "0";
 int mDimmer = 50;
 int mShutter = 30;
 int mFarbe = 80;
@@ -52,7 +52,7 @@ void setup() {
   
 
   // Player - MH vorbereiten
-  DmxSimple.write(1, kPan1); //Pan
+  /*DmxSimple.write(1, kPan1); //Pan
   DmxSimple.write(2, kPan2); //Panfeintuning
   DmxSimple.write(3, kTilt1); //Tilt
   DmxSimple.write(4, kTilt2); //Tiltfeintuning
@@ -62,7 +62,7 @@ void setup() {
   DmxSimple.write(18, kIris); //Iris
   DmxSimple.write(22, kFokus); //Schärfe
 
-  // Computer - MH vorbereiten
+  // Random  - MH vorbereiten
   DmxSimple.write(33, mPan1); //Pan
   DmxSimple.write(34, mPan2); //Panfeintuning
   DmxSimple.write(35, mTilt1); //Tilt
@@ -71,7 +71,7 @@ void setup() {
   DmxSimple.write(40, mShutter); //Shutter
   DmxSimple.write(41, mFarbe); //Farbe
   DmxSimple.write(50, mIris); //Iris
-  DmxSimple.write(54, mFokus); //Schärfe
+  DmxSimple.write(54, mFokus); //Schärfe*/
 
   // Die Ein- und Ausschaltwerte für die arduinointerne LED sind im UTF8 Format, da die Bluetooth LE Datenübertragung von Android zum Bluetooth Modul nur Werte in Form eines ByteArrays nach UTF Standard annimmt.
   ON = "111110";  // Ursprünglicher Wert in Android Studio zum Einschalten der LED war "on", dessen Wert in der UTF8 Tabelle 49 ist.
@@ -92,8 +92,41 @@ void loop() {
   
   if (BTSerial.available()) {
     data = BTSerial.read();
-    Serial.println("data: " + data);
-    if (data.toInt() <=57 && data.toInt() >= 48){
+    //Serial.println("data: " + data);
+    if (counter == 0){
+      kPan1 = data;
+      counter +=1;
+    }
+    else if (counter == 1){
+      kPan2 = data;
+      counter +=1;
+    }
+    else if (counter == 2){
+      kTilt1 = data;
+      counter +=1;
+    }
+    else if (counter == 3){
+      kTilt2 = data;
+      counter +=1;
+    }
+    else if (counter == 4){
+      mPan1 = data;
+      counter +=1;
+    }
+    else if (counter == 5){
+      mPan2 = data;
+      counter +=1;
+    }
+    else if (counter == 6){
+      mTilt1 = data;
+      counter +=1;
+    }
+    else if (counter == 7){
+      mTilt2 = data;
+      counter = 0;
+    }
+    
+    /*if (data.toInt() <=57 && data.toInt() >= 48){
       if (counter == 0){
         playerHeadlightBeamViewCurrentX += map(data.toInt(), 48,57,0,9);
         data = "";
@@ -110,14 +143,19 @@ void loop() {
         randomHeadlightBeamViewCurrentY += map(data.toInt(), 48,57,0,9);
         data = "";
       }
-    }
+    }*/
 
-    Serial.println("playerHeadlightBeamViewCurrentX: " + playerHeadlightBeamViewCurrentX);
-    Serial.println("playerHeadlightBeamViewCurrentY: " + playerHeadlightBeamViewCurrentY);
-    Serial.println("randomHeadlightBeamViewCurrentX: " + randomHeadlightBeamViewCurrentX);
-    Serial.println("randomHeadlightBeamViewCurrentY: " + randomHeadlightBeamViewCurrentY);
+    Serial.println("kPan1: " + kPan1);
+    Serial.println("kPan2: " + kPan2);
+    Serial.println("kTilt1: " + kTilt1);
+    Serial.println("kTilt2: " + kTilt2);
+
+    Serial.println("mPan1: " + mPan1);
+    Serial.println("mPan2: " + mPan2);
+    Serial.println("mTilt1: " + mTilt1);
+    Serial.println("mTilt2: " + mTilt2);
     
-    if (data.equals(ESCAPE_CHARACTER)){
+   /*if (data.equals(ESCAPE_CHARACTER)){
       Serial.println("ESCAPED");
       data = "";
       counter +=1;
@@ -126,7 +164,7 @@ void loop() {
         resetCoordinates();
         counter = 0;
       }
-    }
+    }*/
 
    // Code um die BluetoothLED ein und auszuschalten
     /*if (data.equals(ON)){
@@ -139,7 +177,6 @@ void loop() {
       data = "";
     }*/
   }
-  data = "";
 }
 
 void resetCoordinates(){
@@ -153,7 +190,7 @@ void sendDataToDMX(){
   // Lampe manuell einmal starten
   // Bluetoothwerte auslesen und in Variable schreiben
   
-  DmxSimple.write(1, kPan1); //Pan
+  /*DmxSimple.write(1, kPan1); //Pan
   DmxSimple.write(2, kPan2); //Panfeintuning
   DmxSimple.write(3, kTilt1); //Tilt
   DmxSimple.write(4,kTilt2); //Tiltfeintuning
@@ -165,7 +202,7 @@ void sendDataToDMX(){
   DmxSimple.write(35, kTilt1); //Tilt
   DmxSimple.write(36,kTilt2); //Tiltfeintuning
   DmxSimple.write(39, kDimmer); //Dimmer
-  DmxSimple.write(41, kFarbe); //Farbe
+  DmxSimple.write(41, kFarbe); //Farbe*/
 
   /*if (data.equals("49")){
       kTilt1 = 130;
