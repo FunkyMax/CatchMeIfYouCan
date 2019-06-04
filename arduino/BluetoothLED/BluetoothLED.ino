@@ -1,8 +1,11 @@
-#include <DmxSimple.h>
+#include <DMXSerial.h>
 
-#include <SoftwareSerial.h>
+//#include <DmxSimple.h>
+
+//#include <Softwar eSerial.h>
 #define BTSerial Serial1
 #define BAUD 115200
+
 // Arduino Variablen
 int counter;
 int data;
@@ -12,67 +15,69 @@ String ON;
 String OFF;
 
 // Player - MH DMX Variablen
-String kPan1 = "43";
-String kPan2 = "0";
-String kTilt1 = "45";
-String kTilt2 = "0";
-int kDimmer = 100;
+int kPan1 = 43;
+int kPan2 = 0;
+int kTilt1 = 130;
+int kTilt2 = 0;
+int kDimmer = 50;
 int kShutter = 30;
 int kFarbe = 160;
-int kIris = 4;
+int kIris = 200;
 int kFokus = 0;
 
 // Computer - MH DMX Variablen
-String mPan1 = "42";
-String mPan2 = "0";
-String mTilt1 = "45";
-String mTilt2 = "0";
-int mDimmer = 50;
+int mPan1 = 42;
+int mPan2 = 0;
+int mTilt1 = 45;
+int mTilt2 = 0;
+int mDimmer = 30;
 int mShutter = 30;
 int mFarbe = 80;
-int mIris = 4;
+int mIris = 200;
 int mFokus = 10;
 
 void setup() {
   // Arduino vorbereiten
-  Serial.begin(BAUD);
+  //Serial.begin(BAUD);
   BTSerial.begin(BAUD);
 
   // MH am Arduino registieren
   pinMode(2, OUTPUT);
   digitalWrite(2,HIGH);
-  DmxSimple.usePin(36);
+  //DmxSimple.usePin(36);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
+  DMXSerial.init(DMXController);
   
 
   // Player - MH vorbereiten
-  /*DmxSimple.write(1, kPan1); //Pan
-  DmxSimple.write(2, kPan2); //Panfeintuning
-  DmxSimple.write(3, kTilt1); //Tilt
-  DmxSimple.write(4, kTilt2); //Tiltfeintuning
-  DmxSimple.write(7, kDimmer); //Dimmer
-  DmxSimple.write(8, kShutter); //Shutter
-  DmxSimple.write(9, kFarbe); //Farbe
-  DmxSimple.write(18, kIris); //Iris
-  DmxSimple.write(22, kFokus); //Schärfe
+  DMXSerial.write(62, 45);
+  sendDataToDMX();
+  /*DMXSerial.write(1, kPan1); //Pan
+  DMXSerial.write(2, kPan2); //Panfeintuning
+  DMXSerial.write(3, kTilt1); //Tilt
+  DMXSerial.write(4, kTilt2); //Tiltfeintuning
+  DMXSerial.write(7, kDimmer); //Dimmer
+  DMXSerial.write(8, kShutter); //Shutter
+  DMXSerial.write(9, kFarbe); //Farbe
+  DMXSerial.write(18, kIris); //Iris
+  DMXSerial.write(22, kFokus); //Schärfe
 
   // Random  - MH vorbereiten
-  DmxSimple.write(33, mPan1); //Pan
-  DmxSimple.write(34, mPan2); //Panfeintuning
-  DmxSimple.write(35, mTilt1); //Tilt
-  DmxSimple.write(36, mTilt2); //Tiltfeintuning
-  DmxSimple.write(39, mDimmer); //Dimmer
-  DmxSimple.write(40, mShutter); //Shutter
-  DmxSimple.write(41, mFarbe); //Farbe
-  DmxSimple.write(50, mIris); //Iris
-  DmxSimple.write(54, mFokus); //Schärfe*/
+  DMXSerial.write(33, mPan1); //Pan
+  DMXSerial.write(34, mPan2); //Panfeintuning
+  DMXSerial.write(35, mTilt1); //Tilt
+  DMXSerial.write(36, mTilt2); //Tiltfeintuning
+  DMXSerial.write(39, mDimmer); //Dimmer
+  DMXSerial.write(40, mShutter); //Shutter
+  DMXSerial.write(41, mFarbe); //Farbe
+  DMXSerial.write(50, mIris); //Iris
+  DMXSerial.write(54, mFokus); //Schärfe*/
 
   // Die Ein- und Ausschaltwerte für die arduinointerne LED sind im UTF8 Format, da die Bluetooth LE Datenübertragung von Android zum Bluetooth Modul nur Werte in Form eines ByteArrays nach UTF Standard annimmt.
   ON = "111110";  // Ursprünglicher Wert in Android Studio zum Einschalten der LED war "on", dessen Wert in der UTF8 Tabelle 49 ist.
   OFF = "111102102"; // Ursprünglicher Wert in Android Studio zum Ausschalten der LED war "off", dessen Wert in der UTF8 Tabelle 48 ist.
-  ESCAPE_CHARACTER = "126"; // Escape Character, der als Tilde "~" zum Bluetooth Modul geschickt wird. Dessen Wert in der UTF8 Tabelle ist 126.
-  counter = -1;
+  counter = -9;
 }
 
 void loop() {
@@ -122,16 +127,17 @@ void loop() {
     }
     else if (counter == 7){
       mTilt2 = data;
+      sendDataToDMX();
       counter = 0;
-      Serial.println("kPan1: " + kPan1);
-      Serial.println("kPan2: " + kPan2);
-      Serial.println("kTilt1: " + kTilt1);
-      Serial.println("kTilt2: " + kTilt2);
+      /*Serial.println(kPan1);
+      Serial.println(kPan2);
+      Serial.println(kTilt1);
+      Serial.println(kTilt2);
 
-      Serial.println("mPan1: " + mPan1);
-      Serial.println("mPan2: " + mPan2);
-      Serial.println("mTilt1: " + mTilt1);
-      Serial.println("mTilt2: " + mTilt2);
+      Serial.println(mPan1);
+      Serial.println(mPan2);
+      Serial.println(mTilt1);
+      Serial.println(mTilt2);*/
     }
 
    // Code um die BluetoothLED ein und auszuschalten
@@ -151,19 +157,24 @@ void sendDataToDMX(){
   // Lampe manuell einmal starten
   // Bluetoothwerte auslesen und in Variable schreiben
   
-  /*DmxSimple.write(1, kPan1); //Pan
-  DmxSimple.write(2, kPan2); //Panfeintuning
-  DmxSimple.write(3, kTilt1); //Tilt
-  DmxSimple.write(4,kTilt2); //Tiltfeintuning
-  DmxSimple.write(7, kDimmer); //Dimmer
-  DmxSimple.write(9, kFarbe); //Farbe
+  DMXSerial.write(1, kPan1); //Pan
+  DMXSerial.write(2, kPan2); //Panfeintuning
+  DMXSerial.write(3, kTilt1); //Tilt
+  DMXSerial.write(4, kTilt2); //Tiltfeintuning
+  DMXSerial.write(5, 12);     // Motorgeschwindigkeit
+  DMXSerial.write(7, kDimmer); //Dimmer
+  DMXSerial.write(8, 30);      // Shutter
+  DMXSerial.write(9, kFarbe); //Farbe
+  
 
-  DmxSimple.write(33, kPan1); //Pan
-  DmxSimple.write(34, kPan2); //Panfeintuning
-  DmxSimple.write(35, kTilt1); //Tilt
-  DmxSimple.write(36,kTilt2); //Tiltfeintuning
-  DmxSimple.write(39, kDimmer); //Dimmer
-  DmxSimple.write(41, kFarbe); //Farbe*/
+  DMXSerial.write(26, mPan1); //Pan
+  DMXSerial.write(27, mPan2); //Panfeintuning
+  DMXSerial.write(28, mTilt1); //Tilt
+  DMXSerial.write(29, mTilt2); //Tiltfeintuning
+  DMXSerial.write(30, 12);      // Motorgeschwindigkeit
+  DMXSerial.write(32, mDimmer); //Dimmer
+  DMXSerial.write(33, 30);      // Shutter
+  DMXSerial.write(34, mFarbe); //Farbe
 
   /*if (data.equals("49")){
       kTilt1 = 130;

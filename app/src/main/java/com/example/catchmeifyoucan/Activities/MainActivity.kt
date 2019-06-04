@@ -63,14 +63,14 @@ class MainActivity : AppCompatActivity(){
     private val randomHeadlightBeamViewRunnable = object : Runnable {
         override fun run() {
             gameController.moveRandomHeadlightBeamView(randomHeadlightBeamView)
-            randomHeadlightBeamViewHandler.postDelayed(this, 800)
+            randomHeadlightBeamViewHandler.postDelayed(this, 1300)
         }
     }
 
     private val viewsCoordinatesTranslatorRunnable = object : Runnable {
         override fun run() {
             viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
-            viewsCoordinatesTranslatorHandler.postDelayed(this, 50)
+            viewsCoordinatesTranslatorHandler.postDelayed(this, 100)
         }
     }
 

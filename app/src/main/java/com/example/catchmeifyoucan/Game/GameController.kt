@@ -14,7 +14,7 @@ class GameController{
     private val playerHeadlightBeamViewResetX = 700f
     private val playerHeadlightBeamViewResetY = 2300f
     private val playerHeadlightBeamAnimationDuration= 34L
-    private val randomHeadlightBeamAnimationDuration = 1100L
+    private val randomHeadlightBeamAnimationDuration = 1600L
     private val randomHeadlightMinDistanceToNextPosition = 750
     private val randomHeadlightMaxDistanceToNextPosition = 1500
     private val random = Random

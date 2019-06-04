@@ -13,8 +13,8 @@ const val power = 2.0
 const val sixteenToEightBitConverter = 256
 
 const val distanceToWall = 300.0
-const val wallWidth = 400
-const val wallHeight = 300
+const val wallWidth = 300
+const val wallHeight = 170
 const val displayWidth = 2860
 const val displayHeight = 1340
 
