@@ -32,10 +32,10 @@ class ViewsCoordinatesTranslator() {
     private var playerHeadlightBeamViewCurrentPixelY = 0
     private var playerHeadlightBeamViewCurrentWallY = 0.0
 
-    private var randomHeadlightBeamViewCurrentPixelX = 0
-    private var randomHeadlightBeamViewCurrentWallX = 0.0
-    private var randomHeadlightBeamViewCurrentPixelY = 0
-    private var randomHeadlightBeamViewCurrentWallY = 0.0
+    private var randomBlueHeadlightBeamViewCurrentPixelX = 0
+    private var randomBlueHeadlightBeamViewCurrentWallX = 0.0
+    private var randomBlueHeadlightBeamViewCurrentPixelY = 0
+    private var randomBlueHeadlightBeamViewCurrentWallY = 0.0
 
     fun translateCoordinatesAndSendToBluetoothModule() {
         getViewsCoordinatesInPixels()
@@ -47,8 +47,8 @@ class ViewsCoordinatesTranslator() {
     private fun getViewsCoordinatesInPixels() {
         playerHeadlightBeamViewCurrentPixelX = gameController.getPlayerHeadlightBeamViewCurrentX()
         playerHeadlightBeamViewCurrentPixelY = gameController.getPlayerHeadlightBeamViewCurrentY()
-        randomHeadlightBeamViewCurrentPixelX = gameController.getRandomHeadlightBeamViewCurrentX()
-        randomHeadlightBeamViewCurrentPixelY = gameController.getRandomHeadlightBeamViewCurrentY()
+        randomBlueHeadlightBeamViewCurrentPixelX = gameController.getRandomBlueHeadlightBeamViewCurrentX()
+        randomBlueHeadlightBeamViewCurrentPixelY = gameController.getRandomBlueHeadlightBeamViewCurrentY()
     }
 
     private fun transformPixelCoordinatesIntoWallCoordinates() {
@@ -56,10 +56,10 @@ class ViewsCoordinatesTranslator() {
             (((playerHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - playerMHOffsetX)
         playerHeadlightBeamViewCurrentWallY =
             (((-playerHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
-        randomHeadlightBeamViewCurrentWallX =
-            (((randomHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomMHOffsetX)
-        randomHeadlightBeamViewCurrentWallY =
-            (((-randomHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
+        randomBlueHeadlightBeamViewCurrentWallX =
+            (((randomBlueHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomMHOffsetX)
+        randomBlueHeadlightBeamViewCurrentWallY =
+            (((-randomBlueHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
     }
 
     private fun calculateDMXValuesFromPanAndTiltValues() {
@@ -83,19 +83,19 @@ class ViewsCoordinatesTranslator() {
                     )
         ) * radToDeg
         val randomDegreesPan = Math.asin(
-            randomHeadlightBeamViewCurrentWallX /
+            randomBlueHeadlightBeamViewCurrentWallX /
                     Math.sqrt(
-                        Math.pow(randomHeadlightBeamViewCurrentWallX, power) + Math.pow(
-                            randomHeadlightBeamViewCurrentWallY,
+                        Math.pow(randomBlueHeadlightBeamViewCurrentWallX, power) + Math.pow(
+                            randomBlueHeadlightBeamViewCurrentWallY,
                             power
                         ) + Math.pow(distanceToWall, power)
                     )
         ) * radToDeg
         val randomDegreesTilt = Math.asin(
-            randomHeadlightBeamViewCurrentWallY /
+            randomBlueHeadlightBeamViewCurrentWallY /
                     Math.sqrt(
-                        Math.pow(randomHeadlightBeamViewCurrentWallX, power) + Math.pow(
-                            randomHeadlightBeamViewCurrentWallY,
+                        Math.pow(randomBlueHeadlightBeamViewCurrentWallX, power) + Math.pow(
+                            randomBlueHeadlightBeamViewCurrentWallY,
                             power
                         ) + Math.pow(distanceToWall, power)
                     )

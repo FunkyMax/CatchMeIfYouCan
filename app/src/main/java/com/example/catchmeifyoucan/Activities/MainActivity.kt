@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(){
 
     // Initializing the necessary Handlers
     private val playerHeadlightBeamViewHandler = Handler()
-    private val randomHeadlightBeamViewHandler = Handler()
+    private val randomBlueHeadlightBeamViewHandler = Handler()
     private val viewsCoordinatesTranslatorHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(){
         //ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
 
         setupBluetoothConnection()
-        randomHeadlightBeamViewRunnable.run()
+        randomBlueHeadlightBeamViewRunnable.run()
         playerHeadlightBeamViewRunnable.run()
         viewsCoordinatesTranslatorRunnable.run();
     }
@@ -55,15 +55,15 @@ class MainActivity : AppCompatActivity(){
     private val playerHeadlightBeamViewRunnable = object : Runnable {
         override fun run() {
             gameController.movePlayerHeadlightBeamViewWithJoystick(joystickView, playerHeadlightBeamView)
-            gameController.collisionDetection(playerHeadlightBeamView, randomHeadlightBeamView)
+            gameController.collisionDetection(playerHeadlightBeamView, randomBlueHeadlightBeamView)
             playerHeadlightBeamViewHandler.postDelayed(this, 17)
         }
     }
 
-    private val randomHeadlightBeamViewRunnable = object : Runnable {
+    private val randomBlueHeadlightBeamViewRunnable = object : Runnable {
         override fun run() {
-            gameController.moveRandomHeadlightBeamView(randomHeadlightBeamView)
-            randomHeadlightBeamViewHandler.postDelayed(this, 1300)
+            gameController.moveRandomHeadlightBeamView(randomBlueHeadlightBeamView)
+            randomBlueHeadlightBeamViewHandler.postDelayed(this, 1300)
         }
     }
 

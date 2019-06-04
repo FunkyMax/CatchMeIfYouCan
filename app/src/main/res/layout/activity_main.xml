@@ -34,10 +34,10 @@
             android:layout_marginBottom="48dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="156dp" app:layout_constraintHorizontal_bias="0.189"
             app:layout_constraintVertical_bias="0.0"/>
-    <com.example.catchmeifyoucan.views.RandomHeadlightBeamView
+    <com.example.catchmeifyoucan.views.RandomBlueHeadlightBeamView
             android:layout_width="60px"
             android:layout_height="60px"
-            android:id="@+id/randomHeadlightBeamView"
+            android:id="@+id/randomBlueHeadlightBeamView"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="352dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="193dp"

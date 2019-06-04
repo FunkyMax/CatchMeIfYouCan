@@ -3,7 +3,7 @@ package com.example.catchmeifyoucan.Game
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import com.example.catchmeifyoucan.views.PlayerHeadlightBeamView
-import com.example.catchmeifyoucan.views.RandomHeadlightBeamView
+import com.example.catchmeifyoucan.views.RandomBlueHeadlightBeamView
 import io.github.controlwear.virtual.joystick.android.JoystickView
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -14,7 +14,7 @@ class GameController{
     private val playerHeadlightBeamViewResetX = 700f
     private val playerHeadlightBeamViewResetY = 2300f
     private val playerHeadlightBeamAnimationDuration= 34L
-    private val randomHeadlightBeamAnimationDuration = 1600L
+    private val randomBlueHeadlightBeamAnimationDuration = 1600L
     private val randomHeadlightMinDistanceToNextPosition = 750
     private val randomHeadlightMaxDistanceToNextPosition = 1500
     private val random = Random
@@ -28,33 +28,40 @@ class GameController{
     private var playerHeadlightBeamViewNextX = 0f
     private var playerHeadlightBeamViewNextY = 0f
 
-    private val randomHeadlightBeamViewCurrentCoordinates = IntArray(2)
-    private var randomHeadlightBeamViewCurrentX = 0f
-    private var randomHeadlightBeamViewCurrentY = 0f
-    private var randomHeadlightBeamViewNextX = 0f
-    private var randomHeadlightBeamViewNextY = 0f
+    private val randomBlueHeadlightBeamViewCurrentCoordinates = IntArray(2)
+    private var randomBlueHeadlightBeamViewCurrentX = 0f
+    private var randomBlueHeadlightBeamViewCurrentY = 0f
+    private var randomBlueHeadlightBeamViewNextX = 0f
+    private var randomBlueHeadlightBeamViewNextY = 0f
 
     private lateinit var animatorSet : AnimatorSet
     private lateinit var playerHeadlightBeamViewAnimationDirectionLengthX : ObjectAnimator
     private lateinit var playerHeadlightBeamViewAnimationDirectionLengthY : ObjectAnimator
 
-    fun moveRandomHeadlightBeamView(randomHeadlightBeamView: RandomHeadlightBeamView){
+    fun moveRandomHeadlightBeamView(randomBlueHeadlightBeamView: RandomBlueHeadlightBeamView) {
         for (i in 0..10){
-            randomHeadlightBeamViewNextX = random.nextFloat() * displayWidthBorder
-            randomHeadlightBeamViewNextY = random.nextFloat() * displayHeightBorder
+            randomBlueHeadlightBeamViewNextX = random.nextFloat() * displayWidthBorder
+            randomBlueHeadlightBeamViewNextY = random.nextFloat() * displayHeightBorder
 
-            val distance = (Math.sqrt(Math.pow(randomHeadlightBeamViewNextX.toDouble() - randomHeadlightBeamView.x, 2.0) + Math.pow(randomHeadlightBeamViewNextY - randomHeadlightBeamView.y.toDouble(), 2.0)))
+            val distance = (Math.sqrt(
+                Math.pow(
+                    randomBlueHeadlightBeamViewNextX.toDouble() - randomBlueHeadlightBeamView.x,
+                    2.0
+                ) + Math.pow(randomBlueHeadlightBeamViewNextY - randomBlueHeadlightBeamView.y.toDouble(), 2.0)
+            ))
             if (distance > randomHeadlightMinDistanceToNextPosition && distance < randomHeadlightMaxDistanceToNextPosition) {
                 break
             }
         }
 
-        val animationX : ObjectAnimator  = ObjectAnimator.ofFloat(randomHeadlightBeamView, "x", randomHeadlightBeamViewNextX)
-        val animationY : ObjectAnimator  = ObjectAnimator.ofFloat(randomHeadlightBeamView, "y", randomHeadlightBeamViewNextY)
+        val animationX: ObjectAnimator =
+            ObjectAnimator.ofFloat(randomBlueHeadlightBeamView, "x", randomBlueHeadlightBeamViewNextX)
+        val animationY: ObjectAnimator =
+            ObjectAnimator.ofFloat(randomBlueHeadlightBeamView, "y", randomBlueHeadlightBeamViewNextY)
 
         animatorSet = AnimatorSet()
         animatorSet.playTogether(animationX,animationY)
-        animatorSet.duration = randomHeadlightBeamAnimationDuration
+        animatorSet.duration = randomBlueHeadlightBeamAnimationDuration
         animatorSet.start()
     }
 
@@ -103,21 +110,24 @@ class GameController{
 
 
     //TODO: Collision Detection muss noch angepasst werden. Erst nach 3 menschlich wahrgenommenen Kollisionen soll die playerHeadlightBeamView Position zurückgesetzt werden.
-    fun collisionDetection(playerHeadlightBeamView: PlayerHeadlightBeamView, randomHeadlightBeamView: RandomHeadlightBeamView){
+    fun collisionDetection(
+        playerHeadlightBeamView: PlayerHeadlightBeamView,
+        randomBlueHeadlightBeamView: RandomBlueHeadlightBeamView
+    ) {
         playerHeadlightBeamView.getLocationOnScreen(playerHeadlightBeamViewCurrentCoordinates)
-        randomHeadlightBeamView.getLocationOnScreen(randomHeadlightBeamViewCurrentCoordinates)
+        randomBlueHeadlightBeamView.getLocationOnScreen(randomBlueHeadlightBeamViewCurrentCoordinates)
 
         //Getting the current coordinates of the 2 views.
         playerHeadlightBeamViewCurrentX = playerHeadlightBeamViewCurrentCoordinates[0].toFloat()
         playerHeadlightBeamViewCurrentY = playerHeadlightBeamViewCurrentCoordinates[1].toFloat()
-        randomHeadlightBeamViewCurrentX = randomHeadlightBeamViewCurrentCoordinates[0].toFloat()
-        randomHeadlightBeamViewCurrentY = randomHeadlightBeamViewCurrentCoordinates[1].toFloat()
+        randomBlueHeadlightBeamViewCurrentX = randomBlueHeadlightBeamViewCurrentCoordinates[0].toFloat()
+        randomBlueHeadlightBeamViewCurrentY = randomBlueHeadlightBeamViewCurrentCoordinates[1].toFloat()
 
         val distance = Math.sqrt(
             Math.pow(
-                playerHeadlightBeamViewCurrentX.toDouble() - randomHeadlightBeamViewCurrentX,
+                playerHeadlightBeamViewCurrentX.toDouble() - randomBlueHeadlightBeamViewCurrentX,
                 2.0
-            ) + Math.pow(playerHeadlightBeamViewCurrentY - randomHeadlightBeamViewCurrentY.toDouble(), 2.0)
+            ) + Math.pow(playerHeadlightBeamViewCurrentY - randomBlueHeadlightBeamViewCurrentY.toDouble(), 2.0)
         )
         if(distance <= 50 ){
             //println(distance)
@@ -151,11 +161,11 @@ class GameController{
         return playerHeadlightBeamViewCurrentY.roundToInt()
     }
 
-    fun getRandomHeadlightBeamViewCurrentX(): Int {
-        return randomHeadlightBeamViewCurrentX.roundToInt()
+    fun getRandomBlueHeadlightBeamViewCurrentX(): Int {
+        return randomBlueHeadlightBeamViewCurrentX.roundToInt()
     }
 
-    fun getRandomHeadlightBeamViewCurrentY(): Int {
-        return randomHeadlightBeamViewCurrentY.roundToInt()
+    fun getRandomBlueHeadlightBeamViewCurrentY(): Int {
+        return randomBlueHeadlightBeamViewCurrentY.roundToInt()
     }
 }

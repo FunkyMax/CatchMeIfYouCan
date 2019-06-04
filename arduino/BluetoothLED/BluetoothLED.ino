@@ -1,8 +1,5 @@
 #include <DMXSerial.h>
-
-//#include <DmxSimple.h>
-
-//#include <Softwar eSerial.h>
+//#include <SoftwareSerial.h>
 #define BTSerial Serial1
 #define BAUD 115200
 
@@ -19,7 +16,7 @@ int kPan1 = 43;
 int kPan2 = 0;
 int kTilt1 = 130;
 int kTilt2 = 0;
-int kDimmer = 50;
+int kDimmer = 30;
 int kShutter = 30;
 int kFarbe = 160;
 int kIris = 200;
@@ -28,7 +25,7 @@ int kFokus = 0;
 // Computer - MH DMX Variablen
 int mPan1 = 42;
 int mPan2 = 0;
-int mTilt1 = 45;
+int mTilt1 = 130;
 int mTilt2 = 0;
 int mDimmer = 30;
 int mShutter = 30;
@@ -42,8 +39,8 @@ void setup() {
   BTSerial.begin(BAUD);
 
   // MH am Arduino registieren
-  pinMode(2, OUTPUT);
-  digitalWrite(2,HIGH);
+  pinMode(2, OUTPUT);     // Digital pin 2 is declared as Output since the second MH is connected to that pin.
+  digitalWrite(2,HIGH);   // We need high Level (5V) for the second MH.
   //DmxSimple.usePin(36);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
@@ -127,7 +124,7 @@ void loop() {
     }
     else if (counter == 7){
       mTilt2 = data;
-      sendDataToDMX();
+      //sendDataToDMX();
       counter = 0;
       /*Serial.println(kPan1);
       Serial.println(kPan2);
