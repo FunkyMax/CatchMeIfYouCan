@@ -14,14 +14,16 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
-private const val power = 2.0
-private const val collisionDistance = 50
+private const val displayWidthBorder = 2860
+private const val displayHeightBorder = 1340
+private const val collisionMaxDistance = 50
 private const val collisionForbiddenDuration = 2000L
+private const val gameDuration = 45000L
+private const val randomYellowAppearanceDuration = 7500L
+private const val power = 2.0
 
 class GameController{
     // game specific fields
-    private val displayWidthBorder = 2860
-    private val displayHeightBorder = 1340
     private val random = Random
     private var collisionAllowed = true
     private var score = 0
@@ -37,8 +39,6 @@ class GameController{
     private var playerHeadlightBeamViewNextY = 0f
     private lateinit var playerHeadlightBeamViewAnimationDirectionLengthX: ObjectAnimator
     private lateinit var playerHeadlightBeamViewAnimationDirectionLengthY: ObjectAnimator
-    //private val playerHeadlightBeamViewResetX = 700f
-    //private val playerHeadlightBeamViewResetY = 2300f
 
     // randomBlueHeadlightBeam specific fields
     private val randomBlueHeadlightBeamAnimationDuration = 2000L
@@ -191,13 +191,13 @@ class GameController{
             )
 
         if (collisionAllowed) {
-            if (distanceBetweenPlayerAndRandomBlueHeadlightBeamView <= collisionDistance) {
+            if (distanceBetweenPlayerAndRandomBlueHeadlightBeamView <= collisionMaxDistance) {
                 score += 1
                 disableCollisions()
-            } else if (distanceBetweenPlayerAndRandomYellowHeadlightBeamView <= collisionDistance) {
+            } else if (distanceBetweenPlayerAndRandomYellowHeadlightBeamView <= collisionMaxDistance && randomYellowHeadlightBeamView.visibility == 0) {
                 score += 3
                 disableCollisions()
-            } else if (distanceBetweenPlayerAndRandomRedHeadlightBeamView <= collisionDistance) {
+            } else if (distanceBetweenPlayerAndRandomRedHeadlightBeamView <= collisionMaxDistance) {
                 score -= 2
                 disableCollisions()
             }

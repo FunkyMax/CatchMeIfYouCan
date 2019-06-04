@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(){
     // Initializing the necessary Handlers
     private val playerHeadlightBeamViewHandler = Handler()
     private val randomHeadlightBeamViewsHandler = Handler()
+    private val randomYellowHeadlightBeamViewVisibilityHandler = Handler()
     private val viewsCoordinatesTranslatorHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +50,8 @@ class MainActivity : AppCompatActivity(){
         setupBluetoothConnection()
         playerHeadlightBeamViewRunnable.run()
         randomBlueHeadlightBeamViewRunnable.run()
-        randomYellowHeadlightBeamViewRunnable.run()
+        //randomYellowHeadlightBeamViewRunnable.run()
+        randomYellowHeadlightBeamViewVisibilityRunnable.run()
         randomRedHeadlightBeamViewRunnable.run()
         viewsCoordinatesTranslatorRunnable.run();
     }
@@ -85,6 +87,14 @@ class MainActivity : AppCompatActivity(){
         override fun run() {
             gameController.moveRandomHeadlightBeamView(randomRedHeadlightBeamView)
             randomHeadlightBeamViewsHandler.postDelayed(this, 1100)
+        }
+    }
+
+    private val randomYellowHeadlightBeamViewVisibilityRunnable = object : Runnable {
+        override fun run() {
+            val visibility: Int = if (randomYellowHeadlightBeamView.visibility == 0) 8 else 0
+            randomYellowHeadlightBeamView.visibility = visibility
+            randomHeadlightBeamViewsHandler.postDelayed(this, 11000)
         }
     }
 
