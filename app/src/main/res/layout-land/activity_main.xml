@@ -49,5 +49,13 @@
             android:layout_marginStart="323dp" android:layout_marginTop="41dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="323dp" android:visibility="invisible"/>
+    <com.example.catchmeifyoucan.views.RandomYellowHeadlightBeamView
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:id="@+id/randomYellowHeadlightBeamView"
+            android:layout_marginBottom="59dp" app:layout_constraintBottom_toTopOf="@+id/joystickView"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="197dp"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="70dp"
+            app:layout_constraintEnd_toStartOf="@+id/ledCheckBoxID" android:layout_marginEnd="103dp"/>
 </android.support.constraint.ConstraintLayout>
 

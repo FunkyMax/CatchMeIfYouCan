@@ -5,18 +5,24 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-const val DELAY = 50L;
+const val DELAY = 33L;
 
 class DataController {
 
     private val bluetoothLeService = MainActivity.bluetoothLeService
 
-    fun sendDataToBluetoothModule(playerDMXValuesArray: ByteArray, randomDMXValuesArray: ByteArray) {
+    fun sendDataToBluetoothModule(
+        playerDMXValuesArray: ByteArray,
+        randomBlueDMXValuesArray: ByteArray,
+        randomYellowDMXValuesArray: ByteArray
+    ) {
         GlobalScope.launch{
             delay(DELAY)
             bluetoothLeService.write(playerDMXValuesArray)
             delay(DELAY)
-            bluetoothLeService.write(randomDMXValuesArray)
+            bluetoothLeService.write(randomBlueDMXValuesArray)
+            delay(DELAY)
+            bluetoothLeService.write(randomYellowDMXValuesArray)
         }
     }
 }

@@ -2,67 +2,83 @@ package com.example.catchmeifyoucan.Game
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.view.View
 import com.example.catchmeifyoucan.views.PlayerHeadlightBeamView
 import com.example.catchmeifyoucan.views.RandomBlueHeadlightBeamView
+import com.example.catchmeifyoucan.views.RandomYellowHeadlightBeamView
 import io.github.controlwear.virtual.joystick.android.JoystickView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
+private const val power = 2.0
+private const val collisionDistance = 50
+private const val collisionForbiddenDuration = 2000L
+
 class GameController{
+    // game specific fields
     private val displayWidthBorder = 2860
     private val displayHeightBorder = 1340
-    private val playerHeadlightBeamViewResetX = 700f
-    private val playerHeadlightBeamViewResetY = 2300f
-    private val playerHeadlightBeamAnimationDuration= 34L
-    private val randomBlueHeadlightBeamAnimationDuration = 1600L
-    private val randomHeadlightMinDistanceToNextPosition = 750
-    private val randomHeadlightMaxDistanceToNextPosition = 1500
     private val random = Random
-
-    private var catchCounter = 0
+    private var collisionAllowed = true
+    private var score = 0
     private var strengthFromJoystick = 0f
+    private lateinit var animatorSet: AnimatorSet
 
+    // player specific fields
+    private val playerHeadlightBeamAnimationDuration = 34L
     private val playerHeadlightBeamViewCurrentCoordinates = IntArray(2)
     private var playerHeadlightBeamViewCurrentX = 0f
     private var playerHeadlightBeamViewCurrentY = 0f
     private var playerHeadlightBeamViewNextX = 0f
     private var playerHeadlightBeamViewNextY = 0f
+    private lateinit var playerHeadlightBeamViewAnimationDirectionLengthX: ObjectAnimator
+    private lateinit var playerHeadlightBeamViewAnimationDirectionLengthY: ObjectAnimator
+    //private val playerHeadlightBeamViewResetX = 700f
+    //private val playerHeadlightBeamViewResetY = 2300f
 
+    // randomBlueHeadlightBeam specific fields
+    private val randomBlueHeadlightBeamAnimationDuration = 1600L
     private val randomBlueHeadlightBeamViewCurrentCoordinates = IntArray(2)
     private var randomBlueHeadlightBeamViewCurrentX = 0f
     private var randomBlueHeadlightBeamViewCurrentY = 0f
     private var randomBlueHeadlightBeamViewNextX = 0f
     private var randomBlueHeadlightBeamViewNextY = 0f
+    private val randomBlueHeadlightMinDistanceToNextPosition = 750
+    private val randomBlueHeadlightMaxDistanceToNextPosition = 1500
 
-    private lateinit var animatorSet : AnimatorSet
-    private lateinit var playerHeadlightBeamViewAnimationDirectionLengthX : ObjectAnimator
-    private lateinit var playerHeadlightBeamViewAnimationDirectionLengthY : ObjectAnimator
+    // randomYellowHeadlightBeam specific fields
+    private val randomYellowHeadlightBeamAnimationDuration = 1200L
+    private val randomYellowHeadlightBeamViewCurrentCoordinates = IntArray(2)
+    private var randomYellowHeadlightBeamViewCurrentX = 0f
+    private var randomYellowHeadlightBeamViewCurrentY = 0f
+    private var randomYellowHeadlightBeamViewNextX = 0f
+    private var randomYellowHeadlightBeamViewNextY = 0f
+    private val randomYellowHeadlightMinDistanceToNextPosition = 750
+    private val randomYellowHeadlightMaxDistanceToNextPosition = 1500
 
-    fun moveRandomHeadlightBeamView(randomBlueHeadlightBeamView: RandomBlueHeadlightBeamView) {
-        for (i in 0..10){
-            randomBlueHeadlightBeamViewNextX = random.nextFloat() * displayWidthBorder
-            randomBlueHeadlightBeamViewNextY = random.nextFloat() * displayHeightBorder
-
-            val distance = (Math.sqrt(
-                Math.pow(
-                    randomBlueHeadlightBeamViewNextX.toDouble() - randomBlueHeadlightBeamView.x,
-                    2.0
-                ) + Math.pow(randomBlueHeadlightBeamViewNextY - randomBlueHeadlightBeamView.y.toDouble(), 2.0)
-            ))
-            if (distance > randomHeadlightMinDistanceToNextPosition && distance < randomHeadlightMaxDistanceToNextPosition) {
-                break
-            }
+    fun moveRandomHeadlightBeamView(view: View?) {
+        if (view is RandomBlueHeadlightBeamView) {
+            moveViewRandomly(
+                view,
+                randomBlueHeadlightBeamViewNextX,
+                randomBlueHeadlightBeamViewNextY,
+                randomBlueHeadlightMinDistanceToNextPosition,
+                randomBlueHeadlightMaxDistanceToNextPosition,
+                randomBlueHeadlightBeamAnimationDuration
+            )
+        } else if (view is RandomYellowHeadlightBeamView) {
+            moveViewRandomly(
+                view,
+                randomYellowHeadlightBeamViewNextX,
+                randomYellowHeadlightBeamViewNextY,
+                randomYellowHeadlightMinDistanceToNextPosition,
+                randomYellowHeadlightMaxDistanceToNextPosition,
+                randomYellowHeadlightBeamAnimationDuration
+            )
         }
-
-        val animationX: ObjectAnimator =
-            ObjectAnimator.ofFloat(randomBlueHeadlightBeamView, "x", randomBlueHeadlightBeamViewNextX)
-        val animationY: ObjectAnimator =
-            ObjectAnimator.ofFloat(randomBlueHeadlightBeamView, "y", randomBlueHeadlightBeamViewNextY)
-
-        animatorSet = AnimatorSet()
-        animatorSet.playTogether(animationX,animationY)
-        animatorSet.duration = randomBlueHeadlightBeamAnimationDuration
-        animatorSet.start()
     }
 
     fun movePlayerHeadlightBeamViewWithJoystick(joystick: JoystickView, playerHeadlightBeamView : PlayerHeadlightBeamView) {
@@ -109,36 +125,92 @@ class GameController{
     }
 
 
-    //TODO: Collision Detection muss noch angepasst werden. Erst nach 3 menschlich wahrgenommenen Kollisionen soll die playerHeadlightBeamView Position zurückgesetzt werden.
     fun collisionDetection(
         playerHeadlightBeamView: PlayerHeadlightBeamView,
-        randomBlueHeadlightBeamView: RandomBlueHeadlightBeamView
+        randomBlueHeadlightBeamView: RandomBlueHeadlightBeamView,
+        randomYellowHeadlightBeamView: RandomYellowHeadlightBeamView
     ) {
         playerHeadlightBeamView.getLocationOnScreen(playerHeadlightBeamViewCurrentCoordinates)
         randomBlueHeadlightBeamView.getLocationOnScreen(randomBlueHeadlightBeamViewCurrentCoordinates)
+        randomYellowHeadlightBeamView.getLocationOnScreen(randomYellowHeadlightBeamViewCurrentCoordinates)
 
-        //Getting the current coordinates of the 2 views.
+        //Getting the current coordinates of views.
         playerHeadlightBeamViewCurrentX = playerHeadlightBeamViewCurrentCoordinates[0].toFloat()
         playerHeadlightBeamViewCurrentY = playerHeadlightBeamViewCurrentCoordinates[1].toFloat()
         randomBlueHeadlightBeamViewCurrentX = randomBlueHeadlightBeamViewCurrentCoordinates[0].toFloat()
         randomBlueHeadlightBeamViewCurrentY = randomBlueHeadlightBeamViewCurrentCoordinates[1].toFloat()
+        randomYellowHeadlightBeamViewCurrentX = randomYellowHeadlightBeamViewCurrentCoordinates[0].toFloat()
+        randomYellowHeadlightBeamViewCurrentY = randomYellowHeadlightBeamViewCurrentCoordinates[1].toFloat()
 
-        val distance = Math.sqrt(
-            Math.pow(
-                playerHeadlightBeamViewCurrentX.toDouble() - randomBlueHeadlightBeamViewCurrentX,
-                2.0
-            ) + Math.pow(playerHeadlightBeamViewCurrentY - randomBlueHeadlightBeamViewCurrentY.toDouble(), 2.0)
-        )
-        if(distance <= 50 ){
-            //println(distance)
-            //catchCounter +=1
-            //println(catchCounter)
-            if (catchCounter == 3){
-                //println("SUCCESS")
-                playerHeadlightBeamViewCurrentX = playerHeadlightBeamViewResetX
-                playerHeadlightBeamViewCurrentY = playerHeadlightBeamViewResetY
-                catchCounter = 0
+        val distanceBetweenPlayerAndRandomBlueHeadlightBeamView =
+            Math.sqrt(
+                Math.pow(
+                    playerHeadlightBeamViewCurrentX.toDouble() - randomBlueHeadlightBeamViewCurrentX,
+                    power
+                ) + Math.pow(playerHeadlightBeamViewCurrentY - randomBlueHeadlightBeamViewCurrentY.toDouble(), power)
+            )
+
+        val distanceBetweenPlayerAndRandomYellowHeadlightBeamView =
+            Math.sqrt(
+                Math.pow(
+                    playerHeadlightBeamViewCurrentX.toDouble() - randomYellowHeadlightBeamViewCurrentX,
+                    power
+                ) + Math.pow(playerHeadlightBeamViewCurrentY - randomYellowHeadlightBeamViewCurrentY.toDouble(), power)
+            )
+
+        if (collisionAllowed) {
+            if (distanceBetweenPlayerAndRandomBlueHeadlightBeamView <= collisionDistance) {
+                score += 1
+                disableCollisions()
+            } else if (distanceBetweenPlayerAndRandomYellowHeadlightBeamView <= collisionDistance) {
+                score += 3
+                disableCollisions()
+                println(score)
             }
+        }
+    }
+
+    private fun moveViewRandomly(
+        view: View,
+        viewNextX: Float,
+        viewNextY: Float,
+        viewMinDistance: Int,
+        viewMaxDistance: Int,
+        viewAnimationDuration: Long
+    ) {
+        var viewNextX = viewNextX
+        var viewNextY = viewNextY
+        for (i in 0..10) {
+            viewNextX = random.nextFloat() * displayWidthBorder
+            viewNextY = random.nextFloat() * displayHeightBorder
+
+            val distance = (Math.sqrt(
+                Math.pow(viewNextX.toDouble() - view.x, power) + Math.pow(
+                    viewNextY.toDouble() - view.y,
+                    power
+                )
+            ))
+            if (distance > viewMinDistance && distance < viewMaxDistance) {
+                break
+            }
+        }
+
+        val animationX: ObjectAnimator =
+            ObjectAnimator.ofFloat(view, "x", viewNextX)
+        val animationY: ObjectAnimator =
+            ObjectAnimator.ofFloat(view, "y", viewNextY)
+
+        animatorSet = AnimatorSet()
+        animatorSet.playTogether(animationX, animationY)
+        animatorSet.duration = viewAnimationDuration
+        animatorSet.start()
+    }
+
+    private fun disableCollisions() {
+        collisionAllowed = false
+        GlobalScope.launch {
+            delay(collisionForbiddenDuration)
+            collisionAllowed = true
         }
     }
 
@@ -167,5 +239,13 @@ class GameController{
 
     fun getRandomBlueHeadlightBeamViewCurrentY(): Int {
         return randomBlueHeadlightBeamViewCurrentY.roundToInt()
+    }
+
+    fun getRandomYellowHeadlightBeamViewCurrentX(): Int {
+        return randomYellowHeadlightBeamViewCurrentX.roundToInt()
+    }
+
+    fun getRandomYellowHeadlightBeamViewCurrentY(): Int {
+        return randomYellowHeadlightBeamViewCurrentY.roundToInt()
     }
 }

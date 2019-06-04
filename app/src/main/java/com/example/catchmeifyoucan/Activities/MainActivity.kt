@@ -15,11 +15,11 @@ import com.example.catchmeifyoucan.Game.ViewsCoordinatesTranslator
 import com.example.catchmeifyoucan.R
 import kotlinx.android.synthetic.main.activity_main.*
 
-const val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 1
+private const val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 1
 
 class MainActivity : AppCompatActivity(){
 
-    // Making the BluetoothLeService a "static" field because the same instance is gonna be needed in a few classes. Further the BluetoothLeService can only be initialized in MainActivity because getSystemService() can only be called in here.
+    // Making the BluetoothLeService a "static" field because the same instance is gonna be needed in a few classes. Further the BluetoothLeService can only be initialized in MainActivity because getSystemService() can only be called from here.
     companion object{
         lateinit var bluetoothLeService: BluetoothLeService
         val gameController = GameController()
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(){
     // Initializing the necessary Handlers
     private val playerHeadlightBeamViewHandler = Handler()
     private val randomBlueHeadlightBeamViewHandler = Handler()
+    private val randomYellowHeadlightBeamViewHandler = Handler()
     private val viewsCoordinatesTranslatorHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity(){
 
         setupBluetoothConnection()
         randomBlueHeadlightBeamViewRunnable.run()
+        randomYellowHeadlightBeamViewRunnable.run()
         playerHeadlightBeamViewRunnable.run()
         viewsCoordinatesTranslatorRunnable.run();
     }
@@ -55,7 +57,11 @@ class MainActivity : AppCompatActivity(){
     private val playerHeadlightBeamViewRunnable = object : Runnable {
         override fun run() {
             gameController.movePlayerHeadlightBeamViewWithJoystick(joystickView, playerHeadlightBeamView)
-            gameController.collisionDetection(playerHeadlightBeamView, randomBlueHeadlightBeamView)
+            gameController.collisionDetection(
+                playerHeadlightBeamView,
+                randomBlueHeadlightBeamView,
+                randomYellowHeadlightBeamView
+            )
             playerHeadlightBeamViewHandler.postDelayed(this, 17)
         }
     }
@@ -64,6 +70,13 @@ class MainActivity : AppCompatActivity(){
         override fun run() {
             gameController.moveRandomHeadlightBeamView(randomBlueHeadlightBeamView)
             randomBlueHeadlightBeamViewHandler.postDelayed(this, 1300)
+        }
+    }
+
+    private val randomYellowHeadlightBeamViewRunnable = object : Runnable {
+        override fun run() {
+            gameController.moveRandomHeadlightBeamView(randomYellowHeadlightBeamView)
+            randomBlueHeadlightBeamViewHandler.postDelayed(this, 1000)
         }
     }
 

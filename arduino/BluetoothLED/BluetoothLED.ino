@@ -1,5 +1,5 @@
-#include <DMXSerial.h>
-//#include <SoftwareSerial.h>
+//#include <DMXSerial.h>
+#include <SoftwareSerial.h>
 #define BTSerial Serial1
 #define BAUD 115200
 
@@ -11,31 +11,53 @@ int data;
 String ON;
 String OFF;
 
-// Player - MH DMX Variablen
-int kPan1 = 43;
-int kPan2 = 0;
-int kTilt1 = 130;
-int kTilt2 = 0;
-int kDimmer = 30;
-int kShutter = 30;
-int kFarbe = 160;
-int kIris = 200;
-int kFokus = 0;
+// PlayerMH DMX Variablen
+int playerPan1 = 45;
+int playerPan2 = 0;
+int playerTilt1 = 130;
+int playerTilt2 = 0;
+int playerDimmer = 30;
+int playerShutter = 30;
+int playerFarbe = 160;
+int playerIris = 200;
+int playerFokus = 0;
 
-// Computer - MH DMX Variablen
-int mPan1 = 42;
-int mPan2 = 0;
-int mTilt1 = 130;
-int mTilt2 = 0;
-int mDimmer = 30;
-int mShutter = 30;
-int mFarbe = 80;
-int mIris = 200;
-int mFokus = 10;
+// randomBlueMH DMX Variablen
+int randomBluePan1 = 45;
+int randomBluePan2 = 0;
+int randomBlueTilt1 = 130;
+int randomBlueTilt2 = 0;
+int randomBlueDimmer = 30;
+int randomBlueShutter = 30;
+int randomBlueFarbe = 80;
+int randomBlueIris = 200;
+int randomBlueFokus = 10;
+
+// randomYellowMH DMX Variablen
+int randomYellowPan1 = 45;
+int randomYellowPan2 = 0;
+int randomYellowTilt1 = 130;
+int randomYellowTilt2 = 0;
+int randomYellowDimmer = 30;
+int randomYellowShutter = 30;
+int randomYellowFarbe = 80;
+int randomYellowIris = 200;
+int randomYellowFokus = 10;
+
+// randomRedMH DMX Variablen
+int randomRedPan1 = 45;
+int randomRedPan2 = 0;
+int randomRedTilt1 = 130;
+int randomRedTilt2 = 0;
+int randomRedDimmer = 30;
+int randomRedShutter = 30;
+int randomRedFarbe = 80;
+int randomRedIris = 200;
+int randomRedFokus = 10;
 
 void setup() {
   // Arduino vorbereiten
-  //Serial.begin(BAUD);
+  Serial.begin(BAUD);
   BTSerial.begin(BAUD);
 
   // MH am Arduino registieren
@@ -44,32 +66,12 @@ void setup() {
   //DmxSimple.usePin(36);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
-  DMXSerial.init(DMXController);
+  //DMXSerial.init(DMXController);
   
 
   // Player - MH vorbereiten
-  DMXSerial.write(62, 45);
+  //DMXSerial.write(62, 45);
   sendDataToDMX();
-  /*DMXSerial.write(1, kPan1); //Pan
-  DMXSerial.write(2, kPan2); //Panfeintuning
-  DMXSerial.write(3, kTilt1); //Tilt
-  DMXSerial.write(4, kTilt2); //Tiltfeintuning
-  DMXSerial.write(7, kDimmer); //Dimmer
-  DMXSerial.write(8, kShutter); //Shutter
-  DMXSerial.write(9, kFarbe); //Farbe
-  DMXSerial.write(18, kIris); //Iris
-  DMXSerial.write(22, kFokus); //Schärfe
-
-  // Random  - MH vorbereiten
-  DMXSerial.write(33, mPan1); //Pan
-  DMXSerial.write(34, mPan2); //Panfeintuning
-  DMXSerial.write(35, mTilt1); //Tilt
-  DMXSerial.write(36, mTilt2); //Tiltfeintuning
-  DMXSerial.write(39, mDimmer); //Dimmer
-  DMXSerial.write(40, mShutter); //Shutter
-  DMXSerial.write(41, mFarbe); //Farbe
-  DMXSerial.write(50, mIris); //Iris
-  DMXSerial.write(54, mFokus); //Schärfe*/
 
   // Die Ein- und Ausschaltwerte für die arduinointerne LED sind im UTF8 Format, da die Bluetooth LE Datenübertragung von Android zum Bluetooth Modul nur Werte in Form eines ByteArrays nach UTF Standard annimmt.
   ON = "111110";  // Ursprünglicher Wert in Android Studio zum Einschalten der LED war "on", dessen Wert in der UTF8 Tabelle 49 ist.
@@ -89,52 +91,72 @@ void loop() {
   
   if (BTSerial.available()) { 
     data = BTSerial.read();
-    
+    Serial.println(data);
     if (counter<0){
       counter += 1;
     }
     
     if (counter == 0){
-      kPan1 = data;
+      playerPan1 = data;
       counter +=1;
     }
     else if (counter == 1){
-      kPan2 = data;
+      playerPan2 = data;
       counter +=1;
     }
     else if (counter == 2){
-      kTilt1 = data;
+      playerTilt1 = data;
       counter +=1;
     }
     else if (counter == 3){
-      kTilt2 = data;
+      playerTilt2 = data;
       counter +=1;
     }
     else if (counter == 4){
-      mPan1 = data;
+      randomBluePan1 = data;
       counter +=1;
     }
     else if (counter == 5){
-      mPan2 = data;
+      randomBluePan2 = data;
       counter +=1;
     }
     else if (counter == 6){
-      mTilt1 = data;
+      randomBlueTilt1 = data;
       counter +=1;
     }
     else if (counter == 7){
-      mTilt2 = data;
+      randomBlueTilt2 = data;
+    }
+    else if (counter == 8){
+      randomYellowPan1 = data;
+      counter += 1;
+    }
+    else if (counter == 9){
+      randomYellowPan2 = data;
+      counter += 1;
+    }
+    else if (counter == 10){
+      randomYellowTilt1 = data;
+      counter += 1;
+    }
+    else if (counter == 11){
+      randomYellowTilt2 = data;
       //sendDataToDMX();
       counter = 0;
-      /*Serial.println(kPan1);
-      Serial.println(kPan2);
-      Serial.println(kTilt1);
-      Serial.println(kTilt2);
-
-      Serial.println(mPan1);
-      Serial.println(mPan2);
-      Serial.println(mTilt1);
-      Serial.println(mTilt2);*/
+      Serial.println(playerPan1);
+      Serial.println(playerPan2);
+      Serial.println(playerTilt1);
+      Serial.println(playerTilt2);
+      Serial.println("");
+      Serial.println(randomBluePan1);
+      Serial.println(randomBluePan2);
+      Serial.println(randomBlueTilt1);
+      Serial.println(randomBlueTilt2);
+      Serial.println("");
+      Serial.println(randomYellowPan1);
+      Serial.println(randomYellowPan2);
+      Serial.println(randomYellowTilt1);
+      Serial.println(randomYellowTilt2);
     }
 
    // Code um die BluetoothLED ein und auszuschalten
@@ -154,24 +176,42 @@ void sendDataToDMX(){
   // Lampe manuell einmal starten
   // Bluetoothwerte auslesen und in Variable schreiben
   
-  DMXSerial.write(1, kPan1); //Pan
-  DMXSerial.write(2, kPan2); //Panfeintuning
-  DMXSerial.write(3, kTilt1); //Tilt
-  DMXSerial.write(4, kTilt2); //Tiltfeintuning
+  /*DMXSerial.write(1, playerPan1); //Pan
+  DMXSerial.write(2, playerPan2); //Panfeintuning
+  DMXSerial.write(3, playerTilt1); //Tilt
+  DMXSerial.write(4, playerTilt2); //Tiltfeintuning
   DMXSerial.write(5, 12);     // Motorgeschwindigkeit
-  DMXSerial.write(7, kDimmer); //Dimmer
+  DMXSerial.write(7, playerDimmer); //Dimmer
   DMXSerial.write(8, 30);      // Shutter
-  DMXSerial.write(9, kFarbe); //Farbe
+  DMXSerial.write(9, playerFarbe); //Farbe
   
-
-  DMXSerial.write(26, mPan1); //Pan
-  DMXSerial.write(27, mPan2); //Panfeintuning
-  DMXSerial.write(28, mTilt1); //Tilt
-  DMXSerial.write(29, mTilt2); //Tiltfeintuning
+  DMXSerial.write(26, randomBluePan1); //Pan
+  DMXSerial.write(27, randomBluePan2); //Panfeintuning
+  DMXSerial.write(28, randomBlueTilt1); //Tilt
+  DMXSerial.write(29, randomBlueTilt2); //Tiltfeintuning
   DMXSerial.write(30, 12);      // Motorgeschwindigkeit
-  DMXSerial.write(32, mDimmer); //Dimmer
+  DMXSerial.write(32, randomBlueDimmer); //Dimmer
   DMXSerial.write(33, 30);      // Shutter
-  DMXSerial.write(34, mFarbe); //Farbe
+  DMXSerial.write(34, randomBlueFarbe); //Farbe
+
+  DMXSerial.write(51, randomYellowPan1); //Pan
+  DMXSerial.write(52, randomYellowPan2); //Panfeintuning
+  DMXSerial.write(53, randomYellowTilt1); //Tilt
+  DMXSerial.write(54, randomYellowTilt2); //Tiltfeintuning
+  DMXSerial.write(55, 12);      // Motorgeschwindigkeit
+  DMXSerial.write(57, randomYellowDimmer); //Dimmer
+  DMXSerial.write(58, 30);      // Shutter
+  DMXSerial.write(59, randomYellowFarbe); //Farbe
+
+  DMXSerial.write(76, randomRedPan1); //Pan
+  DMXSerial.write(77, randomRedPan2); //Panfeintuning
+  DMXSerial.write(78, randomRedTilt1); //Tilt
+  DMXSerial.write(79, randomRedTilt2); //Tiltfeintuning
+  DMXSerial.write(80, 12);      // Motorgeschwindigkeit
+  DMXSerial.write(82, randomRedDimmer); //Dimmer
+  DMXSerial.write(83, 30);      // Shutter
+  DMXSerial.write(84, randomRedFarbe); //Farbe
+  */
 
   /*if (data.equals("49")){
       kTilt1 = 130;
