@@ -20,6 +20,8 @@ const val displayHeight = 1340
 
 const val playerMHOffsetX = 169
 const val randomBlueMHOffsetX = 231
+const val randomYellowMHOffsetX = 231
+const val randomRedMHOffsetX = 231
 
 class ViewsCoordinatesTranslator() {
     private val gameController = MainActivity.gameController
@@ -27,6 +29,7 @@ class ViewsCoordinatesTranslator() {
     private lateinit var playerDMXValuesArray: ByteArray
     private lateinit var randomBlueDMXValuesArray: ByteArray
     private lateinit var randomYellowDMXValuesArray: ByteArray
+    private lateinit var randomRedDMXValuesArray: ByteArray
 
     private var playerHeadlightBeamViewCurrentPixelX = 0
     private var playerHeadlightBeamViewCurrentWallX = 0.0
@@ -42,6 +45,11 @@ class ViewsCoordinatesTranslator() {
     private var randomYellowHeadlightBeamViewCurrentWallX = 0.0
     private var randomYellowHeadlightBeamViewCurrentPixelY = 0
     private var randomYellowHeadlightBeamViewCurrentWallY = 0.0
+
+    private var randomRedHeadlightBeamViewCurrentPixelX = 0
+    private var randomRedHeadlightBeamViewCurrentWallX = 0.0
+    private var randomRedHeadlightBeamViewCurrentPixelY = 0
+    private var randomRedHeadlightBeamViewCurrentWallY = 0.0
 
     fun translateCoordinatesAndSendToBluetoothModule() {
         getViewsCoordinatesInPixels()
@@ -59,6 +67,9 @@ class ViewsCoordinatesTranslator() {
 
         randomYellowHeadlightBeamViewCurrentPixelX = gameController.getRandomYellowHeadlightBeamViewCurrentX()
         randomYellowHeadlightBeamViewCurrentPixelY = gameController.getRandomYellowHeadlightBeamViewCurrentY()
+
+        randomRedHeadlightBeamViewCurrentPixelX = gameController.getRandomRedHeadlightBeamViewCurrentX()
+        randomRedHeadlightBeamViewCurrentPixelY = gameController.getRandomRedHeadlightBeamViewCurrentY()
     }
 
     private fun transformPixelCoordinatesIntoWallCoordinates() {
@@ -73,9 +84,14 @@ class ViewsCoordinatesTranslator() {
             (((-randomBlueHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
 
         randomYellowHeadlightBeamViewCurrentWallX =
-            (((randomYellowHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomBlueMHOffsetX)
+            (((randomYellowHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomYellowMHOffsetX)
         randomYellowHeadlightBeamViewCurrentWallY =
             (((-randomYellowHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
+
+        randomRedHeadlightBeamViewCurrentWallX =
+            (((randomRedHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomRedMHOffsetX)
+        randomRedHeadlightBeamViewCurrentWallY =
+            (((-randomRedHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
     }
 
     private fun calculateDMXValuesFromPanAndTiltValues() {
@@ -139,6 +155,26 @@ class ViewsCoordinatesTranslator() {
                     )
         ) * radToDeg
 
+        // calculate Pan and Tilt Values in Degrees for randomRedHeadlightBeam
+        val randomRedDegreesPan = Math.asin(
+            randomRedHeadlightBeamViewCurrentWallX /
+                    Math.sqrt(
+                        Math.pow(randomRedHeadlightBeamViewCurrentWallX, power) + Math.pow(
+                            randomRedHeadlightBeamViewCurrentWallY,
+                            power
+                        ) + Math.pow(distanceToWall, power)
+                    )
+        ) * radToDeg
+        val randomRedDegreesTilt = Math.asin(
+            randomRedHeadlightBeamViewCurrentWallY /
+                    Math.sqrt(
+                        Math.pow(randomRedHeadlightBeamViewCurrentWallX, power) + Math.pow(
+                            randomRedHeadlightBeamViewCurrentWallY,
+                            power
+                        ) + Math.pow(distanceToWall, power)
+                    )
+        ) * radToDeg
+
         // transform Degree Pan and Tilt Values into DMX friendly values
         val playerDMXPan = (P0 + ((P45 - P0) / 45) * playerDegreesPan).roundToInt()
         val playerDMXTilt = (T0 + ((T45 - T0) / 45) * playerDegreesTilt).roundToInt()
@@ -146,6 +182,8 @@ class ViewsCoordinatesTranslator() {
         val randomBlueDMXTilt = (T0 + ((T45 - T0) / 45) * randomBlueDegreesTilt).roundToInt()
         val randomYellowDMXPan = (P0 + ((P45 - P0) / 45) * randomYellowDegreesPan).roundToInt()
         val randomYellowDMXTilt = (T0 + ((T45 - T0) / 45) * randomYellowDegreesTilt).roundToInt()
+        val randomRedDMXPan = (P0 + ((P45 - P0) / 45) * randomRedDegreesPan).roundToInt()
+        val randomRedDMXTilt = (T0 + ((T45 - T0) / 45) * randomRedDegreesTilt).roundToInt()
 
         val playerDMXPanForChannel1 = (Math.floor(playerDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
         val playerDMXPanForChannel2 = playerDMXPan.rem(sixteenToEightBitConverter)
@@ -166,7 +204,14 @@ class ViewsCoordinatesTranslator() {
             (Math.floor(randomYellowDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
         val randomYellowDMXTiltForChannel54 = randomYellowDMXTilt.rem(sixteenToEightBitConverter)
 
-        println("playerDMXPanForChannel1: " + playerDMXPanForChannel1)
+        val randomRedDMXPanForChannel76 =
+            (Math.floor(randomYellowDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
+        val randomRedDMXPanForChannel77 = randomRedDMXPan.rem(sixteenToEightBitConverter)
+        val randomRedDMXTiltForChannel78 =
+            (Math.floor(randomYellowDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
+        val randomRedDMXTiltForChannel79 = randomRedDMXTilt.rem(sixteenToEightBitConverter)
+
+        /*println("playerDMXPanForChannel1: " + playerDMXPanForChannel1)
         println("playerDMXPanForChannel2: " + playerDMXPanForChannel2)
         println("playerDMXTiltForChannel3: " + playerDMXTiltForChannel3)
         println("playerDMXTiltForChannel4: " + playerDMXTiltForChannel4)
@@ -180,6 +225,11 @@ class ViewsCoordinatesTranslator() {
         println("randomYellowDMXPanForChannel52: " + randomYellowDMXPanForChannel52)
         println("randomYellowDMXTiltForChannel53: " + randomYellowDMXTiltForChannel53)
         println("randomYellowDMXTiltForChannel54: " + randomYellowDMXTiltForChannel54)
+        println("\n")
+        println("randomRedDMXPanForChannel76: " + randomRedDMXPanForChannel76)
+        println("randomRedDMXPanForChannel77: " + randomRedDMXPanForChannel77)
+        println("randomRedDMXTiltForChannel78: " + randomRedDMXTiltForChannel78)
+        println("randomRedDMXTiltForChannel79: " + randomRedDMXTiltForChannel79)*/
 
 
         // put values into corresponding arrays
@@ -234,13 +284,31 @@ class ViewsCoordinatesTranslator() {
                 }
             }
 
+        val randomRedDMXValuesIntegerArray = arrayOf(
+            randomRedDMXPanForChannel76,
+            randomRedDMXPanForChannel77,
+            randomRedDMXTiltForChannel78,
+            randomRedDMXTiltForChannel79
+        )
+
+        randomRedDMXValuesArray =
+            randomRedDMXValuesIntegerArray.foldIndexed(ByteArray(randomRedDMXValuesIntegerArray.size)) { i, a, v ->
+                a.apply {
+                    set(
+                        i,
+                        v.toByte()
+                    )
+                }
+            }
+
     }
 
     private fun sendData() {
         dataController.sendDataToBluetoothModule(
             playerDMXValuesArray,
             randomBlueDMXValuesArray,
-            randomYellowDMXValuesArray
+            randomYellowDMXValuesArray,
+            randomRedDMXValuesArray
         )
     }
 }

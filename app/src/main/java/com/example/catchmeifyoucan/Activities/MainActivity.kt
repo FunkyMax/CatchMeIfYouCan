@@ -31,8 +31,7 @@ class MainActivity : AppCompatActivity(){
 
     // Initializing the necessary Handlers
     private val playerHeadlightBeamViewHandler = Handler()
-    private val randomBlueHeadlightBeamViewHandler = Handler()
-    private val randomYellowHeadlightBeamViewHandler = Handler()
+    private val randomHeadlightBeamViewsHandler = Handler()
     private val viewsCoordinatesTranslatorHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +47,10 @@ class MainActivity : AppCompatActivity(){
         //ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
 
         setupBluetoothConnection()
+        playerHeadlightBeamViewRunnable.run()
         randomBlueHeadlightBeamViewRunnable.run()
         randomYellowHeadlightBeamViewRunnable.run()
-        playerHeadlightBeamViewRunnable.run()
+        randomRedHeadlightBeamViewRunnable.run()
         viewsCoordinatesTranslatorRunnable.run();
     }
 
@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity(){
             gameController.collisionDetection(
                 playerHeadlightBeamView,
                 randomBlueHeadlightBeamView,
-                randomYellowHeadlightBeamView
+                randomYellowHeadlightBeamView,
+                randomRedHeadlightBeamView
             )
             playerHeadlightBeamViewHandler.postDelayed(this, 17)
         }
@@ -69,14 +70,21 @@ class MainActivity : AppCompatActivity(){
     private val randomBlueHeadlightBeamViewRunnable = object : Runnable {
         override fun run() {
             gameController.moveRandomHeadlightBeamView(randomBlueHeadlightBeamView)
-            randomBlueHeadlightBeamViewHandler.postDelayed(this, 1300)
+            randomHeadlightBeamViewsHandler.postDelayed(this, 1300)
         }
     }
 
     private val randomYellowHeadlightBeamViewRunnable = object : Runnable {
         override fun run() {
             gameController.moveRandomHeadlightBeamView(randomYellowHeadlightBeamView)
-            randomBlueHeadlightBeamViewHandler.postDelayed(this, 1000)
+            randomHeadlightBeamViewsHandler.postDelayed(this, 1000)
+        }
+    }
+
+    private val randomRedHeadlightBeamViewRunnable = object : Runnable {
+        override fun run() {
+            gameController.moveRandomHeadlightBeamView(randomRedHeadlightBeamView)
+            randomHeadlightBeamViewsHandler.postDelayed(this, 1100)
         }
     }
 

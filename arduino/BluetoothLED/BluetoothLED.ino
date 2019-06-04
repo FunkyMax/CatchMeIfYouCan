@@ -91,7 +91,7 @@ void loop() {
   
   if (BTSerial.available()) { 
     data = BTSerial.read();
-    Serial.println(data);
+    //Serial.println(data);
     if (counter<0){
       counter += 1;
     }
@@ -141,7 +141,19 @@ void loop() {
     }
     else if (counter == 11){
       randomYellowTilt2 = data;
-      //sendDataToDMX();
+    }
+    else if (counter == 12){
+      randomRedPan1 = data;
+    }
+    else if (counter == 13){
+      randomRedPan2 = data;
+    }
+    else if (counter == 14){
+      randomRedTilt1 = data;
+    }
+    else if (counter == 15){
+      randomRedTilt2 = data;
+       //sendDataToDMX();
       counter = 0;
       Serial.println(playerPan1);
       Serial.println(playerPan2);
@@ -157,6 +169,11 @@ void loop() {
       Serial.println(randomYellowPan2);
       Serial.println(randomYellowTilt1);
       Serial.println(randomYellowTilt2);
+      Serial.println("");
+      Serial.println(randomRedPan1);
+      Serial.println(randomRedPan2);
+      Serial.println(randomRedTilt1);
+      Serial.println(randomRedTilt2);
     }
 
    // Code um die BluetoothLED ein und auszuschalten

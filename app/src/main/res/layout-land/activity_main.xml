@@ -33,11 +33,11 @@
             android:layout_width="60px"
             android:layout_height="60px"
             android:id="@+id/randomBlueHeadlightBeamView"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="201dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="187dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="197dp" app:layout_constraintEnd_toStartOf="@+id/playerHeadlightBeamView"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="67dp" android:layout_marginStart="373dp"
+            app:layout_constraintStart_toEndOf="@+id/joystickView" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="89dp" android:layout_marginTop="229dp"
+            app:layout_constraintTop_toBottomOf="@+id/randomRedHeadlightBeamView"/>
     <CheckBox
             android:text="LED"
             android:layout_width="wrap_content"
@@ -54,8 +54,15 @@
             android:layout_height="60px"
             android:id="@+id/randomYellowHeadlightBeamView"
             android:layout_marginBottom="59dp" app:layout_constraintBottom_toTopOf="@+id/joystickView"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="197dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="100dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="70dp"
-            app:layout_constraintEnd_toStartOf="@+id/ledCheckBoxID" android:layout_marginEnd="103dp"/>
+            app:layout_constraintEnd_toStartOf="@+id/ledCheckBoxID" android:layout_marginEnd="103dp"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
+    <com.example.catchmeifyoucan.views.RandomRedHeadlightBeamView
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:id="@+id/randomRedHeadlightBeamView" android:layout_marginStart="212dp"
+            app:layout_constraintStart_toEndOf="@+id/ledCheckBoxID" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="70dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="87dp"/>
 </android.support.constraint.ConstraintLayout>
 
