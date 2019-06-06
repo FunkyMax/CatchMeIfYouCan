@@ -57,6 +57,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         if (mBluetoothAdapter == null) {
             return false
         }
+        mBluetoothGatt!!.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
         connect(HM10_ADDRESS)
         while (!initialized) {
             println("CONNECTING TO BLUETOOTH MODULE...")
