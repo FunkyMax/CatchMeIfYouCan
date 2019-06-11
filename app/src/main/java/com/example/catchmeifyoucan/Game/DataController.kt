@@ -12,20 +12,20 @@ class DataController {
     private val bluetoothLeService = MainActivity.bluetoothLeService
 
     fun sendDataToBluetoothModule(
-        playerDMXValuesArray: ByteArray,
-        randomBlueDMXValuesArray: ByteArray,
-        randomYellowDMXValuesArray: ByteArray,
-        randomRedHeadlightBeamView: ByteArray
+        playerDMXValues: String,
+        randomBlueDMXValues: String,
+        randomYellowDMXValues: String,
+        randomRedDMXValues: String
     ) {
         GlobalScope.launch{
             delay(DELAY)
-            bluetoothLeService.write(playerDMXValuesArray)
+            bluetoothLeService.write(playerDMXValues)
             delay(DELAY)
-            bluetoothLeService.write(randomBlueDMXValuesArray)
+            bluetoothLeService.write(randomBlueDMXValues)
             delay(DELAY)
-            bluetoothLeService.write(randomYellowDMXValuesArray)
+            bluetoothLeService.write(randomYellowDMXValues)
             delay(DELAY)
-            bluetoothLeService.write(randomRedHeadlightBeamView)
+            bluetoothLeService.write(randomRedDMXValues)
         }
     }
 }

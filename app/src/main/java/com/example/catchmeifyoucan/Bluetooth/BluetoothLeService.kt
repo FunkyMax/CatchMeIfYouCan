@@ -57,8 +57,8 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
         if (mBluetoothAdapter == null) {
             return false
         }
-        mBluetoothGatt!!.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
         connect(HM10_ADDRESS)
+        mBluetoothGatt!!.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
         while (!initialized) {
             println("CONNECTING TO BLUETOOTH MODULE...")
             if (initialized) {
@@ -71,13 +71,13 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
     /**
      * Method for transmitting data to the HM10 Soft Bluetooth module.
      */
-    fun write(data: ByteArray) {
+    fun write(data: String) {
         if (mBluetoothGatt == null) {
             return
         }
         val service = mBluetoothGatt!!.getService(serviceUUID)
         val characteristic = service.getCharacteristic(characteristicUUID)
-        characteristic.value = data
+        characteristic.value = data.toByteArray()
         //mBluetoothGatt!!.setCharacteristicNotification(characteristic, true)
         mBluetoothGatt!!.writeCharacteristic(characteristic)
     }

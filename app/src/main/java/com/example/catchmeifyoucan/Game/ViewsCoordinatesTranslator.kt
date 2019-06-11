@@ -1,6 +1,7 @@
 package com.example.catchmeifyoucan.Game
 
 import com.example.catchmeifyoucan.Activities.MainActivity
+import org.json.JSONObject
 import kotlin.math.roundToInt
 
 const val T0 = 11520
@@ -12,16 +13,16 @@ const val radToDeg = 360 / (2 * Math.PI)
 private const val power = 2.0
 const val sixteenToEightBitConverter = 256
 
-const val distanceToWall = 300.0
-const val wallWidth = 300
-const val wallHeight = 170
+const val distanceToWall = 460.0
+const val wallWidth = 400
+const val wallHeight = 300
 const val displayWidth = 2860
 const val displayHeight = 1340
 
-const val playerMHOffsetX = 169
-const val randomBlueMHOffsetX = 231
-const val randomYellowMHOffsetX = 231
-const val randomRedMHOffsetX = 231
+const val playerMHOffsetX = 140
+const val randomBlueMHOffsetX = 166
+const val randomYellowMHOffsetX = 230
+const val randomRedMHOffsetX = 280
 
 class ViewsCoordinatesTranslator() {
     private val gameController = MainActivity.gameController
@@ -30,6 +31,11 @@ class ViewsCoordinatesTranslator() {
     private lateinit var randomBlueDMXValuesArray: ByteArray
     private lateinit var randomYellowDMXValuesArray: ByteArray
     private lateinit var randomRedDMXValuesArray: ByteArray
+
+    private lateinit var playerJSONObject: JSONObject
+    private lateinit var randomBlueJSONObject: JSONObject
+    private lateinit var randomYellowJSONObject: JSONObject
+    private lateinit var randomRedJSONObject: JSONObject
 
     private var playerHeadlightBeamViewCurrentPixelX = 0
     private var playerHeadlightBeamViewCurrentWallX = 0.0
@@ -205,39 +211,54 @@ class ViewsCoordinatesTranslator() {
         val randomYellowDMXTiltForChannel54 = randomYellowDMXTilt.rem(sixteenToEightBitConverter)
 
         val randomRedDMXPanForChannel76 =
-            (Math.floor(randomYellowDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
+            (Math.floor(randomRedDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
         val randomRedDMXPanForChannel77 = randomRedDMXPan.rem(sixteenToEightBitConverter)
         val randomRedDMXTiltForChannel78 =
-            (Math.floor(randomYellowDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
+            (Math.floor(randomRedDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
         val randomRedDMXTiltForChannel79 = randomRedDMXTilt.rem(sixteenToEightBitConverter)
 
-        /*println("playerDMXPanForChannel1: " + playerDMXPanForChannel1)
-        println("playerDMXPanForChannel2: " + playerDMXPanForChannel2)
+        println("playerDMXPanForChannel1: " + playerDMXPanForChannel1)
+        //println("playerDMXPanForChannel2: " + playerDMXPanForChannel2)
         println("playerDMXTiltForChannel3: " + playerDMXTiltForChannel3)
-        println("playerDMXTiltForChannel4: " + playerDMXTiltForChannel4)
+        //println("playerDMXTiltForChannel4: " + playerDMXTiltForChannel4)
         println("\n")
         println("randomBlueDMXPanForChannel26: " + randomBlueDMXPanForChannel26)
-        println("randomBlueDMXPanForChannel27: " + randomBlueDMXPanForChannel27)
+        //println("randomBlueDMXPanForChannel27: " + randomBlueDMXPanForChannel27)
         println("randomBlueDMXTiltForChannel28: " + randomBlueDMXTiltForChannel28)
-        println("randomBlueDMXTiltForChannel29: " + randomBlueDMXTiltForChannel29)
+        //println("randomBlueDMXTiltForChannel29: " + randomBlueDMXTiltForChannel29)
         println("\n")
         println("randomYellowDMXPanForChannel51: " + randomYellowDMXPanForChannel51)
-        println("randomYellowDMXPanForChannel52: " + randomYellowDMXPanForChannel52)
+        //println("randomYellowDMXPanForChannel52: " + randomYellowDMXPanForChannel52)
         println("randomYellowDMXTiltForChannel53: " + randomYellowDMXTiltForChannel53)
-        println("randomYellowDMXTiltForChannel54: " + randomYellowDMXTiltForChannel54)
+        //println("randomYellowDMXTiltForChannel54: " + randomYellowDMXTiltForChannel54)
         println("\n")
         println("randomRedDMXPanForChannel76: " + randomRedDMXPanForChannel76)
-        println("randomRedDMXPanForChannel77: " + randomRedDMXPanForChannel77)
+        //println("randomRedDMXPanForChannel77: " + randomRedDMXPanForChannel77)
         println("randomRedDMXTiltForChannel78: " + randomRedDMXTiltForChannel78)
-        println("randomRedDMXTiltForChannel79: " + randomRedDMXTiltForChannel79)*/
-
+        //println("randomRedDMXTiltForChannel79: " + randomRedDMXTiltForChannel79)
 
         // put values into corresponding arrays
+        playerJSONObject = JSONObject()
+        playerJSONObject.put("1", playerDMXPanForChannel1)
+        playerJSONObject.put("3", playerDMXTiltForChannel3)
+
+        randomBlueJSONObject = JSONObject()
+        randomBlueJSONObject.put("26", randomBlueDMXPanForChannel26)
+        randomBlueJSONObject.put("28", randomBlueDMXTiltForChannel28)
+
+        randomYellowJSONObject = JSONObject()
+        randomYellowJSONObject.put("51", randomYellowDMXPanForChannel51)
+        randomYellowJSONObject.put("53", randomYellowDMXTiltForChannel53)
+
+        randomRedJSONObject = JSONObject()
+        randomRedJSONObject.put("76", randomRedDMXPanForChannel76)
+        randomRedJSONObject.put("78", randomRedDMXTiltForChannel78)
+
         val playerDMXValuesIntegerArray = arrayOf(
             playerDMXPanForChannel1,
-            playerDMXPanForChannel2,
-            playerDMXTiltForChannel3,
-            playerDMXTiltForChannel4
+            //playerDMXPanForChannel2,
+            playerDMXTiltForChannel3
+            //playerDMXTiltForChannel4
         )
 
         playerDMXValuesArray =
@@ -252,9 +273,9 @@ class ViewsCoordinatesTranslator() {
 
         val randomBlueDMXValuesIntegerArray = arrayOf(
             randomBlueDMXPanForChannel26,
-            randomBlueDMXPanForChannel27,
-            randomBlueDMXTiltForChannel28,
-            randomBlueDMXTiltForChannel29
+            //randomBlueDMXPanForChannel27,
+            randomBlueDMXTiltForChannel28
+            //randomBlueDMXTiltForChannel29
         )
 
         randomBlueDMXValuesArray =
@@ -269,9 +290,9 @@ class ViewsCoordinatesTranslator() {
 
         val randomYellowDMXValuesIntegerArray = arrayOf(
             randomYellowDMXPanForChannel51,
-            randomYellowDMXPanForChannel52,
-            randomYellowDMXTiltForChannel53,
-            randomYellowDMXTiltForChannel54
+            //randomYellowDMXPanForChannel52,
+            randomYellowDMXTiltForChannel53
+            //randomYellowDMXTiltForChannel54
         )
 
         randomYellowDMXValuesArray =
@@ -286,9 +307,9 @@ class ViewsCoordinatesTranslator() {
 
         val randomRedDMXValuesIntegerArray = arrayOf(
             randomRedDMXPanForChannel76,
-            randomRedDMXPanForChannel77,
-            randomRedDMXTiltForChannel78,
-            randomRedDMXTiltForChannel79
+            //randomRedDMXPanForChannel77,
+            randomRedDMXTiltForChannel78
+            //randomRedDMXTiltForChannel79
         )
 
         randomRedDMXValuesArray =
@@ -304,11 +325,17 @@ class ViewsCoordinatesTranslator() {
     }
 
     private fun sendData() {
-        dataController.sendDataToBluetoothModule(
+        /*dataController.sendDataToBluetoothModule(
             playerDMXValuesArray,
             randomBlueDMXValuesArray,
             randomYellowDMXValuesArray,
             randomRedDMXValuesArray
+        )*/
+        dataController.sendDataToBluetoothModule(
+            playerJSONObject.toString(),
+            randomBlueJSONObject.toString(),
+            randomYellowJSONObject.toString(),
+            randomRedJSONObject.toString()
         )
     }
 }

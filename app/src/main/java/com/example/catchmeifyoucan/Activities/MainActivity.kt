@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(){
         setupBluetoothConnection()
         playerHeadlightBeamViewRunnable.run()
         randomBlueHeadlightBeamViewRunnable.run()
-        //randomYellowHeadlightBeamViewRunnable.run()
+        randomYellowHeadlightBeamViewRunnable.run()
         randomYellowHeadlightBeamViewVisibilityRunnable.run()
         randomRedHeadlightBeamViewRunnable.run()
         viewsCoordinatesTranslatorRunnable.run();
