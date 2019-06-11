@@ -3,6 +3,7 @@ package com.example.catchmeifyoucan.Game
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
+import com.example.catchmeifyoucan.Activities.MainActivity
 import com.example.catchmeifyoucan.views.PlayerHeadlightBeamView
 import com.example.catchmeifyoucan.views.RandomBlueHeadlightBeamView
 import com.example.catchmeifyoucan.views.RandomRedHeadlightBeamView
@@ -11,18 +12,22 @@ import io.github.controlwear.virtual.joystick.android.JoystickView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
 private const val displayWidthBorder = 2860
 private const val displayHeightBorder = 1340
 private const val collisionMaxDistance = 50
-private const val collisionForbiddenDuration = 2000L
+private const val collisionForbiddenDuration = 1500L
 private const val gameDuration = 45000L
 private const val randomYellowAppearanceDuration = 7500L
 private const val power = 2.0
+private const val visualCollisionFeedback = 40
 
 class GameController{
+    // reference to DataController to be able to send out Data
+    private val dataController = MainActivity.dataController
     // game specific fields
     private val random = Random
     private var collisionAllowed = true
@@ -192,14 +197,14 @@ class GameController{
 
         if (collisionAllowed) {
             if (distanceBetweenPlayerAndRandomBlueHeadlightBeamView <= collisionMaxDistance) {
-                score += 1
-                disableCollisions()
+                score += 2
+                disableCollisions(randomBlueHeadlightBeamView)
             } else if (distanceBetweenPlayerAndRandomYellowHeadlightBeamView <= collisionMaxDistance && randomYellowHeadlightBeamView.visibility == 0) {
-                score += 3
-                disableCollisions()
+                score += 5
+                disableCollisions(randomYellowHeadlightBeamView)
             } else if (distanceBetweenPlayerAndRandomRedHeadlightBeamView <= collisionMaxDistance) {
-                score -= 2
-                disableCollisions()
+                score -= 3
+                disableCollisions(randomRedHeadlightBeamView)
             }
         }
     }
@@ -240,13 +245,32 @@ class GameController{
         animatorSet.start()
     }
 
-    private fun disableCollisions() {
-        println(score);
+    private fun disableCollisions(randomHeadlightBeamView: View) {
+        println(score)
         collisionAllowed = false
+
         GlobalScope.launch {
+            randomHeadlightBeamView.alpha = .05f
+            resolveCollisionData(randomHeadlightBeamView)
             delay(collisionForbiddenDuration)
             collisionAllowed = true
+            randomHeadlightBeamView.alpha = 1f
         }
+    }
+
+    private fun resolveCollisionData(randomHeadlightBeamView: View) {
+        val jsonObject = JSONObject()
+        jsonObject.put("7", visualCollisionFeedback)
+
+        if (randomHeadlightBeamView is RandomBlueHeadlightBeamView) {
+            jsonObject.put("32", visualCollisionFeedback)
+        } else if (randomHeadlightBeamView is RandomYellowHeadlightBeamView) {
+            jsonObject.put("57", visualCollisionFeedback)
+        } else if (randomHeadlightBeamView is RandomRedHeadlightBeamView) {
+            jsonObject.put("82", visualCollisionFeedback)
+        }
+
+        dataController.sendCollisionData(jsonObject.toString())
     }
 
     private fun playerHeadlightBeamViewTouchesHeightBorders() = playerHeadlightBeamViewNextY > displayHeightBorder || playerHeadlightBeamViewNextY <= 0

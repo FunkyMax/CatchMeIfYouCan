@@ -11,6 +11,10 @@ char JSONObject[JSON_BUFFER] = {0};
 int JSONCounter = 0;
 bool JSONObjectIsFullyRead = false;
 
+//No Collision Period
+int noCollisionPeriod = 1500;
+unsigned long previousMillis = 0;
+
 // velocity for MH engines
 const int velocity = 12;
 
@@ -67,12 +71,16 @@ void loop() {
 
   //When Reading is done:
     if (JSONObjectIsFullyRead) {
+      //Serial.println(JSONObject);
       
-      //evaluate JSON String
+      //evaluate JSON String for pan and tilt values
         StaticJsonDocument<JSON_BUFFER> doc;
         if (parseJSONObject(&doc, JSONObject)) {
           evaluateJSONObject(doc);
         }
+
+      //checkForOnCollision between Headlights
+      onCollision(doc);
 
       //empty JSON Buffer
         emptyJSONBuffer();
@@ -142,10 +150,10 @@ void evaluateJSONObject(JsonDocument doc) {
   if (doc["78"]){
     String value = doc["78"];
     randomRedTilt = value.toInt();
-    sendGameDataToMHs();
+    sendPanAndTiltValuesToMHs();
   }
 
-  Serial.print("PlayerPan: ");
+  /*Serial.print("PlayerPan: ");
   Serial.println(playerPan);
   Serial.print("PlayerTilt: ");
   Serial.println(playerTilt);
@@ -161,10 +169,37 @@ void evaluateJSONObject(JsonDocument doc) {
   Serial.println(randomRedPan);
   Serial.print("randomRedTilt: ");
   Serial.println(randomRedTilt);
+  */
+}
+
+void onCollision(JsonDocument doc){
+  if (doc["7"]){
+    //DMXSerial.write(7, doc[7]);
+    Serial.println("Player deactivated");
+  }
+  if (doc["32"]){
+    //DMXSerial.write(32, doc[32]);
+    Serial.println("randomBlue deactivated");
+  }
+  if (doc["57"]){
+    //DMXSerial.write(57, doc[57]);
+    Serial.println("randomYellow deactivated");
+  }
+  if (doc["82"]){
+    //DMXSerial.write(82, doc[82]);
+    Serial.println("randomRed deactivated");
+  }
+  
+  double timeNow = millis();
+  if ((timeNow - previousMillis) > noCollisionPeriod){
+      previousMillis = millis();
+      //Serial.println(previousMillis);
+      resetMHs();
+  }
 }
 
 // Sends Pan and Tilt values to all MHs
-void sendGameDataToMHs(){
+void sendPanAndTiltValuesToMHs(){
   /*DMXSerial.write(1, playerPan);          //Pan
   DMXSerial.write(3, playerTilt);           //Tilt
   
@@ -207,6 +242,15 @@ void initializeMHs(){
   DMXSerial.write(84, randomRedFarbe);      //Farbe
 
   delay(10);
+  */
+}
+
+void resetMHs(){
+  //Serial.println("done");
+  /*DMXSerial.write(7, playerDimmer);         //Dimmer
+  DMXSerial.write(32, randomBlueDimmer);    //Dimmer
+  DMXSerial.write(57, randomYellowDimmer);  //Dimmer
+  DMXSerial.write(82, randomRedDimmer);     //Dimmer
   */
 }
 

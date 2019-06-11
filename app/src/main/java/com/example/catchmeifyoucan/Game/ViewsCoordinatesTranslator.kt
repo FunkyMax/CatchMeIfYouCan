@@ -26,11 +26,7 @@ const val randomRedMHOffsetX = 280
 
 class ViewsCoordinatesTranslator() {
     private val gameController = MainActivity.gameController
-    private val dataController = DataController()
-    private lateinit var playerDMXValuesArray: ByteArray
-    private lateinit var randomBlueDMXValuesArray: ByteArray
-    private lateinit var randomYellowDMXValuesArray: ByteArray
-    private lateinit var randomRedDMXValuesArray: ByteArray
+    private val dataController = MainActivity.dataController
 
     private lateinit var playerJSONObject: JSONObject
     private lateinit var randomBlueJSONObject: JSONObject
@@ -217,6 +213,7 @@ class ViewsCoordinatesTranslator() {
             (Math.floor(randomRedDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
         val randomRedDMXTiltForChannel79 = randomRedDMXTilt.rem(sixteenToEightBitConverter)
 
+        /*
         println("playerDMXPanForChannel1: " + playerDMXPanForChannel1)
         //println("playerDMXPanForChannel2: " + playerDMXPanForChannel2)
         println("playerDMXTiltForChannel3: " + playerDMXTiltForChannel3)
@@ -236,8 +233,9 @@ class ViewsCoordinatesTranslator() {
         //println("randomRedDMXPanForChannel77: " + randomRedDMXPanForChannel77)
         println("randomRedDMXTiltForChannel78: " + randomRedDMXTiltForChannel78)
         //println("randomRedDMXTiltForChannel79: " + randomRedDMXTiltForChannel79)
+        */
 
-        // put values into corresponding arrays
+        // put values into corresponding JSONObjects
         playerJSONObject = JSONObject()
         playerJSONObject.put("1", playerDMXPanForChannel1)
         playerJSONObject.put("3", playerDMXTiltForChannel3)
@@ -253,85 +251,10 @@ class ViewsCoordinatesTranslator() {
         randomRedJSONObject = JSONObject()
         randomRedJSONObject.put("76", randomRedDMXPanForChannel76)
         randomRedJSONObject.put("78", randomRedDMXTiltForChannel78)
-
-        val playerDMXValuesIntegerArray = arrayOf(
-            playerDMXPanForChannel1,
-            //playerDMXPanForChannel2,
-            playerDMXTiltForChannel3
-            //playerDMXTiltForChannel4
-        )
-
-        playerDMXValuesArray =
-            playerDMXValuesIntegerArray.foldIndexed(ByteArray(playerDMXValuesIntegerArray.size)) { i, a, v ->
-                a.apply {
-                    set(
-                        i,
-                        v.toByte()
-                    )
-                }
-            }
-
-        val randomBlueDMXValuesIntegerArray = arrayOf(
-            randomBlueDMXPanForChannel26,
-            //randomBlueDMXPanForChannel27,
-            randomBlueDMXTiltForChannel28
-            //randomBlueDMXTiltForChannel29
-        )
-
-        randomBlueDMXValuesArray =
-            randomBlueDMXValuesIntegerArray.foldIndexed(ByteArray(randomBlueDMXValuesIntegerArray.size)) { i, a, v ->
-                a.apply {
-                    set(
-                        i,
-                        v.toByte()
-                    )
-                }
-            }
-
-        val randomYellowDMXValuesIntegerArray = arrayOf(
-            randomYellowDMXPanForChannel51,
-            //randomYellowDMXPanForChannel52,
-            randomYellowDMXTiltForChannel53
-            //randomYellowDMXTiltForChannel54
-        )
-
-        randomYellowDMXValuesArray =
-            randomYellowDMXValuesIntegerArray.foldIndexed(ByteArray(randomYellowDMXValuesIntegerArray.size)) { i, a, v ->
-                a.apply {
-                    set(
-                        i,
-                        v.toByte()
-                    )
-                }
-            }
-
-        val randomRedDMXValuesIntegerArray = arrayOf(
-            randomRedDMXPanForChannel76,
-            //randomRedDMXPanForChannel77,
-            randomRedDMXTiltForChannel78
-            //randomRedDMXTiltForChannel79
-        )
-
-        randomRedDMXValuesArray =
-            randomRedDMXValuesIntegerArray.foldIndexed(ByteArray(randomRedDMXValuesIntegerArray.size)) { i, a, v ->
-                a.apply {
-                    set(
-                        i,
-                        v.toByte()
-                    )
-                }
-            }
-
     }
 
     private fun sendData() {
-        /*dataController.sendDataToBluetoothModule(
-            playerDMXValuesArray,
-            randomBlueDMXValuesArray,
-            randomYellowDMXValuesArray,
-            randomRedDMXValuesArray
-        )*/
-        dataController.sendDataToBluetoothModule(
+        dataController.sendPanAndTiltValues(
             playerJSONObject.toString(),
             randomBlueJSONObject.toString(),
             randomYellowJSONObject.toString(),

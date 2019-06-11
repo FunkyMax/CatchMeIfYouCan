@@ -11,7 +11,7 @@ class DataController {
 
     private val bluetoothLeService = MainActivity.bluetoothLeService
 
-    fun sendDataToBluetoothModule(
+    fun sendPanAndTiltValues(
         playerDMXValues: String,
         randomBlueDMXValues: String,
         randomYellowDMXValues: String,
@@ -27,5 +27,9 @@ class DataController {
             delay(DELAY)
             bluetoothLeService.write(randomRedDMXValues)
         }
+    }
+
+    fun sendCollisionData(jsonObject: String) {
+        bluetoothLeService.write(jsonObject)
     }
 }

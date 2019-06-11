@@ -10,6 +10,7 @@ import android.view.View
 import android.view.Window
 import android.widget.CheckBox
 import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
+import com.example.catchmeifyoucan.Game.DataController
 import com.example.catchmeifyoucan.Game.GameController
 import com.example.catchmeifyoucan.Game.ViewsCoordinatesTranslator
 import com.example.catchmeifyoucan.R
@@ -22,7 +23,8 @@ class MainActivity : AppCompatActivity(){
     // Making the BluetoothLeService a "static" field because the same instance is gonna be needed in a few classes. Further the BluetoothLeService can only be initialized in MainActivity because getSystemService() can only be called from here.
     companion object{
         lateinit var bluetoothLeService: BluetoothLeService
-        val gameController = GameController()
+        lateinit var gameController: GameController
+        lateinit var dataController: DataController
     }
 
     // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in MainActivity. See above for more info.
@@ -110,6 +112,8 @@ class MainActivity : AppCompatActivity(){
         bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeService = BluetoothLeService(bluetoothManager)
         if (bluetoothLeService.initialize()) {
+            dataController = DataController()
+            gameController = GameController()
             viewsCoordinatesTranslator = ViewsCoordinatesTranslator()
         }
     }
