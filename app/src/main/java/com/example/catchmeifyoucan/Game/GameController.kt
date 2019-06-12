@@ -19,18 +19,19 @@ import kotlin.random.Random
 private const val displayWidthBorder = 2860
 private const val displayHeightBorder = 1340
 private const val collisionMaxDistance = 50
-private const val collisionForbiddenDuration = 1500L
+private const val collisionForbiddenDuration = 2500L
 private const val gameDuration = 45000L
 private const val randomYellowAppearanceDuration = 7500L
 private const val power = 2.0
-private const val visualCollisionFeedback = 40
+private const val visualCollisionBrightnessFeedback = 20
+private const val visualCollisionBrightnessFeedbackReset = 80
 
 class GameController{
     // reference to DataController to be able to send out Data
     private val dataController = MainActivity.dataController
+
     // game specific fields
     private val random = Random
-    private var collisionAllowed = true
     private var score = 0
     private var strengthFromJoystick = 0f
     private lateinit var animatorSet: AnimatorSet
@@ -195,18 +196,18 @@ class GameController{
                 ) + Math.pow(playerHeadlightBeamViewCurrentY - randomRedHeadlightBeamViewCurrentY.toDouble(), power)
             )
 
-        if (collisionAllowed) {
-            if (distanceBetweenPlayerAndRandomBlueHeadlightBeamView <= collisionMaxDistance) {
+        //if (collisionAllowed) {
+        if (distanceBetweenPlayerAndRandomBlueHeadlightBeamView <= collisionMaxDistance && randomBlueHeadlightBeamView.alpha == 1f) {
                 score += 2
                 disableCollisions(randomBlueHeadlightBeamView)
-            } else if (distanceBetweenPlayerAndRandomYellowHeadlightBeamView <= collisionMaxDistance && randomYellowHeadlightBeamView.visibility == 0) {
+        } else if (distanceBetweenPlayerAndRandomYellowHeadlightBeamView <= collisionMaxDistance && randomYellowHeadlightBeamView.alpha == 1f) {
                 score += 5
                 disableCollisions(randomYellowHeadlightBeamView)
-            } else if (distanceBetweenPlayerAndRandomRedHeadlightBeamView <= collisionMaxDistance) {
+        } else if (distanceBetweenPlayerAndRandomRedHeadlightBeamView <= collisionMaxDistance && randomRedHeadlightBeamView.alpha == 1f) {
                 score -= 3
                 disableCollisions(randomRedHeadlightBeamView)
             }
-        }
+        //}
     }
 
     private fun moveViewRandomly(
@@ -247,30 +248,29 @@ class GameController{
 
     private fun disableCollisions(randomHeadlightBeamView: View) {
         println(score)
-        collisionAllowed = false
 
         GlobalScope.launch {
             randomHeadlightBeamView.alpha = .05f
-            resolveCollisionData(randomHeadlightBeamView)
+            resolveCollisionData(randomHeadlightBeamView, visualCollisionBrightnessFeedback)
             delay(collisionForbiddenDuration)
-            collisionAllowed = true
             randomHeadlightBeamView.alpha = 1f
+            resolveCollisionData(randomHeadlightBeamView, visualCollisionBrightnessFeedbackReset)
         }
     }
 
-    private fun resolveCollisionData(randomHeadlightBeamView: View) {
+    private fun resolveCollisionData(randomHeadlightBeamView: View, feedback: Int) {
         val jsonObject = JSONObject()
-        jsonObject.put("7", visualCollisionFeedback)
+        jsonObject.put("C", feedback)
 
         if (randomHeadlightBeamView is RandomBlueHeadlightBeamView) {
-            jsonObject.put("32", visualCollisionFeedback)
+            jsonObject.put("32", feedback)
         } else if (randomHeadlightBeamView is RandomYellowHeadlightBeamView) {
-            jsonObject.put("57", visualCollisionFeedback)
+            jsonObject.put("57", feedback)
         } else if (randomHeadlightBeamView is RandomRedHeadlightBeamView) {
-            jsonObject.put("82", visualCollisionFeedback)
+            jsonObject.put("82", (feedback / 2) - 1)
         }
 
-        dataController.sendCollisionData(jsonObject.toString())
+        dataController.setCollisionData(jsonObject.toString())
     }
 
     private fun playerHeadlightBeamViewTouchesHeightBorders() = playerHeadlightBeamViewNextY > displayHeightBorder || playerHeadlightBeamViewNextY <= 0

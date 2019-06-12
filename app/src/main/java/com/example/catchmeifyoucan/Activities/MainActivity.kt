@@ -15,8 +15,9 @@ import com.example.catchmeifyoucan.Game.GameController
 import com.example.catchmeifyoucan.Game.ViewsCoordinatesTranslator
 import com.example.catchmeifyoucan.R
 import kotlinx.android.synthetic.main.activity_main.*
-
-private const val REQUEST_PERMISSION_ACCESS_FINE_LOCATION = 1
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(){
 
@@ -45,17 +46,24 @@ class MainActivity : AppCompatActivity(){
             systemUiVisibility =
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
-        //window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        //ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_PERMISSION_ACCESS_FINE_LOCATION)
+    }
 
+    override fun onStart() {
+        super.onStart()
         setupBluetoothConnection()
-        playerHeadlightBeamViewRunnable.run()
+    }
+
+    override fun onResume() {
+        super.onResume()
         randomBlueHeadlightBeamViewRunnable.run()
         randomYellowHeadlightBeamViewRunnable.run()
         randomYellowHeadlightBeamViewVisibilityRunnable.run()
         randomRedHeadlightBeamViewRunnable.run()
         viewsCoordinatesTranslatorRunnable.run();
+        GlobalScope.launch {
+            delay(100)
+            playerHeadlightBeamViewRunnable.run()
+        }
     }
 
     private val playerHeadlightBeamViewRunnable = object : Runnable {
@@ -103,7 +111,7 @@ class MainActivity : AppCompatActivity(){
     private val viewsCoordinatesTranslatorRunnable = object : Runnable {
         override fun run() {
             viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
-            viewsCoordinatesTranslatorHandler.postDelayed(this, 100)
+            viewsCoordinatesTranslatorHandler.postDelayed(this, 50)
         }
     }
 

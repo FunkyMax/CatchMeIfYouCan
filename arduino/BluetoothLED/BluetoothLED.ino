@@ -11,11 +11,11 @@ char JSONObject[JSON_BUFFER] = {0};
 int JSONCounter = 0;
 bool JSONObjectIsFullyRead = false;
 
-//No Collision Period
-int noCollisionPeriod = 1500;
-unsigned long previousMillis = 0;
+// Resetted Pan and Tilt values when game is finished
+const int resetPan = 42;
+const int resetTilt = 130;
 
-// velocity for MH engines
+// velocity for MH engines in-game
 const int velocity = 12;
 
 // PlayerMH DMX Variables
@@ -23,7 +23,7 @@ int playerPan;
 int playerTilt;
 int playerDimmer = 80;
 int playerShutter = 30;
-int playerFarbe = 160;
+int playerFarbe = 150;
 int playerIris = 200;
 int playerFokus = 0;
 
@@ -32,7 +32,7 @@ int randomBluePan;
 int randomBlueTilt;
 int randomBlueDimmer = 80;
 int randomBlueShutter = 30;
-int randomBlueFarbe = 60;
+int randomBlueFarbe = 160;
 int randomBlueIris = 200;
 int randomBlueFokus = 10;
 
@@ -48,9 +48,9 @@ int randomYellowFokus = 10;
 // randomRedMH DMX Variables
 int randomRedPan;
 int randomRedTilt;
-int randomRedDimmer = 80;
+int randomRedDimmer = 39;
 int randomRedShutter = 30;
-int randomRedFarbe = 150;
+int randomRedFarbe = 60;
 int randomRedIris = 200;
 int randomRedFokus = 10;
 
@@ -77,10 +77,9 @@ void loop() {
         StaticJsonDocument<JSON_BUFFER> doc;
         if (parseJSONObject(&doc, JSONObject)) {
           evaluateJSONObject(doc);
+        //if no pan and tilt values are detected then check for collision of Headlights
+          //onCollision(doc);
         }
-
-      //checkForOnCollision between Headlights
-      onCollision(doc);
 
       //empty JSON Buffer
         emptyJSONBuffer();
@@ -111,7 +110,7 @@ bool parseJSONObject(JsonDocument *doc, char buff[]) {
     return true;
   }
   else{
-    Serial.print("deserializeJson() failed!");
+    //Serial.print("deserializeJson() failed!");
     emptyJSONBuffer();
     return false;
   }
@@ -119,6 +118,11 @@ bool parseJSONObject(JsonDocument *doc, char buff[]) {
 
 // Evaluates incoming JSONObject
 void evaluateJSONObject(JsonDocument doc) {
+  if (doc["C"]){
+    //int value = doc["C"];
+    //Serial.println(value);
+    onCollision(doc);
+  }
   if (doc["1"]){
     String value = doc["1"];
     playerPan = value.toInt();
@@ -173,28 +177,17 @@ void evaluateJSONObject(JsonDocument doc) {
 }
 
 void onCollision(JsonDocument doc){
-  if (doc["7"]){
-    //DMXSerial.write(7, doc[7]);
-    Serial.println("Player deactivated");
-  }
   if (doc["32"]){
-    //DMXSerial.write(32, doc[32]);
-    Serial.println("randomBlue deactivated");
+    Serial.println("BLUE");
+    //DMXSerial.write(32, doc["32"]);
   }
   if (doc["57"]){
-    //DMXSerial.write(57, doc[57]);
-    Serial.println("randomYellow deactivated");
+    Serial.println("YELLOW");
+    //DMXSerial.write(57, doc["57"]);
   }
   if (doc["82"]){
-    //DMXSerial.write(82, doc[82]);
-    Serial.println("randomRed deactivated");
-  }
-  
-  double timeNow = millis();
-  if ((timeNow - previousMillis) > noCollisionPeriod){
-      previousMillis = millis();
-      //Serial.println(previousMillis);
-      resetMHs();
+    Serial.println("RED");
+    //DMXSerial.write(82, doc["82"]);
   }
 }
 
@@ -211,16 +204,15 @@ void sendPanAndTiltValuesToMHs(){
 
   DMXSerial.write(76, randomRedPan);        //Pan
   DMXSerial.write(78, randomRedTilt);       //Tilt
-
-  delay(10);*/
+  */
+  
 }
 
 // Initializes MHs values that rarely or never change
 void initializeMHs(){
-  /*
-  DMXSerial.init(DMXController);
+  /*DMXSerial.init(DMXController);
   DMXSerial.write(110, 45);
-  
+
   DMXSerial.write(5, velocity);             //Motorgeschwindigkeit
   DMXSerial.write(7, playerDimmer);         //Dimmer
   DMXSerial.write(8, playerShutter);        //Shutter
@@ -235,22 +227,38 @@ void initializeMHs(){
   DMXSerial.write(57, randomYellowDimmer);  //Dimmer
   DMXSerial.write(58, randomYellowShutter); //Shutter
   DMXSerial.write(59, randomYellowFarbe);   //Farbe
-
+  
   DMXSerial.write(80, velocity);            //Motorgeschwindigkeit
   DMXSerial.write(82, randomRedDimmer);     //Dimmer
   DMXSerial.write(83, randomRedDimmer);     //Shutter
   DMXSerial.write(84, randomRedFarbe);      //Farbe
-
-  delay(10);
   */
+  
 }
 
-void resetMHs(){
+void resetMHsDimmer(){
   //Serial.println("done");
   /*DMXSerial.write(7, playerDimmer);         //Dimmer
   DMXSerial.write(32, randomBlueDimmer);    //Dimmer
   DMXSerial.write(57, randomYellowDimmer);  //Dimmer
   DMXSerial.write(82, randomRedDimmer);     //Dimmer
+  */
+}
+
+// Is called when the game is finished and the user returns to menu
+void stopGame(){
+  /*
+  DMXSerial.write(1, resetPan);
+  DMXSerial.write(3, resetTilt);
+
+  DMXSerial.write(26, resetPan);
+  DMXSerial.write(28, resetTilt);
+
+  DMXSerial.write(51, resetPan);
+  DMXSerial.write(53, resetTilt);
+
+  DMXSerial.write(76, resetPan);
+  DMXSerial.write(78, resetTilt);
   */
 }
 
