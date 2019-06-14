@@ -3,7 +3,7 @@ package com.example.catchmeifyoucan.Game
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.view.View
-import com.example.catchmeifyoucan.Activities.MainActivity
+import com.example.catchmeifyoucan.Activities.GameActivity
 import com.example.catchmeifyoucan.views.PlayerHeadlightBeamView
 import com.example.catchmeifyoucan.views.RandomBlueHeadlightBeamView
 import com.example.catchmeifyoucan.views.RandomRedHeadlightBeamView
@@ -28,7 +28,7 @@ private const val visualCollisionBrightnessFeedbackReset = 80
 
 class GameController{
     // reference to DataController to be able to send out Data
-    private val dataController = MainActivity.dataController
+    private val dataController = GameActivity.dataController
 
     // game specific fields
     private val random = Random

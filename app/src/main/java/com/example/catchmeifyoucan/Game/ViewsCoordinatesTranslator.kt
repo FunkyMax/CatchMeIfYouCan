@@ -1,6 +1,6 @@
 package com.example.catchmeifyoucan.Game
 
-import com.example.catchmeifyoucan.Activities.MainActivity
+import com.example.catchmeifyoucan.Activities.GameActivity
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
@@ -25,8 +25,8 @@ const val randomYellowMHOffsetX = 230
 const val randomRedMHOffsetX = 280
 
 class ViewsCoordinatesTranslator() {
-    private val gameController = MainActivity.gameController
-    private val dataController = MainActivity.dataController
+    private val gameController = GameActivity.gameController
+    private val dataController = GameActivity.dataController
 
     private lateinit var playerJSONObject: JSONObject
     private lateinit var randomBlueJSONObject: JSONObject

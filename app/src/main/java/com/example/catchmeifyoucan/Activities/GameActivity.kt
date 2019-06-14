@@ -18,16 +18,16 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity(){
+class GameActivity : AppCompatActivity(){
 
-    // Making the BluetoothLeService a "static" field because the same instance is gonna be needed in a few classes. Further the BluetoothLeService can only be initialized in MainActivity because getSystemService() can only be called from here.
+    // Making the BluetoothLeService a "static" field because the same instance is gonna be needed in a few classes. Further the BluetoothLeService can only be initialized in GameActivity because getSystemService() can only be called from here.
     companion object{
         lateinit var bluetoothLeService: BluetoothLeService
         lateinit var gameController: GameController
         lateinit var dataController: DataController
     }
 
-    // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in MainActivity. See above for more info.
+    // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in GameActivity. See above for more info.
     private lateinit var bluetoothAdapter : BluetoothAdapter
     private lateinit var viewsCoordinatesTranslator: ViewsCoordinatesTranslator
 
