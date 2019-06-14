@@ -8,13 +8,12 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.Window
-import android.widget.CheckBox
 import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
 import com.example.catchmeifyoucan.Game.DataController
 import com.example.catchmeifyoucan.Game.GameController
 import com.example.catchmeifyoucan.Game.ViewsCoordinatesTranslator
 import com.example.catchmeifyoucan.R
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.game.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.game)
         window.decorView.apply {
             systemUiVisibility =
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -123,19 +122,6 @@ class MainActivity : AppCompatActivity(){
             dataController = DataController()
             gameController = GameController()
             viewsCoordinatesTranslator = ViewsCoordinatesTranslator()
-        }
-    }
-
-    fun onLedClicked(view: View){
-        if (view is CheckBox){
-            if (view.isChecked){
-                viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
-                //bluetoothLeService.write("1")
-            }
-            else {
-                viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
-                //bluetoothLeService.write("0")
-            }
         }
     }
 }

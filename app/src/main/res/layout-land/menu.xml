@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <Button
+            android:text="Start"
+            android:layout_width="150dp"
+            android:layout_height="75dp"
+            android:id="@+id/startButton"
+            android:backgroundTint="#82B1FF"
+            android:onClick="onButtonClicked"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="256dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="304dp" android:gravity="center"/>
+    <com.example.catchmeifyoucan.views.ArrowView
+            android:layout_width="950px"
+            android:layout_height="500px"
+            android:id="@+id/arrowView" android:rotation="0"
+            app:arrow_color="#1976D2"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="88dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="156dp"/>
+    <com.example.catchmeifyoucan.views.ArrowView
+            android:layout_width="950px"
+            android:layout_height="500px"
+            android:id="@+id/arrowView2" android:rotation="180"
+            app:arrow_color="#B20288D1"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="28dp" android:layout_marginEnd="168dp" app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+            android:text="Catch me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/catchMe" android:gravity="center"
+            android:textSize="45sp"
+            android:fontFamily="@font/coolvetica"
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="56dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="380dp"/>
+    <TextView
+            android:text="if you can"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/ifYouCan" android:fontFamily="@font/coolvetica"
+            android:textSize="45sp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="120dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="172dp"/>
+</android.support.constraint.ConstraintLayout>
