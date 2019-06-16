@@ -71,7 +71,7 @@ void loop() {
 
   //When Reading is done:
     if (JSONObjectIsFullyRead) {
-      //Serial.println(JSONObject);
+      Serial.println(JSONObject);
       
       //evaluate JSON String for pan and tilt values
         StaticJsonDocument<JSON_BUFFER> doc;
@@ -122,6 +122,9 @@ void evaluateJSONObject(JsonDocument doc) {
     //int value = doc["C"];
     //Serial.println(value);
     onCollision(doc);
+  }
+  if (doc["R"]){
+    stopGame();
   }
   if (doc["1"]){
     String value = doc["1"];
@@ -247,6 +250,7 @@ void resetMHsDimmer(){
 
 // Is called when the game is finished and the user returns to menu
 void stopGame(){
+  Serial.println("RESET");
   /*
   DMXSerial.write(1, resetPan);
   DMXSerial.write(3, resetTilt);

@@ -10,7 +10,7 @@
             android:text="GO \n BACK \n TO \n LANDSCAPE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView" android:textSize="45sp"
+            android:id="@+id/goBack" android:textSize="45sp"
             android:gravity="center" android:textColor="#FFFFFF"
             android:fontFamily="@font/coolvetica"
             app:layout_constraintTop_toTopOf="parent"

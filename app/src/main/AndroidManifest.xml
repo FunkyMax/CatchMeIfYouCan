@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.GameActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".Activities.ScoreActivity" android:screenOrientation="landscape"></activity>
         <service android:name=".Bluetooth.BluetoothLeService" android:enabled="true"/>
     </application>
 </manifest>

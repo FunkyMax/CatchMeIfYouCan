@@ -4,29 +4,29 @@ import com.example.catchmeifyoucan.Activities.GameActivity
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
-const val T0 = 11520
-const val T45 = 22400
-const val P0 = 10752
-const val P45 = 16256
+private const val T0 = 11520
+private const val T45 = 22400
+private const val P0 = 10752
+private const val P45 = 16256
 
-const val radToDeg = 360 / (2 * Math.PI)
+private const val radToDeg = 360 / (2 * Math.PI)
 private const val power = 2.0
-const val sixteenToEightBitConverter = 256
+private const val sixteenToEightBitConverter = 256
 
-const val distanceToWall = 460.0
-const val wallWidth = 400
-const val wallHeight = 300
-const val displayWidth = 2860
-const val displayHeight = 1340
+private const val distanceToWall = 460.0
+private const val wallWidth = 400
+private const val wallHeight = 300
+private const val displayWidth = 2860
+private const val displayHeight = 1340
 
-const val playerMHOffsetX = 140
-const val randomBlueMHOffsetX = 166
-const val randomYellowMHOffsetX = 230
-const val randomRedMHOffsetX = 280
+private const val playerMHOffsetX = 140
+private const val randomBlueMHOffsetX = 166
+private const val randomYellowMHOffsetX = 230
+private const val randomRedMHOffsetX = 280
 
-class ViewsCoordinatesTranslator() {
+class ViewsCoordinatesTranslator {
     private val gameController = GameActivity.gameController
-    private val dataController = GameActivity.dataController
+    private val dataController = GameController.dataController
 
     private lateinit var playerJSONObject: JSONObject
     private lateinit var randomBlueJSONObject: JSONObject

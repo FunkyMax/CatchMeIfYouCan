@@ -1,16 +1,16 @@
 package com.example.catchmeifyoucan.Game
 
-import com.example.catchmeifyoucan.Activities.GameActivity
+import com.example.catchmeifyoucan.Activities.MenuActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-const val DELAY = 10L;
+const val DELAY = 10L
 
 class DataController {
 
-    private val bluetoothLeService = GameActivity.bluetoothLeService
-    private var collisionData = ""
+    private val bluetoothLeService = MenuActivity.bluetoothLeService
+    private var extraData = ""
 
     fun sendPanAndTiltValues(
         playerDMXValues: String,
@@ -19,8 +19,6 @@ class DataController {
         randomRedDMXValues: String
     ) {
         GlobalScope.launch{
-            bluetoothLeService.write(collisionData)
-            delay(DELAY)
             bluetoothLeService.write(playerDMXValues)
             delay(DELAY)
             bluetoothLeService.write(randomBlueDMXValues)
@@ -29,10 +27,18 @@ class DataController {
             delay(DELAY)
             bluetoothLeService.write(randomRedDMXValues)
             delay(DELAY)
+            if (!extraData.isEmpty()){
+                bluetoothLeService.write(extraData)
+                delay(DELAY)
+            }
         }
     }
 
     fun setCollisionData(jsonObject: String) {
-        collisionData = jsonObject
+        extraData = jsonObject
+    }
+
+    fun setResetData(jsonObject: String){
+        bluetoothLeService.write(jsonObject)
     }
 }

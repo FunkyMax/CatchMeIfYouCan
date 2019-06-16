@@ -38,6 +38,7 @@ class BluetoothLeService(bluetoothManager: BluetoothManager) : Service() {
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 mConnectionState = STATE_DISCONNECTED
+                println("DISCONNECTED")
             }
         }
 

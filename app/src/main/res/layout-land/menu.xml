@@ -13,19 +13,12 @@
             android:onClick="onButtonClicked"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="256dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="304dp" android:gravity="center"/>
+            android:layout_marginStart="304dp" android:gravity="center" android:fontFamily="@font/coolvetica"
+            android:textColor="#FFFFFF" android:textSize="18sp"/>
     <com.example.catchmeifyoucan.views.ArrowView
             android:layout_width="950px"
             android:layout_height="500px"
-            android:id="@+id/arrowView" android:rotation="0"
-            app:arrow_color="#1976D2"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="88dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="156dp"/>
-    <com.example.catchmeifyoucan.views.ArrowView
-            android:layout_width="950px"
-            android:layout_height="500px"
-            android:id="@+id/arrowView2" android:rotation="180"
+            android:id="@+id/catchMeArrowView" android:rotation="180"
             app:arrow_color="#B20288D1"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="28dp" android:layout_marginEnd="168dp" app:layout_constraintEnd_toEndOf="parent"/>
@@ -33,20 +26,35 @@
             android:text="Catch me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/catchMe" android:gravity="center"
+            android:id="@+id/catchMeTextView" android:gravity="center"
             android:textSize="45sp"
             android:fontFamily="@font/coolvetica"
             android:textColor="#FFFFFF"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="64dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="380dp"/>
+    <com.example.catchmeifyoucan.views.ArrowView
+            android:layout_width="950px"
+            android:layout_height="500px"
+            android:id="@+id/ifYouCanArrowView" android:rotation="0"
+            app:arrow_color="#1976D2"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="88dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="156dp"/>
     <TextView
             android:text="if you can"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/ifYouCan" android:fontFamily="@font/coolvetica"
+            android:layout_height="wrap_content" android:id="@+id/ifYouCanTextView"
+            android:fontFamily="@font/coolvetica"
             android:textSize="45sp"
             android:textColor="#FFFFFF"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="120dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="172dp"/>
+    <ImageView
+            android:layout_width="33dp"
+            android:layout_height="57dp" app:srcCompat="@mipmap/bt_not_conected"
+            android:id="@+id/bt_View" android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="287dp"/>
 </android.support.constraint.ConstraintLayout>
