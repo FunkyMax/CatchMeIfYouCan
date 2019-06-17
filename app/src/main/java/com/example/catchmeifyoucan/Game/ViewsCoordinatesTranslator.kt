@@ -198,52 +198,22 @@ class ViewsCoordinatesTranslator {
         val randomRedDMXTilt = (T0 + ((T45 - T0) / 45) * randomRedDegreesTilt).roundToInt()
 
         val playerDMXPanForChannel1 = (Math.floor(playerDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
-        val playerDMXPanForChannel2 = playerDMXPan.rem(sixteenToEightBitConverter)
         val playerDMXTiltForChannel3 = (Math.floor(playerDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
-        val playerDMXTiltForChannel4 = playerDMXTilt.rem(sixteenToEightBitConverter)
 
         val randomGreenDMXPanForChannel26 =
             (Math.floor(randomGreenDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomGreenDMXPanForChannel27 = randomGreenDMXPan.rem(sixteenToEightBitConverter)
         val randomGreenDMXTiltForChannel28 =
             (Math.floor(randomGreenDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomGreenDMXTiltForChannel29 = randomGreenDMXTilt.rem(sixteenToEightBitConverter)
 
         val randomYellowDMXPanForChannel51 =
             (Math.floor(randomYellowDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomYellowDMXPanForChannel52 = randomYellowDMXPan.rem(sixteenToEightBitConverter)
         val randomYellowDMXTiltForChannel53 =
             (Math.floor(randomYellowDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomYellowDMXTiltForChannel54 = randomYellowDMXTilt.rem(sixteenToEightBitConverter)
 
         val randomRedDMXPanForChannel76 =
             (Math.floor(randomRedDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomRedDMXPanForChannel77 = randomRedDMXPan.rem(sixteenToEightBitConverter)
         val randomRedDMXTiltForChannel78 =
             (Math.floor(randomRedDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomRedDMXTiltForChannel79 = randomRedDMXTilt.rem(sixteenToEightBitConverter)
-
-        /*
-        println("playerDMXPanForChannel1: " + playerDMXPanForChannel1)
-        //println("playerDMXPanForChannel2: " + playerDMXPanForChannel2)
-        println("playerDMXTiltForChannel3: " + playerDMXTiltForChannel3)
-        //println("playerDMXTiltForChannel4: " + playerDMXTiltForChannel4)
-        println("\n")
-        println("randomGreenDMXPanForChannel26: " + randomGreenDMXPanForChannel26)
-        //println("randomGreenDMXPanForChannel27: " + randomGreenDMXPanForChannel27)
-        println("randomGreenDMXTiltForChannel28: " + randomGreenDMXTiltForChannel28)
-        //println("randomGreenDMXTiltForChannel29: " + randomGreenDMXTiltForChannel29)
-        println("\n")
-        println("randomYellowDMXPanForChannel51: " + randomYellowDMXPanForChannel51)
-        //println("randomYellowDMXPanForChannel52: " + randomYellowDMXPanForChannel52)
-        println("randomYellowDMXTiltForChannel53: " + randomYellowDMXTiltForChannel53)
-        //println("randomYellowDMXTiltForChannel54: " + randomYellowDMXTiltForChannel54)
-        println("\n")
-        println("randomRedDMXPanForChannel76: " + randomRedDMXPanForChannel76)
-        //println("randomRedDMXPanForChannel77: " + randomRedDMXPanForChannel77)
-        println("randomRedDMXTiltForChannel78: " + randomRedDMXTiltForChannel78)
-        //println("randomRedDMXTiltForChannel79: " + randomRedDMXTiltForChannel79)
-        */
 
         // put values into corresponding JSONObjects
         playerJSONObject.put(playerPanChannel, playerDMXPanForChannel1)

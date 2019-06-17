@@ -54,10 +54,6 @@ class DataController {
         }
     }
 
-    fun setPlayerMovingHeadBrightnessData(jsonObject: String) {
-        playerMovingHeadBrightnessData = jsonObject
-    }
-
     fun setRandomGreenMovingHeadBrightnessData(jsonObject: String) {
         randomGreenMovingHeadBrightnessData = jsonObject
     }
@@ -68,13 +64,6 @@ class DataController {
 
     fun setRandomRedMovingHeadBrightnessData(jsonObject: String) {
         randomRedMovingHeadBrightnessData = jsonObject
-    }
-
-    fun resetEachMHsJSONBrightnessData() {
-        playerMovingHeadBrightnessData = ""
-        randomGreenMovingHeadBrightnessData = ""
-        randomYellowMovingHeadBrightnessData = ""
-        randomRedMovingHeadBrightnessData = ""
     }
 
     fun setResetData(jsonObject: String){

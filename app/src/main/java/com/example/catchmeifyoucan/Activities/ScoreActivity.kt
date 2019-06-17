@@ -7,16 +7,12 @@ import android.view.View
 import android.view.Window
 import com.example.catchmeifyoucan.R
 import kotlinx.android.synthetic.main.score.*
-import org.json.JSONObject
 
 class ScoreActivity: AppCompatActivity() {
 
     companion object{
-        private var highScore = -100
+        private var overallHighScore = -100
     }
-
-    private val resetJSONObject = JSONObject()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +28,8 @@ class ScoreActivity: AppCompatActivity() {
         super.onResume()
         val extra = intent.getStringExtra("score")
         score.text = extra.toString()
-        if (extra.toInt() > highScore) highScore = extra.toInt()
-        highScoreTextView.text = highScore.toString()
+        if (extra.toInt() > overallHighScore) overallHighScore = extra.toInt()
+        highScore.text = overallHighScore.toString()
     }
 
     override fun onStop() {

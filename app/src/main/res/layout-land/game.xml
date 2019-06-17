@@ -11,7 +11,7 @@
             android:layout_height="278dp"
             android:layout_width="340dp"
             android:visibility="visible"
-            app:JV_buttonImage="@drawable/fbi_hat"
+            app:JV_buttonImage="@mipmap/fbi_hat"
             app:JV_backgroundColor="#FFFFFF"
             app:JV_borderColor="#4FC3F7"
             app:JV_borderWidth="4dp"

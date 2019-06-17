@@ -26,7 +26,6 @@ private const val power = 2.0
 private const val visualCollisionBrightnessFeedback = 1
 private const val visualCollisionBrightnessFeedbackReset = 100
 
-private const val EMPTY_STRING = ""
 private const val randomGreenBrightnessChannel = "32"
 private const val randomYellowBrightnessChannel = "57"
 private const val randomRedBrightnessChannel = "82"
@@ -413,24 +412,7 @@ class GameController{
         val jsonObject = JSONObject()
         jsonObject.put("B", 1)
         jsonObject.put(channel, brightness)
-        //transferDataToDataControllerAndReleaseJSONObjectAfterwards(jsonObject)
         return jsonObject.toString()
-    }
-
-    private fun transferDataToDataControllerAndReleaseJSONObjectAfterwards(jsonObject: JSONObject) {
-        GlobalScope.launch {
-            if (jsonObject.has(randomGreenBrightnessChannel)) dataController.setRandomGreenMovingHeadBrightnessData(
-                jsonObject.toString()
-            )
-            else if (jsonObject.has(randomYellowBrightnessChannel)) dataController.setRandomYellowMovingHeadBrightnessData(
-                jsonObject.toString()
-            )
-            else if (jsonObject.has(randomRedBrightnessChannel)) dataController.setRandomRedMovingHeadBrightnessData(
-                jsonObject.toString()
-            )
-            delay(collisionForbiddenDuration)
-            dataController.resetEachMHsJSONBrightnessData()
-        }
     }
 
     private fun playerHeadlightBeamViewTouchesHeightBorders() = playerHeadlightBeamViewNextY > displayHeightBorder || playerHeadlightBeamViewNextY <= 0
