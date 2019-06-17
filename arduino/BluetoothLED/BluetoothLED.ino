@@ -119,11 +119,16 @@ bool parseJSONObject(JsonDocument *doc, char buff[]) {
 
 // Evaluates incoming JSONObject
 void evaluateJSONObject(JsonDocument doc) {
-  if (doc["C"]){
-    //int value = doc["C"];
+
+  // check for special data
+  // "B" represents Brightness - these JSONObjects take care of each MH's brightness after collision for example
+  if (doc["B"]){
+    //int value = doc["B"];
     //Serial.println(value);
     onCollision(doc);
   }
+
+  // "R" represents Reset - this JSONObject is only sent once after the game has finished in order to reset each MH's pan and tilt values
   if (doc["R"]){
     stopGame();
   }
@@ -190,7 +195,7 @@ void evaluateJSONObject(JsonDocument doc) {
 
 void onCollision(JsonDocument doc){
   if (doc["32"]){
-    //Serial.println("BLUE");
+    //Serial.println("GREEN");
     DMXSerial.write(32, doc["32"]);
   }
   if (doc["57"]){
@@ -215,7 +220,8 @@ void sendPanAndTiltValuesToMHs(){
   DMXSerial.write(53, randomYellowTilt);    //Tilt
 
   DMXSerial.write(76, randomRedPan);        //Pan
-  DMXSerial.write(78, randomRedTilt);       //Tilt  
+  DMXSerial.write(78, randomRedTilt);       //Tilt
+  
 }
 
 // Initializes MHs values that rarely or never change
@@ -229,9 +235,9 @@ void initializeMHs(){
   DMXSerial.write(9, playerFarbe);          //Farbe
 
   DMXSerial.write(30, velocity);            //Motorgeschwindigkeit
-  DMXSerial.write(32, randomGreenDimmer);    //Dimmer
-  DMXSerial.write(33, randomGreenShutter);   //Shutter
-  DMXSerial.write(34, randomGreenFarbe);     //Farbe
+  DMXSerial.write(32, randomGreenDimmer);   //Dimmer
+  DMXSerial.write(33, randomGreenShutter);  //Shutter
+  DMXSerial.write(34, randomGreenFarbe);    //Farbe
 
   DMXSerial.write(55, velocity);            //Motorgeschwindigkeit
   DMXSerial.write(57, randomYellowDimmer);  //Dimmer
@@ -240,9 +246,8 @@ void initializeMHs(){
   
   DMXSerial.write(80, velocity);            //Motorgeschwindigkeit
   DMXSerial.write(82, randomRedDimmer);     //Dimmer
-  DMXSerial.write(83, randomRedShutter);     //Shutter
+  DMXSerial.write(83, randomRedShutter);    //Shutter
   DMXSerial.write(84, randomRedFarbe);      //Farbe
-  
 }
 
 // Is called when the game is finished and the user returns to menu
@@ -264,7 +269,6 @@ void stopGame(){
   DMXSerial.write(76, resetPan);
   DMXSerial.write(78, resetTilt);
   DMXSerial.write(82, resetBrightness);
-  
 }
 
 // Empties JSON Buffer

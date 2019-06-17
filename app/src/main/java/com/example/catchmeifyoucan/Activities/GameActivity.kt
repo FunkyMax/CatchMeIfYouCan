@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.Window
 import com.example.catchmeifyoucan.Game.GameController
+import com.example.catchmeifyoucan.Game.gameDuration
 import com.example.catchmeifyoucan.R
 import kotlinx.android.synthetic.main.game.*
 import kotlinx.coroutines.GlobalScope
@@ -42,7 +43,7 @@ class GameActivity : AppCompatActivity(){
         gameController.initializeGameController(views)
 
         GlobalScope.launch {
-            delay(45000)
+            delay(gameDuration)
             gameController.endGame()
             goBackToMenu()
         }

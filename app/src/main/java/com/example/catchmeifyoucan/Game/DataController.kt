@@ -10,9 +10,12 @@ const val DELAY = 10L
 class DataController {
 
     private val bluetoothLeService = MenuActivity.bluetoothLeService
-    private var extraData = ""
+    private var playerMovingHeadBrightnessData = ""
+    private var randomGreenMovingHeadBrightnessData = ""
+    private var randomYellowMovingHeadBrightnessData = ""
+    private var randomRedMovingHeadBrightnessData = ""
 
-    fun sendPanAndTiltValues(
+    fun sendData(
         playerDMXValues: String,
         randomGreenDMXValues: String,
         randomYellowDMXValues: String,
@@ -27,15 +30,51 @@ class DataController {
             delay(DELAY)
             bluetoothLeService.write(randomRedDMXValues)
             delay(DELAY)
-            if (!extraData.isEmpty()){
-                bluetoothLeService.write(extraData)
+
+            if (playerMovingHeadBrightnessData.isNotEmpty()) {
+                bluetoothLeService.write(playerMovingHeadBrightnessData)
+                println(playerMovingHeadBrightnessData)
+                delay(DELAY)
+            }
+            if (randomGreenMovingHeadBrightnessData.isNotEmpty()) {
+                bluetoothLeService.write(randomGreenMovingHeadBrightnessData)
+                println(randomGreenMovingHeadBrightnessData)
+                delay(DELAY)
+            }
+            if (randomYellowMovingHeadBrightnessData.isNotEmpty()) {
+                bluetoothLeService.write(randomYellowMovingHeadBrightnessData)
+                println(randomYellowMovingHeadBrightnessData)
+                delay(DELAY)
+            }
+            if (randomRedMovingHeadBrightnessData.isNotEmpty()) {
+                bluetoothLeService.write(randomRedMovingHeadBrightnessData)
+                println(randomRedMovingHeadBrightnessData)
                 delay(DELAY)
             }
         }
     }
 
-    fun setCollisionData(jsonObject: String) {
-        extraData = jsonObject
+    fun setPlayerMovingHeadBrightnessData(jsonObject: String) {
+        playerMovingHeadBrightnessData = jsonObject
+    }
+
+    fun setRandomGreenMovingHeadBrightnessData(jsonObject: String) {
+        randomGreenMovingHeadBrightnessData = jsonObject
+    }
+
+    fun setRandomYellowMovingHeadBrightnessData(jsonObject: String) {
+        randomYellowMovingHeadBrightnessData = jsonObject
+    }
+
+    fun setRandomRedMovingHeadBrightnessData(jsonObject: String) {
+        randomRedMovingHeadBrightnessData = jsonObject
+    }
+
+    fun resetEachMHsJSONBrightnessData() {
+        playerMovingHeadBrightnessData = ""
+        randomGreenMovingHeadBrightnessData = ""
+        randomYellowMovingHeadBrightnessData = ""
+        randomRedMovingHeadBrightnessData = ""
     }
 
     fun setResetData(jsonObject: String){

@@ -13,18 +13,28 @@ private const val radToDeg = 360 / (2 * Math.PI)
 private const val power = 2.0
 private const val sixteenToEightBitConverter = 256
 
-private const val distanceToWall = 360.0
+private const val distanceToWall = 350.0
 private const val wallWidth = 400
 private const val wallHeight = 300
 private const val displayWidth = 2860
 private const val displayHeight = 1340
 
-private const val playerMHOffsetX = 140
-private const val randomGreenMHOffsetX = 166
-private const val randomYellowMHOffsetX = 230
-private const val randomRedMHOffsetX = 280
+private const val playerMHOffsetX = 103
+private const val randomGreenMHOffsetX = 168
+private const val randomYellowMHOffsetX = 232
+private const val randomRedMHOffsetX = 297
+
+private const val playerPanChannel = "1"
+private const val playerTiltChannel = "3"
+private const val randomGreenPanChannel = "26"
+private const val randomGreenTiltChannel = "28"
+private const val randomYellowPanChannel = "51"
+private const val randomYellowTiltChannel = "53"
+private const val randomRedPanChannel = "76"
+private const val randomRedTiltChannel = "78"
 
 class ViewsCoordinatesTranslator {
+
     private val gameController = GameActivity.gameController
     private val dataController = GameController.dataController
 
@@ -236,21 +246,21 @@ class ViewsCoordinatesTranslator {
         */
 
         // put values into corresponding JSONObjects
-        playerJSONObject.put("1", playerDMXPanForChannel1)
-        playerJSONObject.put("3", playerDMXTiltForChannel3)
+        playerJSONObject.put(playerPanChannel, playerDMXPanForChannel1)
+        playerJSONObject.put(playerTiltChannel, playerDMXTiltForChannel3)
 
-        randomGreenJSONObject.put("26", randomGreenDMXPanForChannel26)
-        randomGreenJSONObject.put("28", randomGreenDMXTiltForChannel28)
+        randomGreenJSONObject.put(randomGreenPanChannel, randomGreenDMXPanForChannel26)
+        randomGreenJSONObject.put(randomGreenTiltChannel, randomGreenDMXTiltForChannel28)
 
-        randomYellowJSONObject.put("51", randomYellowDMXPanForChannel51)
-        randomYellowJSONObject.put("53", randomYellowDMXTiltForChannel53)
+        randomYellowJSONObject.put(randomYellowPanChannel, randomYellowDMXPanForChannel51)
+        randomYellowJSONObject.put(randomYellowTiltChannel, randomYellowDMXTiltForChannel53)
 
-        randomRedJSONObject.put("76", randomRedDMXPanForChannel76)
-        randomRedJSONObject.put("78", randomRedDMXTiltForChannel78)
+        randomRedJSONObject.put(randomRedPanChannel, randomRedDMXPanForChannel76)
+        randomRedJSONObject.put(randomRedTiltChannel, randomRedDMXTiltForChannel78)
     }
 
     private fun sendData() {
-        dataController.sendPanAndTiltValues(
+        dataController.sendData(
             playerJSONObject.toString(),
             randomGreenJSONObject.toString(),
             randomYellowJSONObject.toString(),
