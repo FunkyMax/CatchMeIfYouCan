@@ -11,9 +11,9 @@
             android:layout_height="278dp"
             android:layout_width="340dp"
             android:visibility="visible"
-            app:JV_buttonColor="#FF6E40"
-            app:JV_backgroundColor="#61009688"
-            app:JV_borderColor="#00796B"
+            app:JV_buttonImage="@drawable/fbi_hat"
+            app:JV_backgroundColor="#FFFFFF"
+            app:JV_borderColor="#4FC3F7"
             app:JV_borderWidth="4dp"
             app:JV_buttonSizeRatio="15%"
             android:layout_marginTop="255dp"
@@ -29,10 +29,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="184dp" android:layout_marginStart="512dp"/>
-    <com.example.catchmeifyoucan.views.RandomBlueHeadlightBeamView
+    <com.example.catchmeifyoucan.views.RandomGreenHeadlightBeamView
             android:layout_width="60px"
             android:layout_height="60px"
-            android:id="@+id/randomBlueHeadlightBeamView"
+            android:id="@+id/randomGreenHeadlightBeamView"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="209dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="100dp"/>

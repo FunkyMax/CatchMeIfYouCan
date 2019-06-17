@@ -14,14 +14,14 @@ class DataController {
 
     fun sendPanAndTiltValues(
         playerDMXValues: String,
-        randomBlueDMXValues: String,
+        randomGreenDMXValues: String,
         randomYellowDMXValues: String,
         randomRedDMXValues: String
     ) {
         GlobalScope.launch{
             bluetoothLeService.write(playerDMXValues)
             delay(DELAY)
-            bluetoothLeService.write(randomBlueDMXValues)
+            bluetoothLeService.write(randomGreenDMXValues)
             delay(DELAY)
             bluetoothLeService.write(randomYellowDMXValues)
             delay(DELAY)

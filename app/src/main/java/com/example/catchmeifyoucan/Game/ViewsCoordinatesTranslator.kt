@@ -13,14 +13,14 @@ private const val radToDeg = 360 / (2 * Math.PI)
 private const val power = 2.0
 private const val sixteenToEightBitConverter = 256
 
-private const val distanceToWall = 460.0
+private const val distanceToWall = 360.0
 private const val wallWidth = 400
 private const val wallHeight = 300
 private const val displayWidth = 2860
 private const val displayHeight = 1340
 
 private const val playerMHOffsetX = 140
-private const val randomBlueMHOffsetX = 166
+private const val randomGreenMHOffsetX = 166
 private const val randomYellowMHOffsetX = 230
 private const val randomRedMHOffsetX = 280
 
@@ -28,20 +28,20 @@ class ViewsCoordinatesTranslator {
     private val gameController = GameActivity.gameController
     private val dataController = GameController.dataController
 
-    private lateinit var playerJSONObject: JSONObject
-    private lateinit var randomBlueJSONObject: JSONObject
-    private lateinit var randomYellowJSONObject: JSONObject
-    private lateinit var randomRedJSONObject: JSONObject
+    private val playerJSONObject = JSONObject()
+    private val randomGreenJSONObject = JSONObject()
+    private val randomYellowJSONObject = JSONObject()
+    private val randomRedJSONObject = JSONObject()
 
     private var playerHeadlightBeamViewCurrentPixelX = 0
     private var playerHeadlightBeamViewCurrentWallX = 0.0
     private var playerHeadlightBeamViewCurrentPixelY = 0
     private var playerHeadlightBeamViewCurrentWallY = 0.0
 
-    private var randomBlueHeadlightBeamViewCurrentPixelX = 0
-    private var randomBlueHeadlightBeamViewCurrentWallX = 0.0
-    private var randomBlueHeadlightBeamViewCurrentPixelY = 0
-    private var randomBlueHeadlightBeamViewCurrentWallY = 0.0
+    private var randomGreenHeadlightBeamViewCurrentPixelX = 0
+    private var randomGreenHeadlightBeamViewCurrentWallX = 0.0
+    private var randomGreenHeadlightBeamViewCurrentPixelY = 0
+    private var randomGreenHeadlightBeamViewCurrentWallY = 0.0
 
     private var randomYellowHeadlightBeamViewCurrentPixelX = 0
     private var randomYellowHeadlightBeamViewCurrentWallX = 0.0
@@ -64,8 +64,8 @@ class ViewsCoordinatesTranslator {
         playerHeadlightBeamViewCurrentPixelX = gameController.getPlayerHeadlightBeamViewCurrentX()
         playerHeadlightBeamViewCurrentPixelY = gameController.getPlayerHeadlightBeamViewCurrentY()
 
-        randomBlueHeadlightBeamViewCurrentPixelX = gameController.getRandomBlueHeadlightBeamViewCurrentX()
-        randomBlueHeadlightBeamViewCurrentPixelY = gameController.getRandomBlueHeadlightBeamViewCurrentY()
+        randomGreenHeadlightBeamViewCurrentPixelX = gameController.getRandomGreenHeadlightBeamViewCurrentX()
+        randomGreenHeadlightBeamViewCurrentPixelY = gameController.getRandomGreenHeadlightBeamViewCurrentY()
 
         randomYellowHeadlightBeamViewCurrentPixelX = gameController.getRandomYellowHeadlightBeamViewCurrentX()
         randomYellowHeadlightBeamViewCurrentPixelY = gameController.getRandomYellowHeadlightBeamViewCurrentY()
@@ -80,10 +80,10 @@ class ViewsCoordinatesTranslator {
         playerHeadlightBeamViewCurrentWallY =
             (((-playerHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
 
-        randomBlueHeadlightBeamViewCurrentWallX =
-            (((randomBlueHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomBlueMHOffsetX)
-        randomBlueHeadlightBeamViewCurrentWallY =
-            (((-randomBlueHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
+        randomGreenHeadlightBeamViewCurrentWallX =
+            (((randomGreenHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomGreenMHOffsetX)
+        randomGreenHeadlightBeamViewCurrentWallY =
+            (((-randomGreenHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
 
         randomYellowHeadlightBeamViewCurrentWallX =
             (((randomYellowHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomYellowMHOffsetX)
@@ -117,21 +117,21 @@ class ViewsCoordinatesTranslator {
                     )
         ) * radToDeg
 
-        // calculate Pan and Tilt Values in Degrees for randomBlueHeadlightBeam
-        val randomBlueDegreesPan = Math.asin(
-            randomBlueHeadlightBeamViewCurrentWallX /
+        // calculate Pan and Tilt Values in Degrees for randomGreenHeadlightBeam
+        val randomGreenDegreesPan = Math.asin(
+            randomGreenHeadlightBeamViewCurrentWallX /
                     Math.sqrt(
-                        Math.pow(randomBlueHeadlightBeamViewCurrentWallX, power) + Math.pow(
-                            randomBlueHeadlightBeamViewCurrentWallY,
+                        Math.pow(randomGreenHeadlightBeamViewCurrentWallX, power) + Math.pow(
+                            randomGreenHeadlightBeamViewCurrentWallY,
                             power
                         ) + Math.pow(distanceToWall, power)
                     )
         ) * radToDeg
-        val randomBlueDegreesTilt = Math.asin(
-            randomBlueHeadlightBeamViewCurrentWallY /
+        val randomGreenDegreesTilt = Math.asin(
+            randomGreenHeadlightBeamViewCurrentWallY /
                     Math.sqrt(
-                        Math.pow(randomBlueHeadlightBeamViewCurrentWallX, power) + Math.pow(
-                            randomBlueHeadlightBeamViewCurrentWallY,
+                        Math.pow(randomGreenHeadlightBeamViewCurrentWallX, power) + Math.pow(
+                            randomGreenHeadlightBeamViewCurrentWallY,
                             power
                         ) + Math.pow(distanceToWall, power)
                     )
@@ -180,8 +180,8 @@ class ViewsCoordinatesTranslator {
         // transform Degree Pan and Tilt Values into DMX friendly values
         val playerDMXPan = (P0 + ((P45 - P0) / 45) * playerDegreesPan).roundToInt()
         val playerDMXTilt = (T0 + ((T45 - T0) / 45) * playerDegreesTilt).roundToInt()
-        val randomBlueDMXPan = (P0 + ((P45 - P0) / 45) * randomBlueDegreesPan).roundToInt()
-        val randomBlueDMXTilt = (T0 + ((T45 - T0) / 45) * randomBlueDegreesTilt).roundToInt()
+        val randomGreenDMXPan = (P0 + ((P45 - P0) / 45) * randomGreenDegreesPan).roundToInt()
+        val randomGreenDMXTilt = (T0 + ((T45 - T0) / 45) * randomGreenDegreesTilt).roundToInt()
         val randomYellowDMXPan = (P0 + ((P45 - P0) / 45) * randomYellowDegreesPan).roundToInt()
         val randomYellowDMXTilt = (T0 + ((T45 - T0) / 45) * randomYellowDegreesTilt).roundToInt()
         val randomRedDMXPan = (P0 + ((P45 - P0) / 45) * randomRedDegreesPan).roundToInt()
@@ -192,12 +192,12 @@ class ViewsCoordinatesTranslator {
         val playerDMXTiltForChannel3 = (Math.floor(playerDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
         val playerDMXTiltForChannel4 = playerDMXTilt.rem(sixteenToEightBitConverter)
 
-        val randomBlueDMXPanForChannel26 =
-            (Math.floor(randomBlueDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomBlueDMXPanForChannel27 = randomBlueDMXPan.rem(sixteenToEightBitConverter)
-        val randomBlueDMXTiltForChannel28 =
-            (Math.floor(randomBlueDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
-        val randomBlueDMXTiltForChannel29 = randomBlueDMXTilt.rem(sixteenToEightBitConverter)
+        val randomGreenDMXPanForChannel26 =
+            (Math.floor(randomGreenDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
+        val randomGreenDMXPanForChannel27 = randomGreenDMXPan.rem(sixteenToEightBitConverter)
+        val randomGreenDMXTiltForChannel28 =
+            (Math.floor(randomGreenDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
+        val randomGreenDMXTiltForChannel29 = randomGreenDMXTilt.rem(sixteenToEightBitConverter)
 
         val randomYellowDMXPanForChannel51 =
             (Math.floor(randomYellowDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
@@ -219,10 +219,10 @@ class ViewsCoordinatesTranslator {
         println("playerDMXTiltForChannel3: " + playerDMXTiltForChannel3)
         //println("playerDMXTiltForChannel4: " + playerDMXTiltForChannel4)
         println("\n")
-        println("randomBlueDMXPanForChannel26: " + randomBlueDMXPanForChannel26)
-        //println("randomBlueDMXPanForChannel27: " + randomBlueDMXPanForChannel27)
-        println("randomBlueDMXTiltForChannel28: " + randomBlueDMXTiltForChannel28)
-        //println("randomBlueDMXTiltForChannel29: " + randomBlueDMXTiltForChannel29)
+        println("randomGreenDMXPanForChannel26: " + randomGreenDMXPanForChannel26)
+        //println("randomGreenDMXPanForChannel27: " + randomGreenDMXPanForChannel27)
+        println("randomGreenDMXTiltForChannel28: " + randomGreenDMXTiltForChannel28)
+        //println("randomGreenDMXTiltForChannel29: " + randomGreenDMXTiltForChannel29)
         println("\n")
         println("randomYellowDMXPanForChannel51: " + randomYellowDMXPanForChannel51)
         //println("randomYellowDMXPanForChannel52: " + randomYellowDMXPanForChannel52)
@@ -236,19 +236,15 @@ class ViewsCoordinatesTranslator {
         */
 
         // put values into corresponding JSONObjects
-        playerJSONObject = JSONObject()
         playerJSONObject.put("1", playerDMXPanForChannel1)
         playerJSONObject.put("3", playerDMXTiltForChannel3)
 
-        randomBlueJSONObject = JSONObject()
-        randomBlueJSONObject.put("26", randomBlueDMXPanForChannel26)
-        randomBlueJSONObject.put("28", randomBlueDMXTiltForChannel28)
+        randomGreenJSONObject.put("26", randomGreenDMXPanForChannel26)
+        randomGreenJSONObject.put("28", randomGreenDMXTiltForChannel28)
 
-        randomYellowJSONObject = JSONObject()
         randomYellowJSONObject.put("51", randomYellowDMXPanForChannel51)
         randomYellowJSONObject.put("53", randomYellowDMXTiltForChannel53)
 
-        randomRedJSONObject = JSONObject()
         randomRedJSONObject.put("76", randomRedDMXPanForChannel76)
         randomRedJSONObject.put("78", randomRedDMXTiltForChannel78)
     }
@@ -256,7 +252,7 @@ class ViewsCoordinatesTranslator {
     private fun sendData() {
         dataController.sendPanAndTiltValues(
             playerJSONObject.toString(),
-            randomBlueJSONObject.toString(),
+            randomGreenJSONObject.toString(),
             randomYellowJSONObject.toString(),
             randomRedJSONObject.toString()
         )

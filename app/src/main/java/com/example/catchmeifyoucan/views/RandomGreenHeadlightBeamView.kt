@@ -7,13 +7,13 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-class RandomBlueHeadlightBeamView : View {
+class RandomGreenHeadlightBeamView : View {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     private val paint = Paint()
 
     override fun onDraw(canvas: Canvas?) {
         paint.isAntiAlias = true
-        paint.color = Color.BLUE
+        paint.color = Color.GREEN
         canvas?.drawCircle(30f,30f,30f, paint)
     }
 }

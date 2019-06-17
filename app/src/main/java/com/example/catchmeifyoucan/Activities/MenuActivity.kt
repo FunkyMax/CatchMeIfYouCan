@@ -22,7 +22,8 @@ class MenuActivity : AppCompatActivity() {
 
     private var mediaPlayer = MediaPlayer()
     private lateinit var bluetoothView : ImageView
-    // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in GameActivity. See above for more info.
+
+    // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in MenuActivity. See above for more info.
     private lateinit var bluetoothAdapter : BluetoothAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -28,7 +28,16 @@ class GameActivity : AppCompatActivity(){
             systemUiVisibility =
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
-        views = arrayOf(joystickView, playerHeadlightBeamView, randomBlueHeadlightBeamView, randomYellowHeadlightBeamView, randomRedHeadlightBeamView, score, time)
+
+        views = arrayOf(
+            joystickView,
+            playerHeadlightBeamView,
+            randomGreenHeadlightBeamView,
+            randomYellowHeadlightBeamView,
+            randomRedHeadlightBeamView,
+            score,
+            time
+        )
         gameController = GameController()
         gameController.initializeGameController(views)
 
