@@ -14,6 +14,6 @@ class PlayerHeadlightBeamView : View {
     override fun onDraw(canvas: Canvas?) {
         paint.isAntiAlias = true
         paint.color = Color.BLUE
-        canvas?.drawCircle(50f,50f,50f, paint)
+        canvas?.drawCircle(30f, 30f, 30f, paint)
     }
 }

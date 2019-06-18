@@ -14,11 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class GameActivity : AppCompatActivity(){
-
-    companion object{
-        lateinit var gameController: GameController
-    }
-
+    private val gameController = GameController()
     private lateinit var views : Array<View>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,21 +35,29 @@ class GameActivity : AppCompatActivity(){
             score,
             time
         )
-        gameController = GameController()
-        gameController.initializeGameController(views)
 
+        val context = applicationContext
+        gameController.setContext(context);
+        startGame()
+    }
+
+    fun getGameController(): GameController {
+        return gameController
+    }
+
+    private fun startGame() {
+        gameController.initializeGameController(views)
         GlobalScope.launch {
             delay(gameDuration)
             gameController.endGame()
             goBackToMenu()
         }
     }
-
     private fun goBackToMenu(){
         val startScoreActivity = Intent(this, ScoreActivity::class.java)
         startScoreActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startScoreActivity.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startScoreActivity.putExtra("score", (gameController.score).toString())
+        startScoreActivity.putExtra("score", gameController.getScore().toString())
         startActivity(startScoreActivity)
         finish()
     }

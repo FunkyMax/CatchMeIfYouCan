@@ -1,4 +1,4 @@
-package com.example.catchmeifyoucan.Bluetooth
+package com.example.catchmeifyoucan.Services
 
 import android.app.Service
 import android.bluetooth.*

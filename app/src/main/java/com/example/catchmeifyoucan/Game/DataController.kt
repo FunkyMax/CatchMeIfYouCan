@@ -33,22 +33,18 @@ class DataController {
 
             if (playerMovingHeadBrightnessData.isNotEmpty()) {
                 bluetoothLeService.write(playerMovingHeadBrightnessData)
-                println(playerMovingHeadBrightnessData)
                 delay(DELAY)
             }
             if (randomGreenMovingHeadBrightnessData.isNotEmpty()) {
                 bluetoothLeService.write(randomGreenMovingHeadBrightnessData)
-                println(randomGreenMovingHeadBrightnessData)
                 delay(DELAY)
             }
             if (randomYellowMovingHeadBrightnessData.isNotEmpty()) {
                 bluetoothLeService.write(randomYellowMovingHeadBrightnessData)
-                println(randomYellowMovingHeadBrightnessData)
                 delay(DELAY)
             }
             if (randomRedMovingHeadBrightnessData.isNotEmpty()) {
                 bluetoothLeService.write(randomRedMovingHeadBrightnessData)
-                println(randomRedMovingHeadBrightnessData)
                 delay(DELAY)
             }
         }

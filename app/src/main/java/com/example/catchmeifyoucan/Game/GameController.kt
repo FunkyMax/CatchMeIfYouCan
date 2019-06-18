@@ -2,9 +2,11 @@ package com.example.catchmeifyoucan.Game
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Handler
 import android.view.View
 import android.widget.TextView
+import com.example.catchmeifyoucan.Services.VibratorService
 import com.example.catchmeifyoucan.views.PlayerHeadlightBeamView
 import com.example.catchmeifyoucan.views.RandomGreenHeadlightBeamView
 import com.example.catchmeifyoucan.views.RandomRedHeadlightBeamView
@@ -19,7 +21,7 @@ import kotlin.random.Random
 
 private const val displayWidthBorder = 2860
 private const val displayHeightBorder = 1340
-private const val collisionMaxDistance = 75
+private const val collisionMaxDistance = 70
 private const val collisionForbiddenDuration = 2500L
 private const val randomYellowAppearanceDuration = 7500L
 private const val power = 2.0
@@ -30,7 +32,7 @@ private const val randomGreenBrightnessChannel = "32"
 private const val randomYellowBrightnessChannel = "57"
 private const val randomRedBrightnessChannel = "82"
 
-public const val gameDuration = 45000L
+const val gameDuration = 45000L
 
 class GameController{
 
@@ -39,12 +41,16 @@ class GameController{
         val dataController = DataController()
     }
 
+    //private val gameActivity = GameActivity()
+
     // game specific fields
     private val startTime = System.currentTimeMillis()
     private val random = Random
     private var strengthFromJoystick = 0f
-    private var speed = 0.45f
-    public var score = 0
+    private var speed = 1f
+    private var score = 0
+    private lateinit var context: Context
+    private lateinit var vibrator: VibratorService
     private lateinit var viewsCoordinatesTranslator : ViewsCoordinatesTranslator
     private lateinit var animatorSet: AnimatorSet
 
@@ -72,7 +78,7 @@ class GameController{
     private val randomGreenHeadlightMaxDistanceToNextPosition = 1500
 
     // randomYellowHeadlightBeam specific fields
-    private val randomYellowHeadlightBeamAnimationDuration = 1050L
+    private val randomYellowHeadlightBeamAnimationDuration = 1450L
     private val randomYellowHeadlightBeamViewCurrentCoordinates = IntArray(2)
     private var randomYellowHeadlightBeamViewCurrentX = 0f
     private var randomYellowHeadlightBeamViewCurrentY = 0f
@@ -82,7 +88,7 @@ class GameController{
     private val randomYellowHeadlightMaxDistanceToNextPosition = 1250
 
     // randomYellowHeadlightBeam specific fields
-    private val randomRedHeadlightBeamAnimationDuration = 1400L
+    private val randomRedHeadlightBeamAnimationDuration = 1600L
     private val randomRedHeadlightBeamViewCurrentCoordinates = IntArray(2)
     private var randomRedHeadlightBeamViewCurrentX = 0f
     private var randomRedHeadlightBeamViewCurrentY = 0f
@@ -153,20 +159,6 @@ class GameController{
             }
         }
 
-        val randomYellowHeadlightBeamViewVisibilityRunnable = object : Runnable {
-            override fun run() {
-                val alpha = if (randomYellowHeadlightBeamView.alpha == 0.01f) 1f else 0.01f
-                randomYellowHeadlightBeamView.alpha = alpha
-                dataController.setRandomYellowMovingHeadBrightnessData(
-                    getCorrespondingBrightnessJSONObject(
-                        randomYellowBrightnessChannel,
-                        (alpha * 100).toInt()
-                    )
-                )
-                randomHeadlightBeamViewsHandler.postDelayed(this, randomYellowAppearanceDuration)
-            }
-        }
-
         val viewsCoordinatesTranslatorRunnable = object : Runnable {
             override fun run() {
                 viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
@@ -177,13 +169,15 @@ class GameController{
         // Run the runnables
         randomGreenHeadlightBeamViewRunnable.run()
         randomYellowHeadlightBeamViewRunnable.run()
-        randomYellowHeadlightBeamViewVisibilityRunnable.run()
         randomRedHeadlightBeamViewRunnable.run()
         viewsCoordinatesTranslatorRunnable.run()
         playerHeadlightBeamViewRunnable.run()
 
         // Fill resetMHsJSONObject with reset pan and tilt values
         resetMHsJSONObject.put("R", 1)
+
+        // Initialize vibrator
+        vibrator = VibratorService(context)
     }
 
     fun endGame(){
@@ -319,17 +313,17 @@ class GameController{
             )
 
         if (distanceBetweenPlayerAndRandomGreenHeadlightBeamView <= collisionMaxDistance && distanceBetweenPlayerAndRandomGreenHeadlightBeamView > 0 && randomGreenHeadlightBeamView.alpha == 1f) {
-                score += 2
-            speed += 0.1f
+            score += 2
+            speed += 0.05f
             disableCollisions(randomGreenHeadlightBeamView)
         } else if (distanceBetweenPlayerAndRandomYellowHeadlightBeamView <= collisionMaxDistance && distanceBetweenPlayerAndRandomYellowHeadlightBeamView > 0 && randomYellowHeadlightBeamView.alpha == 1f) {
-                score += 5
-            speed += 0.1f
-                disableCollisions(randomYellowHeadlightBeamView)
+            score += 5
+            speed += 0.05f
+            disableCollisions(randomYellowHeadlightBeamView)
         } else if (distanceBetweenPlayerAndRandomRedHeadlightBeamView <= collisionMaxDistance && distanceBetweenPlayerAndRandomRedHeadlightBeamView > 0 && randomRedHeadlightBeamView.alpha == 1f) {
-                score -= 3
-            speed = 0.45f
-                disableCollisions(randomRedHeadlightBeamView)
+            if (score >= 3) score -= 3
+            speed = 1f
+            disableCollisions(randomRedHeadlightBeamView)
         }
         scoreTextView.text = score.toString()
     }
@@ -372,10 +366,10 @@ class GameController{
 
     private fun disableCollisions(randomHeadlightBeamView: View) {
         println(score)
-
+        vibrator.vibrate()
         GlobalScope.launch {
             randomHeadlightBeamView.alpha = .01f
-            dataController
+            delay(200);
             resolveCollisionData(randomHeadlightBeamView, visualCollisionBrightnessFeedback)
             delay(collisionForbiddenDuration)
             randomHeadlightBeamView.alpha = 1f
@@ -456,5 +450,13 @@ class GameController{
 
     fun getRandomRedHeadlightBeamViewCurrentY(): Int {
         return randomRedHeadlightBeamViewCurrentY.roundToInt()
+    }
+
+    fun getScore(): Int {
+        return score
+    }
+
+    fun setContext(context: Context) {
+        this.context = context
     }
 }

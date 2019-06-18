@@ -13,16 +13,16 @@ private const val radToDeg = 360 / (2 * Math.PI)
 private const val power = 2.0
 private const val sixteenToEightBitConverter = 256
 
-private const val distanceToWall = 350.0
+private const val distanceToWall = 400.0
 private const val wallWidth = 400
 private const val wallHeight = 300
 private const val displayWidth = 2860
 private const val displayHeight = 1340
 
-private const val playerMHOffsetX = 103
-private const val randomGreenMHOffsetX = 168
-private const val randomYellowMHOffsetX = 232
-private const val randomRedMHOffsetX = 297
+private const val playerMHOffsetX = 275
+private const val randomGreenMHOffsetX = 225
+private const val randomYellowMHOffsetX = 175
+private const val randomRedMHOffsetX = 125
 
 private const val playerPanChannel = "1"
 private const val playerTiltChannel = "3"
@@ -33,10 +33,10 @@ private const val randomYellowTiltChannel = "53"
 private const val randomRedPanChannel = "76"
 private const val randomRedTiltChannel = "78"
 
-class ViewsCoordinatesTranslator {
-
-    private val gameController = GameActivity.gameController
+class ViewsCoordinatesTranslator() {
     private val dataController = GameController.dataController
+    private val gameActivity = GameActivity()
+    private val gameController = gameActivity.getGameController()
 
     private val playerJSONObject = JSONObject()
     private val randomGreenJSONObject = JSONObject()
@@ -88,7 +88,7 @@ class ViewsCoordinatesTranslator {
         playerHeadlightBeamViewCurrentWallX =
             (((playerHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - playerMHOffsetX)
         playerHeadlightBeamViewCurrentWallY =
-            (((-playerHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
+            (((-playerHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight) + 10
 
         randomGreenHeadlightBeamViewCurrentWallX =
             (((randomGreenHeadlightBeamViewCurrentPixelX.toDouble() / displayWidth) * wallWidth) - randomGreenMHOffsetX)
@@ -197,8 +197,10 @@ class ViewsCoordinatesTranslator {
         val randomRedDMXPan = (P0 + ((P45 - P0) / 45) * randomRedDegreesPan).roundToInt()
         val randomRedDMXTilt = (T0 + ((T45 - T0) / 45) * randomRedDegreesTilt).roundToInt()
 
-        val playerDMXPanForChannel1 = (Math.floor(playerDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
-        val playerDMXTiltForChannel3 = (Math.floor(playerDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
+        val playerDMXPanForChannel1 =
+            (Math.floor(playerDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
+        val playerDMXTiltForChannel3 =
+            (Math.floor(playerDMXTilt.toDouble() / sixteenToEightBitConverter)).toInt()
 
         val randomGreenDMXPanForChannel26 =
             (Math.floor(randomGreenDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()

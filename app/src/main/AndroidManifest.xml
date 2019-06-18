@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
     <application
@@ -23,6 +24,7 @@
         </activity>
         <activity android:name=".Activities.GameActivity" android:screenOrientation="landscape"></activity>
         <activity android:name=".Activities.ScoreActivity" android:screenOrientation="landscape"></activity>
-        <service android:name=".Bluetooth.BluetoothLeService" android:enabled="true"/>
+        <service android:name=".Services.BluetoothLeService" android:enabled="true"/>
+        <service android:name=".Services.VibratorService" android:enabled="true"/>
     </application>
 </manifest>

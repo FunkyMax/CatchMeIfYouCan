@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
-import com.example.catchmeifyoucan.Bluetooth.BluetoothLeService
 import com.example.catchmeifyoucan.R
+import com.example.catchmeifyoucan.Services.BluetoothLeService
 
 class MenuActivity : AppCompatActivity() {
 
@@ -34,6 +34,7 @@ class MenuActivity : AppCompatActivity() {
             systemUiVisibility =
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
+
         bluetoothView = findViewById(R.id.bt_View)
         setupBluetoothConnection()
 
