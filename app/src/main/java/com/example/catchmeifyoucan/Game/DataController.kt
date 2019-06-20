@@ -10,7 +10,6 @@ const val DELAY = 10L
 class DataController {
 
     private val bluetoothLeService = MenuActivity.bluetoothLeService
-    private var playerMovingHeadBrightnessData = ""
     private var randomGreenMovingHeadBrightnessData = ""
     private var randomYellowMovingHeadBrightnessData = ""
     private var randomRedMovingHeadBrightnessData = ""
@@ -31,10 +30,6 @@ class DataController {
             bluetoothLeService.write(randomRedDMXValues)
             delay(DELAY)
 
-            if (playerMovingHeadBrightnessData.isNotEmpty()) {
-                bluetoothLeService.write(playerMovingHeadBrightnessData)
-                delay(DELAY)
-            }
             if (randomGreenMovingHeadBrightnessData.isNotEmpty()) {
                 bluetoothLeService.write(randomGreenMovingHeadBrightnessData)
                 delay(DELAY)

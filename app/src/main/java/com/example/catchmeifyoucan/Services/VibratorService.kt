@@ -9,11 +9,10 @@ import android.os.Vibrator
 
 class VibratorService(context: Context) : Service() {
 
-    //private val context : Context
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
-    fun vibrate() {
-        vibrator.vibrate(VibrationEffect.createOneShot(500, 255))
+    fun collisionVibration() {
+        vibrator.vibrate(VibrationEffect.createOneShot(300, 200))
     }
 
     override fun onBind(p0: Intent?): IBinder? {

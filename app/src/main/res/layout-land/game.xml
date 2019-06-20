@@ -21,7 +21,7 @@
             android:layout_marginStart="16dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="575dp" android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.347"
-            app:layout_constraintVertical_bias="0.746"/>
+            app:layout_constraintVertical_bias="0.746" android:onClick="joyStickViewOnClick"/>
     <com.example.catchmeifyoucan.views.PlayerHeadlightBeamView
             android:layout_width="60px"
             android:layout_height="60px"

@@ -15,7 +15,7 @@ import com.example.catchmeifyoucan.Services.BluetoothLeService
 
 class MenuActivity : AppCompatActivity() {
 
-    // Making BluetoothLeService a "static" field because the same instance is gonna be needed in a few classes. Further the BluetoothLeService can only be initialized in an Activity because getSystemService() can only be called from there.
+    // Making BluetoothLeService a "static" field because the same instance is gonna be needed in DataController class.
     companion object{
         lateinit var bluetoothLeService: BluetoothLeService
     }
@@ -41,19 +41,12 @@ class MenuActivity : AppCompatActivity() {
         mediaPlayer = MediaPlayer.create(this, R.raw.catch_me_if_you_can_main_theme)
         mediaPlayer.start()
         mediaPlayer.isLooping = true
-        println("MENU CREATED")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        println("RESUMED")
     }
 
     fun onButtonClicked(view: View) {
         val startGameActivity = Intent(this, GameActivity::class.java)
         startActivity(startGameActivity)
     }
-
 
     private fun setupBluetoothConnection(){
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager

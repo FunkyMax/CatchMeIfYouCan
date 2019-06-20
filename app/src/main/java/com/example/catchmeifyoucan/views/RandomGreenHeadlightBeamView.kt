@@ -9,6 +9,7 @@ import android.view.View
 
 class RandomGreenHeadlightBeamView : View {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+
     private val paint = Paint()
 
     override fun onDraw(canvas: Canvas?) {

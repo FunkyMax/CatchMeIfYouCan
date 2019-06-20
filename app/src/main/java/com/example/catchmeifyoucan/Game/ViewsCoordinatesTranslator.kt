@@ -1,6 +1,5 @@
 package com.example.catchmeifyoucan.Game
 
-import com.example.catchmeifyoucan.Activities.GameActivity
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
@@ -13,11 +12,11 @@ private const val radToDeg = 360 / (2 * Math.PI)
 private const val power = 2.0
 private const val sixteenToEightBitConverter = 256
 
+private const val displayWidth = 2960
+private const val displayHeight = 1440
 private const val distanceToWall = 400.0
 private const val wallWidth = 400
 private const val wallHeight = 300
-private const val displayWidth = 2860
-private const val displayHeight = 1340
 
 private const val playerMHOffsetX = 275
 private const val randomGreenMHOffsetX = 225
@@ -33,10 +32,9 @@ private const val randomYellowTiltChannel = "53"
 private const val randomRedPanChannel = "76"
 private const val randomRedTiltChannel = "78"
 
-class ViewsCoordinatesTranslator() {
-    private val dataController = GameController.dataController
-    private val gameActivity = GameActivity()
-    private val gameController = gameActivity.getGameController()
+class ViewsCoordinatesTranslator(dataController: DataController) {
+
+    private val dataController : DataController
 
     private val playerJSONObject = JSONObject()
     private val randomGreenJSONObject = JSONObject()
@@ -63,25 +61,14 @@ class ViewsCoordinatesTranslator() {
     private var randomRedHeadlightBeamViewCurrentPixelY = 0
     private var randomRedHeadlightBeamViewCurrentWallY = 0.0
 
+    init {
+        this.dataController = dataController
+    }
+
     fun translateCoordinatesAndSendToBluetoothModule() {
-        getViewsCoordinatesInPixels()
         transformPixelCoordinatesIntoWallCoordinates()
         calculateDMXValuesFromPanAndTiltValues()
         sendData()
-    }
-
-    private fun getViewsCoordinatesInPixels() {
-        playerHeadlightBeamViewCurrentPixelX = gameController.getPlayerHeadlightBeamViewCurrentX()
-        playerHeadlightBeamViewCurrentPixelY = gameController.getPlayerHeadlightBeamViewCurrentY()
-
-        randomGreenHeadlightBeamViewCurrentPixelX = gameController.getRandomGreenHeadlightBeamViewCurrentX()
-        randomGreenHeadlightBeamViewCurrentPixelY = gameController.getRandomGreenHeadlightBeamViewCurrentY()
-
-        randomYellowHeadlightBeamViewCurrentPixelX = gameController.getRandomYellowHeadlightBeamViewCurrentX()
-        randomYellowHeadlightBeamViewCurrentPixelY = gameController.getRandomYellowHeadlightBeamViewCurrentY()
-
-        randomRedHeadlightBeamViewCurrentPixelX = gameController.getRandomRedHeadlightBeamViewCurrentX()
-        randomRedHeadlightBeamViewCurrentPixelY = gameController.getRandomRedHeadlightBeamViewCurrentY()
     }
 
     private fun transformPixelCoordinatesIntoWallCoordinates() {
@@ -238,5 +225,25 @@ class ViewsCoordinatesTranslator() {
             randomYellowJSONObject.toString(),
             randomRedJSONObject.toString()
         )
+    }
+
+    fun setPlayerHeadlightBeamViewCurrentPixels(x : Int, y : Int){
+        playerHeadlightBeamViewCurrentPixelX = x
+        playerHeadlightBeamViewCurrentPixelY = y
+    }
+
+    fun setRandomGreenHeadlightBeamViewCurrentPixels(x : Int, y : Int){
+        randomGreenHeadlightBeamViewCurrentPixelX = x
+        randomGreenHeadlightBeamViewCurrentPixelY = y
+    }
+
+    fun setRandomYellowHeadlightBeamViewCurrentPixels(x : Int, y : Int){
+        randomYellowHeadlightBeamViewCurrentPixelX = x
+        randomYellowHeadlightBeamViewCurrentPixelY = y
+    }
+
+    fun setRandomRedHeadlightBeamViewCurrentPixels(x : Int, y : Int){
+        randomRedHeadlightBeamViewCurrentPixelX = x
+        randomRedHeadlightBeamViewCurrentPixelY = y
     }
 }

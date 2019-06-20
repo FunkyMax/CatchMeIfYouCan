@@ -14,8 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class GameActivity : AppCompatActivity(){
-    private val gameController = GameController()
-    private lateinit var views : Array<View>
+    private var gameController : GameController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +24,12 @@ class GameActivity : AppCompatActivity(){
             systemUiVisibility =
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
+    }
 
-        views = arrayOf(
+    override fun onStart() {
+        super.onStart()
+        val context = applicationContext
+        val gameViews = arrayOf(
             joystickView,
             playerHeadlightBeamView,
             randomGreenHeadlightBeamView,
@@ -36,28 +39,27 @@ class GameActivity : AppCompatActivity(){
             time
         )
 
-        val context = applicationContext
-        gameController.setContext(context);
-        startGame()
+        gameController = GameController(context, gameViews)
+
+        handleGame()
     }
 
-    fun getGameController(): GameController {
-        return gameController
-    }
-
-    private fun startGame() {
-        gameController.initializeGameController(views)
+    private fun handleGame() {
         GlobalScope.launch {
+            // wait until game is finished
             delay(gameDuration)
-            gameController.endGame()
-            goBackToMenu()
+            goToScoreActivity()
         }
     }
-    private fun goBackToMenu(){
+
+    private fun goToScoreActivity(){
         val startScoreActivity = Intent(this, ScoreActivity::class.java)
         startScoreActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startScoreActivity.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startScoreActivity.putExtra("score", gameController.getScore().toString())
+        startScoreActivity.putExtra("score", gameController!!.getScore().toString())
+        gameController?.endGame()
+        gameController = null
+
         startActivity(startScoreActivity)
         finish()
     }
