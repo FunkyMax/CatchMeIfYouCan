@@ -28,6 +28,7 @@ class GameActivity : AppCompatActivity(){
 
     override fun onStart() {
         super.onStart()
+
         val context = applicationContext
         val gameViews = arrayOf(
             joystickView,

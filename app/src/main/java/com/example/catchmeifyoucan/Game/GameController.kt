@@ -25,12 +25,13 @@ private const val power = 2.0
 private const val collisionMaxDistance = 70
 private const val collisionForbiddenInterval = 2500L
 private const val mhBrightnessResetInterval= 1000L
+private const val collisionDelayForMHs = 300L
 private const val visualCollisionBrightnessFeedback = 1
 private const val visualCollisionBrightnessFeedbackReset = 100
 
 private const val EMPTY_STRING = ""
 
-// Some JSONObjects will be sent whose content is irrelevant. They either only trigger the MHs' brightness or reset their pan and tilt values after the games has finished.
+// Some JSONObjects will be sent whose content is irrelevant. Their function is the one as a flag. They either only trigger the MHs' brightness change or reset their pan and tilt values after the games has finished.
 private const val ANY_DATA = 1
 
 private const val randomGreenBrightnessChannel = "32"
@@ -42,13 +43,15 @@ const val gameDuration = 45000L
 class GameController (context: Context, views : Array<View>){
 
     // reference to DataController to be able to send out Data
-    val dataController = DataController()
+    private val dataController = DataController()
+    // reference to ViewsCoordinatesTranslator in order to calculate corresponding pan and tilt values
     private val viewsCoordinatesTranslator = ViewsCoordinatesTranslator(dataController)
+
     // game specific fields
     private val startTime = System.currentTimeMillis()
     private val random = Random
     private var strengthFromJoystick = 0f
-    private var speed = 1f
+    private var speed = .7f
     private var score = 0
     private val vibratorService: VibratorService
     private lateinit var animatorSet: AnimatorSet
@@ -124,13 +127,13 @@ class GameController (context: Context, views : Array<View>){
         // Initializing vibratorService
         vibratorService = VibratorService(context)
 
-        // Fill resetMHsJSONObject with reset pan and tilt values
+        // Fill resetMHsJSONObject with ANY_DATA. The arduino code will recognize "R" and execute its reset code.
         resetMHsJSONObject.put("R", ANY_DATA)
 
         start()
     }
 
-    fun start(){
+    private fun start() {
 
         // Setting the runnables
         val playerHeadlightBeamViewRunnable = object : Runnable {
@@ -171,7 +174,7 @@ class GameController (context: Context, views : Array<View>){
             override fun run() {
                 setViewsCoordinatesInViewCoordinatesTranslator()
                 viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
-                viewsCoordinatesTranslatorHandler.postDelayed(this, 8 * DELAY)
+                viewsCoordinatesTranslatorHandler.postDelayed(this, 12 * DELAY)
             }
         }
 
@@ -318,15 +321,15 @@ class GameController (context: Context, views : Array<View>){
 
         if (distanceBetweenPlayerAndRandomGreenHeadlightBeamView <= collisionMaxDistance && distanceBetweenPlayerAndRandomGreenHeadlightBeamView > 0 && randomGreenHeadlightBeamView.alpha == 1f) {
             score += 2
-            speed += 0.05f
+            speed += .05f
             handleCollision(randomGreenHeadlightBeamView)
         } else if (distanceBetweenPlayerAndRandomYellowHeadlightBeamView <= collisionMaxDistance && distanceBetweenPlayerAndRandomYellowHeadlightBeamView > 0 && randomYellowHeadlightBeamView.alpha == 1f) {
             score += 5
-            speed += 0.05f
+            speed += .05f
             handleCollision(randomYellowHeadlightBeamView)
         } else if (distanceBetweenPlayerAndRandomRedHeadlightBeamView <= collisionMaxDistance && distanceBetweenPlayerAndRandomRedHeadlightBeamView > 0 && randomRedHeadlightBeamView.alpha == 1f) {
             if (score >= 3) score -= 3
-            speed = 1f
+            speed = .7f
             handleCollision(randomRedHeadlightBeamView)
         }
         scoreTextView.text = score.toString()
@@ -369,11 +372,10 @@ class GameController (context: Context, views : Array<View>){
     }
 
     private fun handleCollision(randomHeadlightBeamView: View) {
-        vibratorService.collisionVibration()
-
         GlobalScope.launch {
             randomHeadlightBeamView.alpha = .01f
-            //delay(200);
+            delay(collisionDelayForMHs)
+            vibratorService.collisionVibration()
             resolveCollisionData(randomHeadlightBeamView, visualCollisionBrightnessFeedback)
             delay(collisionForbiddenInterval)
             randomHeadlightBeamView.alpha = 1f

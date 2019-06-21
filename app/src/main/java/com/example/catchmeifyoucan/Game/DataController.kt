@@ -5,7 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-const val DELAY = 10L
+const val DELAY = 15L
 
 class DataController {
 
@@ -16,9 +16,13 @@ class DataController {
 
     fun sendData(
         playerDMXValues: String,
+        playerDMXValues2: String,
         randomGreenDMXValues: String,
+        randomGreenDMXValues2: String,
         randomYellowDMXValues: String,
-        randomRedDMXValues: String
+        randomYellowDMXValues2: String,
+        randomRedDMXValues: String,
+        randomRedDMXValues2: String
     ) {
         GlobalScope.launch{
             bluetoothLeService.write(playerDMXValues)
@@ -28,6 +32,14 @@ class DataController {
             bluetoothLeService.write(randomYellowDMXValues)
             delay(DELAY)
             bluetoothLeService.write(randomRedDMXValues)
+            delay(DELAY)
+            bluetoothLeService.write(playerDMXValues2)
+            delay(DELAY)
+            bluetoothLeService.write(randomGreenDMXValues2)
+            delay(DELAY)
+            bluetoothLeService.write(randomYellowDMXValues2)
+            delay(DELAY)
+            bluetoothLeService.write(randomRedDMXValues2)
             delay(DELAY)
 
             if (randomGreenMovingHeadBrightnessData.isNotEmpty()) {

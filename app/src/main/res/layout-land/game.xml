@@ -20,36 +20,37 @@
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="16dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="575dp" android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.347"
-            app:layout_constraintVertical_bias="0.746" android:onClick="joyStickViewOnClick"/>
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.364"
+            app:layout_constraintVertical_bias="0.761"/>
     <com.example.catchmeifyoucan.views.PlayerHeadlightBeamView
             android:layout_width="60px"
             android:layout_height="60px"
             android:id="@+id/playerHeadlightBeamView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="96dp" android:layout_marginStart="304dp"/>
+            android:layout_marginTop="240dp" android:layout_marginStart="180dp"/>
     <com.example.catchmeifyoucan.views.RandomGreenHeadlightBeamView
             android:layout_width="60px"
             android:layout_height="60px"
             android:id="@+id/randomGreenHeadlightBeamView"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="240dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="292dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="56dp" android:layout_marginStart="180dp"/>
     <com.example.catchmeifyoucan.views.RandomYellowHeadlightBeamView
             android:layout_width="60px"
             android:layout_height="60px"
             android:id="@+id/randomYellowHeadlightBeamView"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="480dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="88dp"
-            android:visibility="visible" android:alpha="1"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="visible" android:alpha="1"
+            android:layout_marginTop="224dp" android:layout_marginStart="512dp"/>
     <com.example.catchmeifyoucan.views.RandomRedHeadlightBeamView
             android:layout_width="60px"
             android:layout_height="60px"
             android:id="@+id/randomRedHeadlightBeamView"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="228dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="268dp"
-    />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="56dp" android:layout_marginEnd="212dp"/>
     <TextView
             android:text="Score: "
             android:layout_width="wrap_content"
