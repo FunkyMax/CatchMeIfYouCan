@@ -1,5 +1,5 @@
-#include <DMXSerial.h>
-//#include <SoftwareSerial.h>
+//#include <DMXSerial.h>
+#include <SoftwareSerial.h>
 #include <ArduinoJson.h>
 
 #define BTSerial Serial1
@@ -15,20 +15,19 @@ bool JSONObjectIsFullyRead = false;
 const int resetPan = 42;
 const int resetTilt = 127;
 
-// Resetted dimmer value when game is finished
-const int resetBrightness = 100;
-
-// velocity for MH engines in-game
+// Initial and reset dimmer value when game is finished
+const int dimmer = 100;
+// Initial shutter value for every MH
+const int shutter = 30;
+// Velocity for MH engines in-game
 const int velocity = 12;
 
 // PlayerMH DMX Variables
 int playerPan;
-int playerPan2;
+int playerPanTuning;
 int playerTilt;
-int playerTilt2;
-int playerDimmer = 100;
-int playerShutter = 30;
-int playerFarbe = 160;
+int playerTiltTuning;
+int playerColour = 160;
 int playerGoboMode = 128;
 int playerGoboEffect = 200;
 int playerIris = 130;
@@ -36,42 +35,36 @@ int playerFocus = 50;
 
 // randomGreenMH DMX Variables
 int randomGreenPan;
-int randomGreenPan2;
+int randomGreenPanTuning;
 int randomGreenTilt;
-int randomGreenTilt2;
-int randomGreenDimmer = 100;
-int randomGreenShutter = 30;
-int randomGreenFarbe = 150;
+int randomGreenTiltTuning;
+int randomGreenColour = 150;
 int randomGreenIris = 165;
 int randomGreenFocus = 50;
 
 // randomYellowMH DMX Variables
 int randomYellowPan;
-int randomYellowPan2;
+int randomYellowPanTuning;
 int randomYellowTilt;
-int randomYellowTilt2;
-int randomYellowDimmer = 100;
-int randomYellowShutter = 30;
-int randomYellowFarbe = 100;
+int randomYellowTiltTuning;
+int randomYellowColour = 100;
 int randomYellowIris = 165;
 int randomYellowFocus = 50;
 
 // randomRedMH DMX Variables
 int randomRedPan;
-int randomRedPan2;
+int randomRedPanTuning;
 int randomRedTilt;
-int randomRedTilt2;
-int randomRedDimmer = 100;
-int randomRedShutter = 30;
-int randomRedFarbe = 60;
+int randomRedTiltTuning;
+int randomRedColour = 60;
 int randomRedIris = 165;
 int randomRedFocus = 50;
 
 void setup() {
-  //Serial.begin(BAUD);
+  Serial.begin(BAUD);
   BTSerial.begin(BAUD);
 
-  //Register all MHs at Arduino Port 2
+  // Register all MHs at Arduino Port 2
   pinMode(2, OUTPUT);  
   digitalWrite(2, HIGH);                  //We need high Level (5V) for the MHs.
   
@@ -79,20 +72,20 @@ void setup() {
 }
 
 void loop() {
-  //Read incoming BT Data:
+  // Read incoming BT Data:
     readBTSerial();
 
-  //When Reading is done:
+  // When Reading is done:
     if (JSONObjectIsFullyRead) {
-      //Serial.println(JSONObject);
+      Serial.println(JSONObject);
       
-      //evaluate JSON String for pan and tilt values
+      // evaluate JSON String
         StaticJsonDocument<JSON_BUFFER> doc;
         if (parseJSONObject(&doc, JSONObject)) {
           evaluateJSONObject(doc);
         }
 
-      //empty JSON Buffer
+      // empty JSON Buffer
         emptyJSONBuffer();
     }    
 }
@@ -131,7 +124,7 @@ bool parseJSONObject(JsonDocument *doc, char buff[]) {
 void evaluateJSONObject(JsonDocument doc) {
 
  // check for special data
-  // "B" represents Brightness - these JSONObjects take care of each MH's brightness after collision for example
+  // "B" represents Brightness - these JSONObjects take care of each MH's dimmer value after collisions
   if (doc["B"]){
     //int value = doc["B"];
     //Serial.println(value);
@@ -150,7 +143,7 @@ void evaluateJSONObject(JsonDocument doc) {
   }
   if (doc["2"]){
     String value = doc["2"];
-    playerPan2 = value.toInt();
+    playerPanTuning = value.toInt();
   }
   if (doc["3"]){
     String value = doc["3"];
@@ -158,7 +151,7 @@ void evaluateJSONObject(JsonDocument doc) {
   }
   if (doc["4"]){
     String value = doc["4"];
-    playerTilt2 = value.toInt();
+    playerTiltTuning = value.toInt();
   }
 
   // Pan and Tilt Values for randomGreen MH
@@ -168,7 +161,7 @@ void evaluateJSONObject(JsonDocument doc) {
   }
   if (doc["27"]){
     String value = doc["27"];
-    randomGreenPan2 = value.toInt();
+    randomGreenPanTuning = value.toInt();
   }
   if (doc["28"]){
     String value = doc["28"];
@@ -176,7 +169,7 @@ void evaluateJSONObject(JsonDocument doc) {
   }
   if (doc["29"]){
     String value = doc["29"];
-    randomGreenTilt2 = value.toInt();
+    randomGreenTiltTuning = value.toInt();
   }
 
   // Pan and Tilt Values for randomYellow MH
@@ -186,7 +179,7 @@ void evaluateJSONObject(JsonDocument doc) {
   }
   if (doc["52"]){
     String value = doc["52"];
-    randomYellowPan2 = value.toInt();
+    randomYellowPanTuning = value.toInt();
   }
   if (doc["53"]){
     String value = doc["53"];
@@ -194,7 +187,7 @@ void evaluateJSONObject(JsonDocument doc) {
   }
   if (doc["54"]){
     String value = doc["54"];
-    randomYellowTilt2 = value.toInt();
+    randomYellowTiltTuning = value.toInt();
   }
 
   // Pan and Tilt Values for randomRed MH
@@ -204,7 +197,7 @@ void evaluateJSONObject(JsonDocument doc) {
   }
   if (doc["77"]){
     String value = doc["77"];
-    randomRedPan2 = value.toInt();
+    randomRedPanTuning = value.toInt();
   }
   if (doc["78"]){
     String value = doc["78"];
@@ -212,113 +205,101 @@ void evaluateJSONObject(JsonDocument doc) {
   }
   if (doc["79"]){
     String value = doc["79"];
-    randomRedTilt2 = value.toInt();
-    sendPanAndTiltValuesToMHs();
+    randomRedTiltTuning = value.toInt();
+    setPanAndTiltValues();
   }
-
-  /*Serial.print("PlayerPan: ");
-  Serial.println(playerPan);
-  Serial.print("PlayerTilt: ");
-  Serial.println(playerTilt);
-  Serial.print("randomGreenPan: ");
-  Serial.println(randomGreenPan);
-  Serial.print("randomGreenTilt: ");
-  Serial.println(randomGreenTilt);
-  Serial.print("randomYellowPan: ");
-  Serial.println(randomYellowPan);
-  Serial.print("randomYellowTilt: ");
-  Serial.println(randomYellowTilt);
-  Serial.print("randomRedPan: ");
-  Serial.println(randomRedPan);
-  Serial.print("randomRedTilt: ");
-  Serial.println(randomRedTilt);
-  Serial.println("");*/
 }
 
 void onCollision(JsonDocument doc){
   if (doc["32"]){
-    //Serial.println("GREEN");
-    DMXSerial.write(32, doc["32"]);
+    Serial.println("GREEN");
+    //DMXSerial.write(32, doc["32"]);
   }
   if (doc["57"]){
-    //Serial.println("YELLOW");
-    DMXSerial.write(57, doc["57"]);
+    Serial.println("YELLOW");
+    //DMXSerial.write(57, doc["57"]);
   }
   if (doc["82"]){
-    //Serial.println("RED");
-    DMXSerial.write(82, doc["82"]);
+    Serial.println("RED");
+    //DMXSerial.write(82, doc["82"]);
   }
 }
 
-// Sends Pan and Tilt values to all MHs
-void sendPanAndTiltValuesToMHs(){
-  DMXSerial.write(1, playerPan);            //Pan
-  DMXSerial.write(2, playerPan2);
-  DMXSerial.write(3, playerTilt);
-  DMXSerial.write(4, playerTilt2);          //Tilt
-  
-  DMXSerial.write(26, randomGreenPan);       //Pan
-  DMXSerial.write(27, randomGreenPan2);
-  DMXSerial.write(28, randomGreenTilt);      //Tilt
-  DMXSerial.write(29, randomGreenTilt2);
+// Sets Pan and Tilt values for all MHs
+void setPanAndTiltValues(){
+  /*
+  DMXSerial.write(1, playerPan);              // Pan
+  DMXSerial.write(2, playerPanTuning);        // Pan tuning
+  DMXSerial.write(3, playerTilt);             // Tilt
+  DMXSerial.write(4, playerTiltTuning);       // Tilt tuning
 
-  DMXSerial.write(51, randomYellowPan);     //Pan
-  DMXSerial.write(52, randomYellowPan2);
-  DMXSerial.write(53, randomYellowTilt);    //Tilt
-  DMXSerial.write(54, randomYellowTilt2);
+  DMXSerial.write(26, randomGreenPan);        // Pan
+  DMXSerial.write(27, randomGreenPanTuning);  // Pan tuning
+  DMXSerial.write(28, randomGreenTilt);       // Tilt
+  DMXSerial.write(29, randomGreenTiltTuning); // Tilt tuning
 
-  DMXSerial.write(76, randomRedPan);        //Pan
-  DMXSerial.write(77, randomRedPan2);
-  DMXSerial.write(78, randomRedTilt);       //Tilt*/
-  DMXSerial.write(79, randomRedTilt2);
-  
+  DMXSerial.write(51, randomYellowPan);       // Pan
+  DMXSerial.write(52, randomYellowPanTuning); // Pan tuning
+  DMXSerial.write(53, randomYellowTilt);      // Tilt
+  DMXSerial.write(54, randomYellowTiltTuning);// Tilt tuning
+
+  DMXSerial.write(76, randomRedPan);          // Pan
+  DMXSerial.write(77, randomRedPanTuning);    // Pan tuning
+  DMXSerial.write(78, randomRedTilt);         // Tilt
+  DMXSerial.write(79, randomRedTiltTuning);   // Tilt tuning
+  */
+
 }
 
 // Initializes MHs values that rarely or never change
 void initializeMHs(){
+  /*
   DMXSerial.init(DMXController);
   DMXSerial.write(110, 45);
 
-  DMXSerial.write(5, velocity);             // Motorgeschwindigkeit
-  DMXSerial.write(7, playerDimmer);         // Dimmer
-  DMXSerial.write(8, playerShutter);        // Shutter
-  DMXSerial.write(9, playerFarbe);          // Farbe
-  DMXSerial.write(12, playerGoboMode);      // Gobo Modus
-  DMXSerial.write(16, playerGoboEffect);    // Gobo Effect
+  DMXSerial.write(5, velocity);               // Engine velocity
+  DMXSerial.write(7, dimmer);                 // Dimmer
+  DMXSerial.write(8, shutter);                // Shutter
+  DMXSerial.write(9, playerColour);           // Colour
+  DMXSerial.write(12, playerGoboMode);        // Gobo Modus
+  DMXSerial.write(16, playerGoboEffect);      // Gobo Effect
 
-  DMXSerial.write(30, velocity);            // Motorgeschwindigkeit
-  DMXSerial.write(32, randomGreenDimmer);   // Dimmer
-  DMXSerial.write(33, randomGreenShutter);  // Shutter
-  DMXSerial.write(34, randomGreenFarbe);    // Farbe
+  DMXSerial.write(30, velocity);              // Engine velocity
+  DMXSerial.write(32, dimmer);                // Dimmer
+  DMXSerial.write(33, shutter);               // Shutter
+  DMXSerial.write(34, randomGreenColour);     // Colour
 
-  DMXSerial.write(55, velocity);            // Motorgeschwindigkeit
-  DMXSerial.write(57, randomYellowDimmer);  // Dimmer
-  DMXSerial.write(58, randomYellowShutter); // Shutter
-  DMXSerial.write(59, randomYellowFarbe);   // Farbe
-  
-  DMXSerial.write(80, velocity);            // Motorgeschwindigkeit
-  DMXSerial.write(82, randomRedDimmer);     // Dimmer
-  DMXSerial.write(83, randomRedShutter);    // Shutter
-  DMXSerial.write(84, randomRedFarbe);      // Farbe/*/
+  DMXSerial.write(55, velocity);              // Engine velocity
+  DMXSerial.write(57, dimmer);                // Dimmer
+  DMXSerial.write(58, shutter);               // Shutter
+  DMXSerial.write(59, randomYellowColour);    // Colour
+
+  DMXSerial.write(80, velocity);              // Engine velocity
+  DMXSerial.write(82, dimmer);                // Dimmer
+  DMXSerial.write(83, shutter);               // Shutter
+  DMXSerial.write(84, randomRedColour);       // Colour
+  */
 }
 
 // Is called when the game is finished and the user returns to menu
-void stopGame(){  
+void stopGame(){
+  /*
   DMXSerial.write(1, resetPan);
   DMXSerial.write(3, resetTilt);
-  DMXSerial.write(7, resetBrightness);
+  DMXSerial.write(7, dimmer);
 
   DMXSerial.write(26, resetPan);
   DMXSerial.write(28, resetTilt);
-  DMXSerial.write(32, resetBrightness);
+  DMXSerial.write(32, dimmer);
 
   DMXSerial.write(51, resetPan);
   DMXSerial.write(53, resetTilt);
-  DMXSerial.write(57, resetBrightness);
+  DMXSerial.write(57, dimmer);
 
   DMXSerial.write(76, resetPan);
   DMXSerial.write(78, resetTilt);
-  DMXSerial.write(82, resetBrightness);
+  DMXSerial.write(82, dimmer);
+  */
 }
 
 // Empties JSON Buffer

@@ -16,45 +16,25 @@ class DataController {
 
     fun sendData(
         playerDMXValues: String,
-        playerDMXValues2: String,
+        playerDMXValuesTuning: String,
         randomGreenDMXValues: String,
-        randomGreenDMXValues2: String,
+        randomGreenDMXValuesTuning: String,
         randomYellowDMXValues: String,
-        randomYellowDMXValues2: String,
+        randomYellowDMXValuesTuning: String,
         randomRedDMXValues: String,
-        randomRedDMXValues2: String
+        randomRedDMXValuesTuning: String
     ) {
+        val dmxArray = arrayOf(playerDMXValues, playerDMXValuesTuning, randomGreenDMXValues, randomGreenDMXValuesTuning, randomYellowDMXValues, randomYellowDMXValuesTuning, randomRedDMXValues, randomRedDMXValuesTuning, randomGreenMovingHeadBrightnessData, randomYellowMovingHeadBrightnessData, randomRedMovingHeadBrightnessData)
         GlobalScope.launch{
-            bluetoothLeService.write(playerDMXValues)
-            delay(DELAY)
-            bluetoothLeService.write(randomGreenDMXValues)
-            delay(DELAY)
-            bluetoothLeService.write(randomYellowDMXValues)
-            delay(DELAY)
-            bluetoothLeService.write(randomRedDMXValues)
-            delay(DELAY)
-            bluetoothLeService.write(playerDMXValues2)
-            delay(DELAY)
-            bluetoothLeService.write(randomGreenDMXValues2)
-            delay(DELAY)
-            bluetoothLeService.write(randomYellowDMXValues2)
-            delay(DELAY)
-            bluetoothLeService.write(randomRedDMXValues2)
-            delay(DELAY)
-
-            if (randomGreenMovingHeadBrightnessData.isNotEmpty()) {
-                bluetoothLeService.write(randomGreenMovingHeadBrightnessData)
-                delay(DELAY)
-            }
-            if (randomYellowMovingHeadBrightnessData.isNotEmpty()) {
-                bluetoothLeService.write(randomYellowMovingHeadBrightnessData)
-                delay(DELAY)
-            }
-            if (randomRedMovingHeadBrightnessData.isNotEmpty()) {
-                bluetoothLeService.write(randomRedMovingHeadBrightnessData)
+            for (data in dmxArray){
+                if (data.isNotEmpty()) bluetoothLeService.write(data)
                 delay(DELAY)
             }
         }
+    }
+
+    fun sendResetData(jsonObject: String){
+        bluetoothLeService.write(jsonObject)
     }
 
     fun setRandomGreenMovingHeadBrightnessData(jsonObject: String) {
@@ -67,9 +47,5 @@ class DataController {
 
     fun setRandomRedMovingHeadBrightnessData(jsonObject: String) {
         randomRedMovingHeadBrightnessData = jsonObject
-    }
-
-    fun setResetData(jsonObject: String){
-        bluetoothLeService.write(jsonObject)
     }
 }

@@ -6,14 +6,14 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             tools:context=".Activities.GameActivity" android:background="#BBDEFB">
-        <TextView
-                android:text="GO \n BACK \n TO \n LANDSCAPE"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/goBack" android:textSize="45sp"
-                android:gravity="center" android:textColor="#FFFFFF"
-                android:fontFamily="@font/coolvetica"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="126dp" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="57dp"/>
+    <TextView
+            android:text="GO\nBACK\nTO\nLANDSCAPE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/goBack" android:textSize="45sp"
+            android:gravity="center" android:textColor="#FFFFFF"
+            android:fontFamily="@font/coolvetica"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="126dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="57dp"/>
     </android.support.constraint.ConstraintLayout>

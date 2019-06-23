@@ -58,6 +58,7 @@ class GameActivity : AppCompatActivity(){
         startScoreActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startScoreActivity.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         startScoreActivity.putExtra("score", gameController!!.getScore().toString())
+
         gameController?.endGame()
         gameController = null
 

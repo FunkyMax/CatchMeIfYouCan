@@ -12,9 +12,6 @@ private const val radToDeg = 360 / (2 * Math.PI)
 private const val power = 2.0
 private const val sixteenToEightBitConverter = 256
 private const val stretchFactor = 95 / 72
-
-private const val displayWidth = 2960
-private const val displayHeight = 1440
 private const val distanceToWall = 263.0
 private const val wallWidth = 400
 private const val wallHeight = 300
@@ -25,13 +22,21 @@ private const val randomYellowMHOffsetX = 175
 private const val randomRedMHOffsetX = 125
 
 private const val playerPanChannel = "1"
+private const val playerPanChannelTuning = "2"
 private const val playerTiltChannel = "3"
+private const val playerTiltChannelTuning = "4"
 private const val randomGreenPanChannel = "26"
+private const val randomGreenPanChannelTuning = "27"
 private const val randomGreenTiltChannel = "28"
+private const val randomGreenTiltChannelTuning = "29"
 private const val randomYellowPanChannel = "51"
+private const val randomYellowPanChannelTuning = "52"
 private const val randomYellowTiltChannel = "53"
+private const val randomYellowTiltChannelTuning = "54"
 private const val randomRedPanChannel = "76"
+private const val randomRedPanChannelTuning = "77"
 private const val randomRedTiltChannel = "78"
+private const val randomRedTiltChannelTuning = "79"
 
 class ViewsCoordinatesTranslator(private val dataController: DataController) {
 
@@ -216,24 +221,24 @@ class ViewsCoordinatesTranslator(private val dataController: DataController) {
 
         // put values into corresponding JSONObjects
         playerJSONObject.put(playerPanChannel, playerDMXPanForChannel1)
+        playerJSONObjectTuning.put(playerPanChannelTuning, playerDMXPanForChannel2)
         playerJSONObject.put(playerTiltChannel, playerDMXTiltForChannel3)
-        playerJSONObjectTuning.put("2", playerDMXPanForChannel2)
-        playerJSONObjectTuning.put("4", playerDMXTiltForChannel4)
+        playerJSONObjectTuning.put(playerTiltChannelTuning, playerDMXTiltForChannel4)
 
         randomGreenJSONObject.put(randomGreenPanChannel, randomGreenDMXPanForChannel26)
+        randomGreenJSONObjectTuning.put(randomGreenPanChannelTuning, randomGreenDMXPanForChannel27)
         randomGreenJSONObject.put(randomGreenTiltChannel, randomGreenDMXTiltForChannel28)
-        randomGreenJSONObjectTuning.put("27", randomGreenDMXPanForChannel27)
-        randomGreenJSONObjectTuning.put("29", randomGreenDMXTiltForChannel29)
+        randomGreenJSONObjectTuning.put(randomGreenTiltChannelTuning, randomGreenDMXTiltForChannel29)
 
         randomYellowJSONObject.put(randomYellowPanChannel, randomYellowDMXPanForChannel51)
+        randomYellowJSONObjectTuning.put(randomYellowPanChannelTuning, randomYellowDMXPanForChannel52)
         randomYellowJSONObject.put(randomYellowTiltChannel, randomYellowDMXTiltForChannel53)
-        randomYellowJSONObjectTuning.put("52", randomYellowDMXPanForChannel52)
-        randomYellowJSONObjectTuning.put("54", randomYellowDMXTiltForChannel54)
+        randomYellowJSONObjectTuning.put(randomYellowTiltChannelTuning, randomYellowDMXTiltForChannel54)
 
         randomRedJSONObject.put(randomRedPanChannel, randomRedDMXPanForChannel76)
+        randomRedJSONObjectTuning.put(randomRedPanChannelTuning, randomRedDMXPanForChannel77)
         randomRedJSONObject.put(randomRedTiltChannel, randomRedDMXTiltForChannel78)
-        randomRedJSONObjectTuning.put("77", randomRedDMXPanForChannel77)
-        randomRedJSONObjectTuning.put("79", randomRedDMXTiltForChannel79)
+        randomRedJSONObjectTuning.put(randomRedTiltChannelTuning, randomRedDMXTiltForChannel79)
     }
 
     private fun sendData() {

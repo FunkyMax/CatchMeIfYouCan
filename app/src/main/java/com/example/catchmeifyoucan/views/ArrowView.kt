@@ -10,16 +10,14 @@ import android.view.View
 import com.example.catchmeifyoucan.R
 
 class ArrowView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
-    private var paint = Paint()
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     private val arrowArray = FloatArray(16)
 
     init {
-        paint = Paint(Paint.ANTI_ALIAS_FLAG)
-
         val ta = context?.obtainStyledAttributes(attrs, R.styleable.ArrowView)
-        val int = ta?.getColor(R.styleable.ArrowView_arrow_color, Color.GREEN)
-        paint.setColor(int!!)
+        val colour = ta?.getColor(R.styleable.ArrowView_arrow_color, Color.GREEN)
+        paint.color = colour!!
         ta.recycle()
 
         arrowArray.set(0, 0f)       //x

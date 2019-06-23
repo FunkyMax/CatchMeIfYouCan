@@ -15,7 +15,7 @@ import com.example.catchmeifyoucan.Services.BluetoothLeService
 
 class MenuActivity : AppCompatActivity() {
 
-    // Making BluetoothLeService a "static" field because the same instance is gonna be needed in DataController class.
+    // Making BluetoothLeService a "static" field because the same instance is going to be needed in DataController class.
     companion object{
         lateinit var bluetoothLeService: BluetoothLeService
     }
@@ -23,7 +23,7 @@ class MenuActivity : AppCompatActivity() {
     private var mediaPlayer = MediaPlayer()
     private lateinit var bluetoothView : ImageView
 
-    // We need a reference to a BluetoothAdapter in here since initializing the BluetoothLeService takes place in MenuActivity. See above for more info.
+    // We need a reference to a BluetoothAdapter in here since initialization of BluetoothLeService takes place in MenuActivity.
     private lateinit var bluetoothAdapter : BluetoothAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -8,7 +8,7 @@
             android:clickable="true"
             tools:context=".Activities.GameActivity" android:background="#BBDEFB">
         <TextView
-                android:text="GO \n BACK \n TO \n LANDSCAPE"
+                android:text="GO\nBACK\nTO\nLANDSCAPE"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/goBack" android:textSize="45sp"

@@ -3,4 +3,8 @@
     <declare-styleable name="ArrowView">
         <attr name="arrow_color" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="HeadlightBeamView">
+        <attr name="circle_color" format="color"/>
+    </declare-styleable>
 </resources>
