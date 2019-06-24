@@ -318,6 +318,7 @@ class GameController (context: Context, views : Array<View>){
             handleCollision(randomYellowHeadlightBeamView)
         } else if (distanceBetweenPlayerAndRandomRedHeadlightBeamView <= collisionMaxDistance && distanceBetweenPlayerAndRandomRedHeadlightBeamView > 0 && randomRedHeadlightBeamView.alpha == 1f) {
             if (score >= 3) score -= 3
+            else score = 0
             speed = .7f
             handleCollision(randomRedHeadlightBeamView)
         }
