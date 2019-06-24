@@ -1,5 +1,5 @@
-//#include <DMXSerial.h>
-#include <SoftwareSerial.h>
+#include <DMXSerial.h>
+//#include <SoftwareSerial.h>
 #include <ArduinoJson.h>
 
 #define BTSerial Serial1
@@ -11,7 +11,7 @@ char JSONObject[JSON_BUFFER] = {0};
 int JSONCounter = 0;
 bool JSONObjectIsFullyRead = false;
 
-// Resetted Pan and Tilt values when game is finished
+// Resetted pan and tilt values when game is finished
 const int resetPan = 42;
 const int resetTilt = 127;
 
@@ -22,7 +22,7 @@ const int shutter = 30;
 // Velocity for MH engines in-game
 const int velocity = 12;
 
-// PlayerMH DMX Variables
+// PlayerMH DMX variables
 int playerPan;
 int playerPanTuning;
 int playerTilt;
@@ -33,35 +33,44 @@ int playerGoboEffect = 200;
 int playerIris = 130;
 int playerFocus = 50;
 
-// randomGreenMH DMX Variables
+// randomGreenMH DMX variables
 int randomGreenPan;
 int randomGreenPanTuning;
 int randomGreenTilt;
 int randomGreenTiltTuning;
 int randomGreenColour = 150;
+int randomGreenGoboMode = 100;
+int randomGreenGoboEffect = 130;
+int randomGreenGoboVelocity = 57;
 int randomGreenIris = 165;
 int randomGreenFocus = 50;
 
-// randomYellowMH DMX Variables
+// randomYellowMH DMX variables
 int randomYellowPan;
 int randomYellowPanTuning;
 int randomYellowTilt;
 int randomYellowTiltTuning;
 int randomYellowColour = 100;
+int randomYellowGoboMode = 100;
+int randomYellowGoboEffect = 130;
+int randomYellowGoboVelocity = 57;
 int randomYellowIris = 165;
 int randomYellowFocus = 50;
 
-// randomRedMH DMX Variables
+// randomRedMH DMX variables
 int randomRedPan;
 int randomRedPanTuning;
 int randomRedTilt;
 int randomRedTiltTuning;
 int randomRedColour = 60;
+int randomRedGoboMode = 100;
+int randomRedGoboEffect = 130;
+int randomRedGoboVelocity = 10;
 int randomRedIris = 165;
 int randomRedFocus = 50;
 
 void setup() {
-  Serial.begin(BAUD);
+  //Serial.begin(BAUD);
   BTSerial.begin(BAUD);
 
   // Register all MHs at Arduino Port 2
@@ -77,7 +86,7 @@ void loop() {
 
   // When Reading is done:
     if (JSONObjectIsFullyRead) {
-      Serial.println(JSONObject);
+      //Serial.println(JSONObject);
       
       // evaluate JSON String
         StaticJsonDocument<JSON_BUFFER> doc;
@@ -212,22 +221,22 @@ void evaluateJSONObject(JsonDocument doc) {
 
 void onCollision(JsonDocument doc){
   if (doc["32"]){
-    Serial.println("GREEN");
-    //DMXSerial.write(32, doc["32"]);
+    //Serial.println("GREEN");
+    DMXSerial.write(32, doc["32"]);
   }
   if (doc["57"]){
-    Serial.println("YELLOW");
-    //DMXSerial.write(57, doc["57"]);
+    //Serial.println("YELLOW");
+    DMXSerial.write(57, doc["57"]);
   }
   if (doc["82"]){
-    Serial.println("RED");
-    //DMXSerial.write(82, doc["82"]);
+    //Serial.println("RED");
+    DMXSerial.write(82, doc["82"]);
   }
 }
 
 // Sets Pan and Tilt values for all MHs
 void setPanAndTiltValues(){
-  /*
+  
   DMXSerial.write(1, playerPan);              // Pan
   DMXSerial.write(2, playerPanTuning);        // Pan tuning
   DMXSerial.write(3, playerTilt);             // Tilt
@@ -247,13 +256,12 @@ void setPanAndTiltValues(){
   DMXSerial.write(77, randomRedPanTuning);    // Pan tuning
   DMXSerial.write(78, randomRedTilt);         // Tilt
   DMXSerial.write(79, randomRedTiltTuning);   // Tilt tuning
-  */
 
 }
 
 // Initializes MHs values that rarely or never change
 void initializeMHs(){
-  /*
+  
   DMXSerial.init(DMXController);
   DMXSerial.write(110, 45);
 
@@ -268,22 +276,31 @@ void initializeMHs(){
   DMXSerial.write(32, dimmer);                // Dimmer
   DMXSerial.write(33, shutter);               // Shutter
   DMXSerial.write(34, randomGreenColour);     // Colour
+  DMXSerial.write(36, randomGreenGoboEffect);
+  DMXSerial.write(37, randomGreenGoboMode);
+  DMXSerial.write(38, randomGreenGoboVelocity);
 
   DMXSerial.write(55, velocity);              // Engine velocity
   DMXSerial.write(57, dimmer);                // Dimmer
   DMXSerial.write(58, shutter);               // Shutter
   DMXSerial.write(59, randomYellowColour);    // Colour
+  DMXSerial.write(61, randomYellowGoboEffect);
+  DMXSerial.write(62, randomYellowGoboMode);
+  DMXSerial.write(63, randomYellowGoboVelocity);
 
   DMXSerial.write(80, velocity);              // Engine velocity
   DMXSerial.write(82, dimmer);                // Dimmer
   DMXSerial.write(83, shutter);               // Shutter
   DMXSerial.write(84, randomRedColour);       // Colour
-  */
+  DMXSerial.write(86, randomRedGoboEffect);
+  DMXSerial.write(87, randomRedGoboMode);
+  DMXSerial.write(88, randomRedGoboVelocity);
+  
 }
 
 // Is called when the game is finished and the user returns to menu
 void stopGame(){
-  /*
+  
   DMXSerial.write(1, resetPan);
   DMXSerial.write(3, resetTilt);
   DMXSerial.write(7, dimmer);
@@ -299,7 +316,7 @@ void stopGame(){
   DMXSerial.write(76, resetPan);
   DMXSerial.write(78, resetTilt);
   DMXSerial.write(82, dimmer);
-  */
+  
 }
 
 // Empties JSON Buffer

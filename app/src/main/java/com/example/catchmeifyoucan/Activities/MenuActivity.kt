@@ -22,10 +22,11 @@ class MenuActivity : AppCompatActivity() {
     }
 
     private var mediaPlayer = MediaPlayer()
-    private lateinit var bluetoothView : ImageView
 
     // We need a reference to a BluetoothAdapter in here since initialization of BluetoothLeService takes place in MenuActivity.
     private lateinit var bluetoothAdapter : BluetoothAdapter
+
+    private lateinit var bluetoothView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +40,9 @@ class MenuActivity : AppCompatActivity() {
         bluetoothView = findViewById(R.id.bt_View)
         setupBluetoothConnection()
 
-        playMusic()
-        //mediaPlayer.isLooping = true
+        mediaPlayer = MediaPlayer.create(this, R.raw.catchmeifyoucan_backgroundmusic)
+        mediaPlayer.isLooping = true
+        mediaPlayer.start()
     }
 
     fun onButtonClicked(view: View) {
@@ -54,23 +56,6 @@ class MenuActivity : AppCompatActivity() {
         bluetoothLeService = BluetoothLeService(bluetoothManager)
         if (bluetoothLeService.initialize()) {
             bluetoothView.setImageResource(R.mipmap.bt_connected)
-        }
-    }
-
-    private fun playMusic(){
-
-        // https://stackoverflow.com/questions/30681002/play-list-of-mp3-file-with-mediaplayer-in-android
-
-        val musicArray = arrayOf(R.raw.catch_me_if_you_can_main_theme, R.raw.bensound_jazzcomedy, R.raw.bensound_jazzyfrenchy, R.raw.bensound_thejazzpiano)
-        var index = 0
-        mediaPlayer = MediaPlayer.create(this, musicArray[index])
-        mediaPlayer.start()
-        mediaPlayer.setOnCompletionListener{
-            println("NEXT TRACK")
-            if (index == musicArray.size - 1) index  = 0
-            else index += 1
-            mediaPlayer.release()
-            mediaPlayer = MediaPlayer.create(this, musicArray[index])
         }
     }
 }

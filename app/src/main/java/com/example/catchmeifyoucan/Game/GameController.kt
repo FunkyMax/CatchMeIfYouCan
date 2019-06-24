@@ -163,7 +163,7 @@ class GameController (context: Context, views : Array<View>){
             override fun run() {
                 setViewsCoordinatesInViewCoordinatesTranslator()
                 viewsCoordinatesTranslator.translateCoordinatesAndSendToBluetoothModule()
-                viewsCoordinatesTranslatorHandler.postDelayed(this, 12 * DELAY)
+                viewsCoordinatesTranslatorHandler.postDelayed(this, 11 * DELAY)
             }
         }
 

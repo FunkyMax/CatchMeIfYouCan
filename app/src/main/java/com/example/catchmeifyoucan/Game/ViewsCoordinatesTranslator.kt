@@ -12,6 +12,7 @@ private const val radToDeg = 360 / (2 * Math.PI)
 private const val power = 2.0
 private const val sixteenToEightBitConverter = 256
 private const val stretchFactor = 95 / 72
+private const val normalizeToOneDegree = 45
 private const val distanceToWall = 263.0
 private const val wallWidth = 400
 private const val wallHeight = 300
@@ -71,7 +72,7 @@ class ViewsCoordinatesTranslator(private val dataController: DataController) {
 
     fun translateCoordinatesAndSendToBluetoothModule() {
         transformPixelCoordinatesIntoWallCoordinates()
-        calculateDMXValuesFromPanAndTiltValues()
+        calculateDMXValues()
         sendData()
     }
 
@@ -97,9 +98,10 @@ class ViewsCoordinatesTranslator(private val dataController: DataController) {
             (((-randomRedHeadlightBeamViewCurrentPixelY.toDouble() + displayHeight) / displayHeight) * wallHeight)
     }
 
-    private fun calculateDMXValuesFromPanAndTiltValues() {
+    private fun calculateDMXValues() {
+        // At first, pan and tilt values are calculated in degrees
 
-        // calculate Pan and Tilt Values in Degrees for player
+        // calculate pan and tilt values in degrees for player
         val playerDegreesPan = Math.asin(
             playerHeadlightBeamViewCurrentWallX /
                     Math.sqrt(
@@ -119,7 +121,7 @@ class ViewsCoordinatesTranslator(private val dataController: DataController) {
                     )
         ) * radToDeg
 
-        // calculate Pan and Tilt Values in Degrees for randomGreenHeadlightBeam
+        // calculate pan and tilt values in degrees for randomGreenHeadlightBeam
         val randomGreenDegreesPan = Math.asin(
             randomGreenHeadlightBeamViewCurrentWallX /
                     Math.sqrt(
@@ -139,7 +141,7 @@ class ViewsCoordinatesTranslator(private val dataController: DataController) {
                     )
         ) * radToDeg
 
-        // calculate Pan and Tilt Values in Degrees for randomYellowHeadlightBeam
+        // calculate pan and tilt values in degrees for randomYellowHeadlightBeam
         val randomYellowDegreesPan = Math.asin(
             randomYellowHeadlightBeamViewCurrentWallX /
                     Math.sqrt(
@@ -159,7 +161,7 @@ class ViewsCoordinatesTranslator(private val dataController: DataController) {
                     )
         ) * radToDeg
 
-        // calculate Pan and Tilt Values in Degrees for randomRedHeadlightBeam
+        // calculate pan and tilt values in degrees for randomRedHeadlightBeam
         val randomRedDegreesPan = Math.asin(
             randomRedHeadlightBeamViewCurrentWallX /
                     Math.sqrt(
@@ -179,19 +181,19 @@ class ViewsCoordinatesTranslator(private val dataController: DataController) {
                     )
         ) * radToDeg
 
-        // transform Degree Pan and Tilt Values into DMX friendly values
+        // transform degree pan and tilt values into DMX friendly values
         val playerDMXPan =
-            (P0 + ((P45 + (1440 - playerHeadlightBeamViewCurrentPixelY) * stretchFactor - P0) / 45) * playerDegreesPan).roundToInt()
-        val playerDMXTilt = (T0 + ((T45 - T0) / 45) * playerDegreesTilt).roundToInt()
+            (P0 + ((P45 + (displayHeight - playerHeadlightBeamViewCurrentPixelY) * stretchFactor - P0) / normalizeToOneDegree) * playerDegreesPan).roundToInt()
+        val playerDMXTilt = (T0 + ((T45 - T0) / normalizeToOneDegree) * playerDegreesTilt).roundToInt()
         val randomGreenDMXPan =
-            (P0 + ((P45 + (1440 - randomGreenHeadlightBeamViewCurrentPixelY) * stretchFactor - P0) / 45) * randomGreenDegreesPan).roundToInt()
-        val randomGreenDMXTilt = (T0 + ((T45 - T0) / 45) * randomGreenDegreesTilt).roundToInt()
+            (P0 + ((P45 + (displayHeight - randomGreenHeadlightBeamViewCurrentPixelY) * stretchFactor - P0) / normalizeToOneDegree) * randomGreenDegreesPan).roundToInt()
+        val randomGreenDMXTilt = (T0 + ((T45 - T0) / normalizeToOneDegree) * randomGreenDegreesTilt).roundToInt()
         val randomYellowDMXPan =
-            (P0 + ((P45 + (1440 - randomYellowHeadlightBeamViewCurrentPixelY) * stretchFactor - P0) / 45) * randomYellowDegreesPan).roundToInt()
-        val randomYellowDMXTilt = (T0 + ((T45 - T0) / 45) * randomYellowDegreesTilt).roundToInt()
+            (P0 + ((P45 + (displayHeight - randomYellowHeadlightBeamViewCurrentPixelY) * stretchFactor - P0) / normalizeToOneDegree) * randomYellowDegreesPan).roundToInt()
+        val randomYellowDMXTilt = (T0 + ((T45 - T0) / normalizeToOneDegree) * randomYellowDegreesTilt).roundToInt()
         val randomRedDMXPan =
-            (P0 + ((P45 + (1440 - randomRedHeadlightBeamViewCurrentPixelY) * stretchFactor - P0) / 45) * randomRedDegreesPan).roundToInt()
-        val randomRedDMXTilt = (T0 + ((T45 - T0) / 45) * randomRedDegreesTilt).roundToInt()
+            (P0 + ((P45 + (displayHeight - randomRedHeadlightBeamViewCurrentPixelY) * stretchFactor - P0) / normalizeToOneDegree) * randomRedDegreesPan).roundToInt()
+        val randomRedDMXTilt = (T0 + ((T45 - T0) / normalizeToOneDegree) * randomRedDegreesTilt).roundToInt()
 
         val playerDMXPanForChannel1 = (Math.floor(playerDMXPan.toDouble() / sixteenToEightBitConverter)).toInt()
         val playerDMXPanForChannel2 = playerDMXPan.rem(sixteenToEightBitConverter)
