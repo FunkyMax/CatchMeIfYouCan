@@ -1,15 +1,3 @@
 <resources>
-    <string name="app_name">CatchMeIfYouCan</string>
-    <string name="playerPanChannel">1</string>
-    <string name="playerTiltChannel">3</string>
-    <string name="playerBrightnessChannel">7</string>
-    <string name="randomGreenPanChannel">26</string>
-    <string name="randomGreenTiltChannel">28</string>
-    <string name="randomGreenBrightnessChannel">32</string>
-    <string name="randomYellowPanChannel">51</string>
-    <string name="randomYellowTiltChannel">53</string>
-    <string name="randomYellowBrightnessChannel">57</string>
-    <string name="randomRedPanChannel">76</string>
-    <string name="randomRedTiltChannel">78</string>
-    <string name="randomRedBrightnessChannel">82</string>
+    <string name="app_name">Catch Me If You Can</string>
 </resources>

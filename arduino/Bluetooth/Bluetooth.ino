@@ -14,7 +14,6 @@ bool JSONObjectIsFullyRead = false;
 // Resetted pan and tilt values when game is finished
 const int resetPan = 42;
 const int resetTilt = 127;
-
 // Initial and reset dimmer value when game is finished
 const int dimmer = 100;
 // Initial shutter value for every MH
