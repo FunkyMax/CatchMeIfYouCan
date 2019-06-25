@@ -54,8 +54,8 @@ class MenuActivity : AppCompatActivity() {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeService = BluetoothLeService(bluetoothManager)
-        if (bluetoothLeService.initialize()) {
+        /*if (bluetoothLeService.initialize()) {
             bluetoothView.setImageResource(R.mipmap.bt_connected)
-        }
+        }*/
     }
 }
