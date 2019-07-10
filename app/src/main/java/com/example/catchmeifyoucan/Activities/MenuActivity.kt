@@ -9,9 +9,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.Window
-import android.widget.ImageView
 import com.example.catchmeifyoucan.R
 import com.example.catchmeifyoucan.Services.BluetoothLeService
+import kotlinx.android.synthetic.main.menu.*
 
 
 class MenuActivity : AppCompatActivity() {
@@ -26,8 +26,6 @@ class MenuActivity : AppCompatActivity() {
     // We need a reference to a BluetoothAdapter in here since initialization of BluetoothLeService takes place in MenuActivity.
     private lateinit var bluetoothAdapter : BluetoothAdapter
 
-    private lateinit var bluetoothView: ImageView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -37,7 +35,6 @@ class MenuActivity : AppCompatActivity() {
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
 
-        bluetoothView = findViewById(R.id.btView)
         setupBluetoothConnection()
 
         mediaPlayer = MediaPlayer.create(this, R.raw.catchmeifyoucan_backgroundmusic)
@@ -55,7 +52,7 @@ class MenuActivity : AppCompatActivity() {
         bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeService = BluetoothLeService(bluetoothManager)
         if (bluetoothLeService.initialize()) {
-            bluetoothView.setImageResource(R.mipmap.bt_connected)
+            btView.setImageResource(R.mipmap.bt_connected)
         }
     }
 }
