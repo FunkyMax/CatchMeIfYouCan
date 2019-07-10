@@ -63,19 +63,10 @@ class GameActivity : AppCompatActivity(){
         gameController = null
 
         startActivity(startScoreActivity)
-        finish()
     }
 
-    fun toggleVisibility(button: View) {
-        val headlightBeamViewArray = arrayOf(
-            playerHeadlightBeamView,
-            randomGreenHeadlightBeamView,
-            randomYellowHeadlightBeamView,
-            randomRedHeadlightBeamView
-        )
-        for (view in headlightBeamViewArray) {
-            val visibility: Int = if (view.visibility == 0) 4 else 0
-            view.visibility = visibility
-        }
+    override fun onStop() {
+        super.onStop()
+        finish()
     }
 }

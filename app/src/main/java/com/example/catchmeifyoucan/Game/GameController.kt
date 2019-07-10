@@ -17,20 +17,20 @@ import org.json.JSONObject
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
-// Samsung Galaxy S8 non-landscape display dimensions
+// Samsung Galaxy S8 landscape display dimensions
 const val displayWidth = 2960
 const val displayHeight = 1440
 
 const val gameDuration = 45000L
+const val EMPTY_STRING = ""
+
 private const val power = 2.0
 private const val collisionMaxDistance = 70
 private const val collisionForbiddenInterval = 2500L
-private const val mhBrightnessResetInterval= 1000L
 private const val collisionDelayForMHs = 300L
 private const val visualCollisionBrightnessFeedback = 1
 private const val visualCollisionBrightnessFeedbackReset = 100
 
-private const val EMPTY_STRING = ""
 
 // Some JSONObjects will be sent whose content is irrelevant. Their purpose is the one of a flag. They either only trigger the MHs' brightness change or reset their pan and tilt values after the game has finished.
 private const val ANY_DATA = 1
@@ -78,8 +78,8 @@ class GameController (context: Context, views : Array<View>){
     private var randomGreenHeadlightBeamViewCurrentY = 0f
     private var randomGreenHeadlightBeamViewNextX = 0f
     private var randomGreenHeadlightBeamViewNextY = 0f
-    private val randomGreenHeadlightMinDistanceToNextPosition = 1000
-    private val randomGreenHeadlightMaxDistanceToNextPosition = 1500
+    private val randomGreenHeadlightMinDistanceToNextPosition = 700
+    private val randomGreenHeadlightMaxDistanceToNextPosition = 1000
 
     // randomYellowHeadlightBeam specific fields
     private val randomYellowHeadlightBeamAnimationDuration = 1450L
@@ -141,21 +141,21 @@ class GameController (context: Context, views : Array<View>){
         val randomGreenHeadlightBeamViewRunnable = object : Runnable {
             override fun run() {
                 moveRandomHeadlightBeamView(randomGreenHeadlightBeamView)
-                randomHeadlightBeamViewsHandler.postDelayed(this, 1300)
+                randomHeadlightBeamViewsHandler.postDelayed(this, 1800)
             }
         }
 
         val randomYellowHeadlightBeamViewRunnable = object : Runnable {
             override fun run() {
                 moveRandomHeadlightBeamView(randomYellowHeadlightBeamView)
-                randomHeadlightBeamViewsHandler.postDelayed(this, 1000)
+                randomHeadlightBeamViewsHandler.postDelayed(this, 1250)
             }
         }
 
         val randomRedHeadlightBeamViewRunnable = object : Runnable {
             override fun run() {
                 moveRandomHeadlightBeamView(randomRedHeadlightBeamView)
-                randomHeadlightBeamViewsHandler.postDelayed(this, 1100)
+                randomHeadlightBeamViewsHandler.postDelayed(this, 1400)
             }
         }
 
@@ -181,7 +181,7 @@ class GameController (context: Context, views : Array<View>){
         viewsCoordinatesTranslatorHandler.removeCallbacksAndMessages(null)
         GlobalScope.launch {
             // wait for 100ms so every remaining game data is received by the arduino so the reset data is the last data to be received
-            delay(100)
+            delay(200)
             dataController.sendResetData(resetMHsJSONObject.toString())
         }
     }
@@ -335,7 +335,7 @@ class GameController (context: Context, views : Array<View>){
     ) {
         var viewNextX = viewNextX
         var viewNextY = viewNextY
-        for (i in 0..10) {
+        for (i in 0..20) {
             viewNextX = random.nextFloat() * displayWidth
             viewNextY = random.nextFloat() * displayHeight
 
@@ -370,9 +370,6 @@ class GameController (context: Context, views : Array<View>){
             delay(collisionForbiddenInterval)
             randomHeadlightBeamView.alpha = 1f
             resolveCollisionData(randomHeadlightBeamView, visualCollisionBrightnessFeedbackReset)
-            delay(mhBrightnessResetInterval)
-            resolveCollisionData(randomHeadlightBeamView)
-
         }
     }
 

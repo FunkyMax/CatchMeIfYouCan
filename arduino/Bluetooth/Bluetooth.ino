@@ -268,36 +268,36 @@ void initializeMHs(){
   DMXSerial.write(7, dimmer);                 // Dimmer
   DMXSerial.write(8, shutter);                // Shutter
   DMXSerial.write(9, playerColour);           // Colour
-  DMXSerial.write(12, playerGoboMode);        // Gobo Modus
-  DMXSerial.write(16, playerGoboEffect);      // Gobo Effect
+  DMXSerial.write(12, playerGoboMode);        // Gobo mode
+  DMXSerial.write(16, playerGoboEffect);      // Gobo effect
 
   DMXSerial.write(30, velocity);              // Engine velocity
   DMXSerial.write(32, dimmer);                // Dimmer
   DMXSerial.write(33, shutter);               // Shutter
   DMXSerial.write(34, randomGreenColour);     // Colour
-  DMXSerial.write(36, randomGreenGoboEffect);
-  DMXSerial.write(37, randomGreenGoboMode);
-  DMXSerial.write(38, randomGreenGoboVelocity);
+  DMXSerial.write(36, randomGreenGoboEffect); // Gobo effect
+  DMXSerial.write(37, randomGreenGoboMode);   // Gobo mode
+  DMXSerial.write(38, randomGreenGoboVelocity); // Gobo velocity
 
   DMXSerial.write(55, velocity);              // Engine velocity
   DMXSerial.write(57, dimmer);                // Dimmer
   DMXSerial.write(58, shutter);               // Shutter
   DMXSerial.write(59, randomYellowColour);    // Colour
-  DMXSerial.write(61, randomYellowGoboEffect);
-  DMXSerial.write(62, randomYellowGoboMode);
-  DMXSerial.write(63, randomYellowGoboVelocity);
+  DMXSerial.write(61, randomYellowGoboEffect);// Gobo effect
+  DMXSerial.write(62, randomYellowGoboMode);  // Gobo mode
+  DMXSerial.write(63, randomYellowGoboVelocity); // Gobo velocity
 
   DMXSerial.write(80, velocity);              // Engine velocity
   DMXSerial.write(82, dimmer);                // Dimmer
   DMXSerial.write(83, shutter);               // Shutter
   DMXSerial.write(84, randomRedColour);       // Colour
-  DMXSerial.write(86, randomRedGoboEffect);
-  DMXSerial.write(87, randomRedGoboMode);
-  DMXSerial.write(88, randomRedGoboVelocity);
+  DMXSerial.write(86, randomRedGoboEffect);   // Gobo effect
+  DMXSerial.write(87, randomRedGoboMode);     // Gobo mode
+  DMXSerial.write(88, randomRedGoboVelocity); // Gobo velocity
   
 }
 
-// Is called when the game is finished and the user returns to menu
+// Is called when the game is finished and the user proceeds to score menu
 void stopGame(){
   
   DMXSerial.write(1, resetPan);
@@ -325,6 +325,7 @@ void emptyJSONBuffer() {
   }
 
   JSONCounter = 0;
+  
   // Flag reset
   JSONObjectIsFullyRead = false;
 }

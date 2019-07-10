@@ -37,7 +37,7 @@ class MenuActivity : AppCompatActivity() {
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
 
-        bluetoothView = findViewById(R.id.bt_View)
+        bluetoothView = findViewById(R.id.btView)
         setupBluetoothConnection()
 
         mediaPlayer = MediaPlayer.create(this, R.raw.catchmeifyoucan_backgroundmusic)
@@ -54,8 +54,8 @@ class MenuActivity : AppCompatActivity() {
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
         bluetoothLeService = BluetoothLeService(bluetoothManager)
-        /*if (bluetoothLeService.initialize()) {
+        if (bluetoothLeService.initialize()) {
             bluetoothView.setImageResource(R.mipmap.bt_connected)
-        }*/
+        }
     }
 }
