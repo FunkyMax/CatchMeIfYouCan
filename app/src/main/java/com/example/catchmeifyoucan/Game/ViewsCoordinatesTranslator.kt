@@ -15,12 +15,12 @@ private const val stretchFactor = 90 / 72
 private const val normalizeToOneDegree = 45
 private const val distanceToWall = 261.0
 private const val wallWidth = 400
-private const val wallHeight = 300
+private const val wallHeight = 250
 
-private const val playerMHOffsetX = 290
-private const val randomGreenMHOffsetX = 230
-private const val randomYellowMHOffsetX = 170
-private const val randomRedMHOffsetX = 110
+private const val playerMHOffsetX = 275
+private const val randomGreenMHOffsetX = 225
+private const val randomYellowMHOffsetX = 175
+private const val randomRedMHOffsetX = 125
 
 private const val playerPanChannel = "1"
 private const val playerPanChannelTuning = "2"
